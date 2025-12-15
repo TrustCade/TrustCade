@@ -1,49 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>TrustCade - Win Prizes</title>
+    <title>TrustCade - Win Daily Prizes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* RESET */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* BODY */
         body {
-            font-family: Arial;
-            background: #2A5B8C;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a3b5c, #2A5B8C);
             color: white;
             text-align: center;
             padding: 20px;
+            min-height: 100vh;
         }
+        
+        /* CONTAINER */
         .container {
             max-width: 500px;
             margin: 0 auto;
         }
+        
+        /* HEADER */
+        .header {
+            margin: 40px 0 30px;
+        }
         .logo {
             font-size: 60px;
-            margin: 40px 0;
+            margin-bottom: 15px;
         }
         h1 {
             font-size: 36px;
             margin-bottom: 10px;
         }
-        .prize {
-            background: rgba(255,255,255,0.1);
-            padding: 30px;
+        .tagline {
+            font-size: 18px;
+            color: #00C2B5;
+            opacity: 0.9;
+        }
+        
+        /* PRIZE CARD */
+        .prize-card {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
+            padding: 30px;
             margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .prize-label {
+            color: #00C2B5;
+            font-size: 16px;
+            margin-bottom: 15px;
         }
         .prize-name {
             font-size: 32px;
             color: #FFB347;
-            margin: 10px 0;
+            margin: 15px 0;
+            font-weight: bold;
         }
+        .prize-value {
+            font-size: 24px;
+        }
+        
+        /* TIMER */
         .timer {
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             font-size: 40px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             margin: 30px 0;
+            letter-spacing: 3px;
         }
+        
+        /* SPIN BUTTON */
         .spin-btn {
-            background: #FFB347;
+            background: linear-gradient(135deg, #FFB347, #FFD700);
             color: #333;
             border: none;
             padding: 25px;
@@ -53,121 +88,134 @@
             width: 100%;
             margin: 30px 0;
             cursor: pointer;
+            transition: all 0.3s;
         }
+        .spin-btn:active {
+            transform: scale(0.98);
+        }
+        .spin-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        /* RESULT */
         .result {
-            min-height: 100px;
+            min-height: 150px;
+            padding: 25px;
+            margin: 25px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            font-size: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .result-emoji {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        
+        /* FEATURES */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 40px 0;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
-            margin: 20px 0;
-            background: rgba(255,255,255,0.05);
             border-radius: 15px;
         }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        /* FOOTER */
         .footer {
             margin-top: 50px;
-            opacity: 0.8;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            h1 { font-size: 28px; }
+            .prize-name { font-size: 26px; }
+            .timer { font-size: 32px; }
+            .spin-btn { font-size: 20px; padding: 20px; }
+            .features { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">🎮</div>
-        <h1>TrustCade</h1>
-        <p>Win amazing prizes every day</p>
-        
-        <div class="prize">
-            <div>🎁 TODAY'S PRIZE</div>
-            <div class="prize-name" id="prizeName">Nintendo Switch</div>
-            <div>Value: <span id="prizeValue">$349.99</span></div>
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">🎮</div>
+            <h1>TrustCade</h1>
+            <p class="tagline">Win Real Prizes Every Day</p>
         </div>
         
+        <!-- PRIZE -->
+        <div class="prize-card">
+            <div class="prize-label">🎁 TODAY'S GRAND PRIZE</div>
+            <div class="prize-name" id="prizeName">Nintendo Switch OLED</div>
+            <div class="prize-value">Value: <span id="prizeValue">$349.99</span></div>
+        </div>
+        
+        <!-- TIMER -->
         <div class="timer" id="timer">24:00:00</div>
         
-        <button class="spin-btn" onclick="spin()">🎡 SPIN NOW</button>
+        <!-- SPIN BUTTON -->
+        <button class="spin-btn" id="spinBtn" onclick="startSpin()">🎡 SPIN NOW</button>
         
+        <!-- RESULT -->
         <div class="result" id="result">
-            Tap SPIN NOW to play!
+            <div class="result-placeholder">
+                Tap "SPIN NOW" to play!
+            </div>
         </div>
         
+        <!-- FEATURES -->
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <div>100% Verified</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎁</div>
+                <div>Daily Prizes</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div>Instant Claims</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <div>Mobile Friendly</div>
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
         <div class="footer">
             © 2024 TrustCade<br>
-            <small>100% Verified • No purchase necessary</small>
+            <small>No purchase necessary • 18+ only • Demo version</small>
         </div>
     </div>
-    
+
     <script>
-        // Timer
-        function updateTimer() {
-            const now = new Date();
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            tomorrow.setHours(0,0,0,0);
-            
-            const diff = tomorrow - now;
-            const hours = Math.floor(diff / (1000*60*60));
-            const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-            const seconds = Math.floor((diff % (1000*60)) / 1000);
-            
-            document.getElementById('timer').textContent = 
-                hours.toString().padStart(2,'0') + ':' +
-                minutes.toString().padStart(2,'0') + ':' +
-                seconds.toString().padStart(2,'0');
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-        
-        // Spin function
-        function spin() {
-            const btn = document.querySelector('.spin-btn');
-            const result = document.getElementById('result');
-            
-            btn.disabled = true;
-            btn.textContent = 'SPINNING...';
-            result.innerHTML = '🎡 Spinning...';
-            
-            setTimeout(() => {
-                const prizes = [
-                    '🎉 You won $50 Gift Card!',
-                    '⭐ You got 3 Prize Entries!',
-                    '🏆 JACKPOT! Daily Grand Prize!',
-                    '🎁 You won an Extra Spin!'
-                ];
-                
-                const win = prizes[Math.floor(Math.random() * prizes.length)];
-                result.innerHTML = win;
-                
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.textContent = 'COME BACK TOMORROW';
-                    btn.style.background = '#00C2B5';
-                    
-                    // Countdown
-                    let time = 10;
-                    const countdown = setInterval(() => {
-                        result.textContent = `Next spin in: ${time}s`;
-                        time--;
-                        if (time < 0) {
-                            clearInterval(countdown);
-                            btn.textContent = '🎡 SPIN NOW';
-                            btn.style.background = '#FFB347';
-                            result.textContent = 'Ready to spin!';
-                        }
-                    }, 1000);
-                }, 3000);
-            }, 2000);
-        }
-        
-        // Rotate prize
+        // ========== CONFIG ==========
         const prizes = [
-            {name:'Nintendo Switch', value:'$349.99'},
-            {name:'iPhone 14 Pro', value:'$999.99'},
-            {name:'PlayStation 5', value:'$499.99'}
+            { name: "Nintendo Switch OLED", value: "$349.99" },
+            { name: "iPhone 14 Pro", value: "$999.99" },
+            { name: "PlayStation 5", value: "$499.99" },
+            { name: "$500 Gift Card", value: "$500.00" }
         ];
-        let current = 0;
-        setInterval(() => {
-            current = (current + 1) % prizes.length;
-            document.getElementById('prizeName').textContent = prizes[current].name;
-            document.getElementById('prizeValue').textContent = prizes[current].value;
-        }, 8000);
-    </script>
-</body>
-</html>
+        
+        const results = [
+            { emoji: "🎉", message: "You won
