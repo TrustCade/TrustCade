@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - TrustCade</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .wins-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .wins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .win-card {
+            border: 2px solid #8B5CF6;
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .win-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+        
+        .win-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-pending { background: #FFD700; color: #333; }
+        .status-verified { background: #10B981; color: white; }
+        .status-shipped { background: #3B82F6; color: white; }
+        .status-delivered { background: #8B5CF6; color: white; }
+        
+        .claim-btn {
+            background: #10B981;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .gift-card-prompt {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .wins-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (same as index.html) -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="profile.html" class="active"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#winners">Winners</a>
+                <a href="index.html#spin" class="btn-spin">SPIN NOW</a>
+            </nav>
+        </div>
+    </header>
 
+    <div class="profile-container">
+        <!-- User Profile Header -->
+        <div class="profile-header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h2 id="userName">Alex Johnson</h2>
+                <p><i class="fas fa-envelope"></i> alex@example.com</p>
+                <p><i class="fas fa-calendar"></i> Member since: Jan 15, 2024</p>
+            </div>
+            
+            <div class="user-stats">
+                <div class="stat-box">
+                    <h3 id="totalWins">3</h3>
+                    <p>Total Wins</p>
+                </div>
+                <div class="stat-box">
+                    <h3 id="totalValue">$1,850</h3>
+                    <p>Total Value</p>
+                </div>
+                <div class="stat-box">
+                    <h3 id="spinsUsed">24</h3>
+                    <p>Spins Used</p>
+                </div>
+                <div class="stat-box">
+                    <h3 id="winRate">12.5%</h3>
+                    <p>Win Rate</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gift Card Verification Alert -->
+        <div class="gift-card-prompt" id="giftCardAlert">
+            <h3><i class="fas fa-gift"></i> Verify with $100 Gift Card to Claim Prizes!</h3>
+            <p>You need to register with a Steam/Apple gift card to claim your prizes</p>
+            <a href="register.html" class="btn-register">Complete Verification Now</a>
+        </div>
+
+        <!-- My Wins Section -->
+        <div class="wins-section">
+            <h2><i class="fas fa-trophy"></i> MY WINNING PRIZES</h2>
+            <p class="section-subtitle">All prizes you've won on TrustCade</p>
+            
+            <div class="wins-grid" id="userWinsGrid">
+                <!-- Wins will be loaded here -->
+            </div>
+            
+            <div class="no-wins" id="noWinsMessage" style="display: none; text-align: center; padding: 3rem;">
+                <i class="fas fa-gift" style="font-size: 4rem; color: #ccc;"></i>
+                <h3>No Wins Yet!</h3>
+                <p>Start spinning to win amazing prizes!</p>
+                <a href="index.html#spin" class="spin-btn">Go Spin Now</a>
+            </div>
+        </div>
+
+        <!-- Prize Claim Instructions -->
+        <div class="instructions-card">
+            <h3><i class="fas fa-info-circle"></i> How to Claim Your Prize:</h3>
+            <ol>
+                <li>Complete gift card verification ($100 required)</li>
+                <li>Click "Claim Prize" on your win</li>
+                <li>Provide shipping address</li>
+                <li>Wait for verification (24-48 hours)</li>
+                <li>Prize will be shipped to you!</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+  </html>
