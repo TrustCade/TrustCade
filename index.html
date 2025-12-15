@@ -1,38 +1,192 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TrustCade - Live!</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #2A5B8C;
-            color: white;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 { font-size: 48px; margin: 20px 0; }
-        .logo { font-size: 80px; animation: spin 4s linear infinite; }
-        .status {
-            background: rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 20px;
-            margin: 30px auto;
-            max-width: 500px;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustCade - Spin & Win Real Prizes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="logo"></div>
-    <h1>TrustCade</h1>
-    <div class="status">
-        <h2>🚀 Deployment Successful!</h2>
-        <p>Your spin wheel platform is now LIVE!</p>
-        <p>Next: Add the full spin wheel code</p>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+            </div>
+            <nav>
+                <a href="#spin" class="btn-spin">SPIN NOW</a>
+                <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+                <a href="#prizes">Prizes</a>
+                <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+        <div class="container">
+            <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
+            <span><i class="fas fa-trophy"></i> 5,247+ Winners</span>
+            <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            <span><i class="fas fa-clock"></i> Free Daily Spin</span>
+        </div>
     </div>
-    <p>© 2024 TrustCade - Daily Spin & Win</p>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Grand Prize Display -->
+        <section class="grand-prize">
+            <h2><i class="fas fa-crown"></i> TODAY'S GRAND PRIZE</h2>
+            <div class="prize-card">
+                <img src="https://via.placeholder.com/150x150/8B5CF6/FFFFFF?text=NSwitch" alt="Nintendo Switch">
+                <div class="prize-info">
+                    <h3>$500 Nintendo Switch OLED</h3>
+                    <p>Complete with games and accessories</p>
+                    <div class="prize-value">
+                        <span class="value">Value: $500</span>
+                        <span class="winner">1 winner today</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spin Wheel Section -->
+        <section class="spin-section" id="spin">
+            <div class="wheel-container">
+                <canvas id="wheelCanvas" width="500" height="500"></canvas>
+                <div class="wheel-center">
+                    <div class="spin-pointer"><i class="fas fa-caret-down"></i></div>
+                </div>
+            </div>
+            
+            <!-- Timer -->
+            <div class="timer-section">
+                <h3><i class="fas fa-clock"></i> NEXT FREE SPIN IN:</h3>
+                <div class="timer" id="countdown">
+                    <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+                </div>
+                <button class="spin-btn" id="spinButton" disabled>
+                    <i class="fas fa-redo"></i> SPIN NOW
+                </button>
+                <p class="spin-info">1 free spin every 24 hours</p>
+            </div>
+        </section>
+
+        <!-- Registration Prompt -->
+        <section class="registration-prompt">
+            <div class="reg-card">
+                <i class="fas fa-gift"></i>
+                <h3>Register with $100 Apple Gift Card</h3>
+                <p>Verify your account with a Steam/Apple gift card to claim prizes</p>
+                <a href="register.html" class="btn-register">Register Now</a>
+            </div>
+        </section>
+
+        <!-- Recent Winners -->
+        <section class="winners-section">
+            <h2><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
+            <div class="winners-grid" id="recentWinnersGrid"></div>
+            <a href="winners.html" class="btn-view-all">View All 5,000+ Winners</a>
+        </section>
+
+        <!-- Leaderboard -->
+        <section class="leaderboard-section">
+            <h2><i class="fas fa-medal"></i> TOP WINNERS LEADERBOARD</h2>
+            <div class="leaderboard-container">
+                <div class="leaderboard-header">
+                    <span>Rank</span>
+                    <span>Winner</span>
+                    <span>Total Wins</span>
+                    <span>Total Value</span>
+                </div>
+                <div class="leaderboard-list" id="leaderboard"></div>
+            </div>
+        </section>
+
+        <!-- Live Stats -->
+        <section class="stats-section">
+            <h2><i class="fas fa-chart-line"></i> LIVE STATISTICS</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>5,247</h3>
+                    <p>Total Winners</p>
+                </div>
+                <div class="stat-card">
+                    <h3>$892,450</h3>
+                    <p>Prizes Distributed</p>
+                </div>
+                <div class="stat-card">
+                    <h3>324</h3>
+                    <p>Wins Today</p>
+                </div>
+                <div class="stat-card">
+                    <h3>1:8</h3>
+                    <p>Win Rate</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prize Gallery -->
+        <section class="prize-gallery" id="prizes">
+            <h2><i class="fas fa-gifts"></i> WINNING PRIZES</h2>
+            <div class="prizes-grid">
+                <div class="prize-item">iPhone 17</div>
+                <div class="prize-item">PlayStation 5</div>
+                <div class="prize-item">MacBook Pro</div>
+                <div class="prize-item">$5,000 Cash</div>
+                <div class="prize-item">Studio Equipment</div>
+                <div class="prize-item">Smart TV</div>
+                <div class="prize-item">Headphones</div>
+                <div class="prize-item">Bicycle</div>
+            </div>
+        </section>
+
+        <!-- Updates Section -->
+        <section class="updates-section">
+            <h2><i class="fas fa-bullhorn"></i> LATEST UPDATES</h2>
+            <div class="updates-grid">
+                <div class="update-card">
+                    <img src="https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=New+Prize" alt="Update">
+                    <h3>New iPhone 17 Added!</h3>
+                    <p>Latest model now available to win</p>
+                </div>
+                <div class="update-card">
+                    <img src="https://via.placeholder.com/300x200/10B981/FFFFFF?text=Winner" alt="Winner">
+                    <h3>Biggest Win Ever!</h3>
+                    <p>User won $5,000 cash prize</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Links -->
+        <section class="social-section">
+            <h2><i class="fas fa-comments"></i> CONTACT & UPDATES</h2>
+            <div class="social-links">
+                <a href="#" class="social-btn"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="#" class="social-btn"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="#" class="social-btn"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="mailto:contact@trustcade.com" class="social-btn"><i class="fas fa-envelope"></i> Email</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners</p>
+            <p>Odds displayed: 1:8 win rate | Verified business | Transparent system</p>
+            <div class="footer-links">
+                <a href="terms.html">Terms</a> | 
+                <a href="privacy.html">Privacy</a> | 
+                <a href="contact.html">Contact</a> | 
+                <a href="faq.html">FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
-</html>
+        </html>
