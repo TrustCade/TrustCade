@@ -1,4 +1,4 @@
-# TrustCade 🎮
+# TrustCade
 
 ### Your Daily Spin & Win Platform
 *Win real prizes every day. 100% verified. No scams.*
