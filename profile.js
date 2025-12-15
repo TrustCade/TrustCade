@@ -1,38 +1,6 @@
-// User wins data (in real app, this comes from database)
-const userWins = [
-    {
-        id: 1,
-        prize: "iPhone 15 Pro",
-        value: "$999",
-        date: "2024-03-15",
-        status: "pending", // pending, verified, shipped, delivered
-        claimCode: "TC-IP15-7A3B9",
-        image: "https://via.placeholder.com/200x200/3B82F6/FFFFFF?text=iPhone15",
-        requiresVerification: true
-    },
-    {
-        id: 2,
-        prize: "$500 Cash Prize",
-        value: "$500",
-        date: "2024-03-10",
-        status: "verified",
-        claimCode: "TC-CASH-2X8Y4",
-        image: "https://via.placeholder.com/200x200/10B981/FFFFFF?text=$500",
-        requiresVerification: false
-    },
-    {
-        id: 3,
-        prize: "Wireless Headphones",
-        value: "$199",
-        date: "2024-03-05",
-        status: "shipped",
-        claimCode: "TC-AUDIO-5Z1Q9",
-        image: "https://via.placeholder.com/200x200/8B5CF6/FFFFFF?text=Headphones",
-        trackingNumber: "UPS-9348-2934-1234"
-    }
-];
+// Profile page functionality - UPDATED VERSION
 
-// Status labels and colors
+// Status configuration
 const statusConfig = {
     pending: { text: "Verification Pending", class: "status-pending", icon: "fas fa-clock" },
     verified: { text: "Verified - Ready to Ship", class: "status-verified", icon: "fas fa-check-circle" },
@@ -40,35 +8,56 @@ const statusConfig = {
     delivered: { text: "Delivered", class: "status-delivered", icon: "fas fa-box-open" }
 };
 
+// Get user wins from localStorage
+function getUserWins() {
+    try {
+        return JSON.parse(localStorage.getItem('trustcade_wins')) || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+// Get user data
+function getUserData() {
+    try {
+        return JSON.parse(localStorage.getItem('trustcade_user')) || { name: "User", email: "" };
+    } catch (e) {
+        return { name: "User", email: "" };
+    }
+}
+
 // Display user's wins
 function displayUserWins() {
+    const userWins = getUserWins();
     const winsGrid = document.getElementById('userWinsGrid');
     const noWinsMessage = document.getElementById('noWinsMessage');
     
+    if (!winsGrid) return;
+    
     if (userWins.length === 0) {
-        winsGrid.style.display = 'none';
-        noWinsMessage.style.display = 'block';
+        if (winsGrid) winsGrid.style.display = 'none';
+        if (noWinsMessage) noWinsMessage.style.display = 'block';
         return;
     }
     
-    winsGrid.innerHTML = userWins.map(win => `
+    // Show wins grid, hide no wins message
+    winsGrid.style.display = 'grid';
+    if (noWinsMessage) noWinsMessage.style.display = 'none';
+    
+    winsGrid.innerHTML = userWins.map((win, index) => `
         <div class="win-card">
-            <div class="win-status ${statusConfig[win.status].class}">
-                <i class="${statusConfig[win.status].icon}"></i> ${statusConfig[win.status].text}
+            <div class="win-status ${statusConfig[win.status || 'pending'].class}">
+                <i class="${statusConfig[win.status || 'pending'].icon}"></i> ${statusConfig[win.status || 'pending'].text}
             </div>
             
-            <div class="win-image">
-                <img src="${win.image}" alt="${win.prize}" style="width: 100px; height: 100px; border-radius: 10px;">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <i class="fas fa-gift" style="font-size: 3rem; color: #8B5CF6;"></i>
             </div>
             
-            <h3>${win.prize}</h3>
-            <p class="win-value"><strong>Value:</strong> ${win.value}</p>
-            <p class="win-date"><i class="fas fa-calendar"></i> Won on: ${win.date}</p>
-            <p class="win-code"><i class="fas fa-tag"></i> Claim Code: <code>${win.claimCode}</code></p>
-            
-            ${win.trackingNumber ? 
-                `<p class="tracking"><i class="fas fa-truck"></i> Tracking: ${win.trackingNumber}</p>` 
-                : ''}
+            <h3 style="margin: 1rem 0;">${win.prize}</h3>
+            <p style="color: #666;"><strong>Value:</strong> ${win.value}</p>
+            <p style="color: #666;"><i class="fas fa-calendar"></i> Won on: ${win.date}</p>
+            <p style="color: #666;"><i class="fas fa-tag"></i> Claim Code: <code>${win.claimCode}</code></p>
             
             ${win.requiresVerification ? 
                 `<button class="claim-btn" onclick="showVerificationRequired()">
@@ -76,7 +65,7 @@ function displayUserWins() {
                 </button>` 
                 : 
                 `<button class="claim-btn" onclick="claimPrize(${win.id})">
-                    <i class="fas fa-gift"></i> ${win.status === 'pending' ? 'Claim Prize' : 'View Details'}
+                    <i class="fas fa-gift"></i> ${(win.status === 'pending' || !win.status) ? 'Claim Prize' : 'View Details'}
                 </button>`
             }
         </div>
@@ -85,40 +74,64 @@ function displayUserWins() {
 
 // Calculate user stats
 function calculateUserStats() {
+    const userWins = getUserWins();
     const totalWins = userWins.length;
+    
     const totalValue = userWins.reduce((sum, win) => {
-        const value = parseInt(win.value.replace('$', '').replace(',', ''));
-        return sum + (isNaN(value) ? 0 : value);
+        const valueStr = win.value.replace('$', '').replace(',', '');
+        const value = parseInt(valueStr) || 0;
+        return sum + value;
     }, 0);
     
-    // Update UI
-    document.getElementById('totalWins').textContent = totalWins;
-    document.getElementById('totalValue').textContent = `$${totalValue.toLocaleString()}`;
+    // Get spins used from localStorage
+    const spinsUsed = parseInt(localStorage.getItem('trustcade_spins')) || 0;
+    const winRate = spinsUsed > 0 ? ((totalWins / spinsUsed) * 100).toFixed(1) : 0;
     
-    // Simulate user data
-    const spinsUsed = 24; // This would come from database
-    const winRate = ((totalWins / spinsUsed) * 100).toFixed(1);
+    // Update UI elements if they exist
+    const totalWinsEl = document.getElementById('totalWins');
+    const totalValueEl = document.getElementById('totalValue');
+    const spinsUsedEl = document.getElementById('spinsUsed');
+    const winRateEl = document.getElementById('winRate');
     
-    document.getElementById('spinsUsed').textContent = spinsUsed;
-    document.getElementById('winRate').textContent = `${winRate}%`;
+    if (totalWinsEl) totalWinsEl.textContent = totalWins;
+    if (totalValueEl) totalValueEl.textContent = `$${totalValue.toLocaleString()}`;
+    if (spinsUsedEl) spinsUsedEl.textContent = spinsUsed;
+    if (winRateEl) winRateEl.textContent = `${winRate}%`;
+    
+    // Update win date if there are wins
+    if (totalWins > 0) {
+        const latestWin = userWins[userWins.length - 1];
+        const winDateEl = document.getElementById('winDate');
+        if (winDateEl) winDateEl.textContent = latestWin.date;
+    }
 }
 
 // Claim prize function
 function claimPrize(winId) {
-    const win = userWins.find(w => w.id === winId);
+    const userWins = getUserWins();
+    const winIndex = userWins.findIndex(w => w.id == winId);
     
-    if (!win) return;
+    if (winIndex === -1) {
+        alert('Prize not found!');
+        return;
+    }
     
-    if (win.status === 'pending') {
+    const win = userWins[winIndex];
+    
+    if (win.status === 'pending' || !win.status) {
         const address = prompt("Please enter your shipping address:");
-        if (address) {
-            alert(`Prize claimed! We'll ship your ${win.prize} to:\n${address}\n\nYou'll receive tracking info within 48 hours.`);
-            // In real app, send to backend
-            win.status = 'verified';
+        if (address && address.trim()) {
+            // Update win status
+            userWins[winIndex].status = 'verified';
+            userWins[winIndex].shippingAddress = address;
+            localStorage.setItem('trustcade_wins', JSON.stringify(userWins));
+            
+            alert(`✅ Prize claimed successfully!\n\nWe'll ship your ${win.prize} to:\n${address}\n\nYou'll receive tracking info within 48 hours.`);
+            
+            // Refresh display
             displayUserWins();
         }
     } else {
-        // Show prize details
         showPrizeDetails(win);
     }
 }
@@ -127,59 +140,100 @@ function claimPrize(winId) {
 function showPrizeDetails(win) {
     const modalHtml = `
         <div class="prize-modal">
-            <h3>${win.prize} Details</h3>
-            <p><strong>Status:</strong> ${statusConfig[win.status].text}</p>
-            <p><strong>Claim Code:</strong> ${win.claimCode}</p>
-            ${win.trackingNumber ? `<p><strong>Tracking:</strong> ${win.trackingNumber}</p>` : ''}
-            <p><strong>Date Won:</strong> ${win.date}</p>
-            <p><strong>Estimated Delivery:</strong> ${getEstimatedDelivery(win.status)}</p>
-            <button onclick="closeModal()">Close</button>
+            <h2><i class="fas fa-gift"></i> ${win.prize}</h2>
+            <div style="margin: 1.5rem 0;">
+                <p><strong>Status:</strong> ${statusConfig[win.status || 'pending'].text}</p>
+                <p><strong>Claim Code:</strong> <code>${win.claimCode}</code></p>
+                <p><strong>Value:</strong> ${win.value}</p>
+                <p><strong>Date Won:</strong> ${win.date}</p>
+                <p><strong>Requires Verification:</strong> ${win.requiresVerification ? 'Yes' : 'No'}</p>
+                ${win.shippingAddress ? `<p><strong>Shipping to:</strong> ${win.shippingAddress}</p>` : ''}
+            </div>
+            <button onclick="closeModal()" class="spin-btn" style="margin-top: 1rem; padding: 0.8rem 2rem;">Close</button>
         </div>
     `;
     
-    // Create modal
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
     modal.innerHTML = modalHtml;
     document.body.appendChild(modal);
 }
 
+// Show verification required
+function showVerificationRequired() {
+    if (confirm('🔐 Verification Required\n\nTo claim this prize, you need to verify your account with a $100 Steam/Apple gift card.\n\nGo to verification page?')) {
+        window.location.href = 'register.html';
+    }
+}
+
+// Check verification status
+function checkVerificationStatus() {
+    const isVerified = localStorage.getItem('trustcade_verified') === 'true';
+    const giftCardAlert = document.getElementById('giftCardAlert');
+    const userWins = getUserWins();
+    
+    if (giftCardAlert) {
+        if (!isVerified && userWins.some(win => win.requiresVerification)) {
+            giftCardAlert.style.display = 'block';
+        } else {
+            giftCardAlert.style.display = 'none';
+        }
+    }
+}
+
+// Close modal
 function closeModal() {
     const modal = document.querySelector('.modal-overlay');
     if (modal) modal.remove();
 }
 
-function getEstimatedDelivery(status) {
-    const estimates = {
-        pending: "After verification (2-3 days)",
-        verified: "Within 5-7 business days",
-        shipped: "3-5 business days",
-        delivered: "Already delivered"
-    };
-    return estimates[status] || "To be determined";
-}
-
-// Gift card verification alert
-function checkVerificationStatus() {
-    const isVerified = false; // This would check from database
-    const giftCardAlert = document.getElementById('giftCardAlert');
-    
-    if (!isVerified && userWins.some(win => win.requiresVerification)) {
-        giftCardAlert.style.display = 'block';
-    } else {
-        giftCardAlert.style.display = 'none';
+// Logout function
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        // Don't clear wins, just clear login status
+        localStorage.removeItem('trustcade_user');
+        window.location.href = 'index.html';
     }
 }
 
-// Initialize when page loads
+// Initialize profile page
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is logged in
+    const user = localStorage.getItem('trustcade_user');
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Load user data
+    const userData = getUserData();
+    const userNameEl = document.getElementById('userName');
+    if (userNameEl) {
+        userNameEl.textContent = userData.name || 'User';
+    }
+    
+    // Update email if element exists
+    const userEmailEl = document.querySelector('.profile-header p:nth-child(2)');
+    if (userEmailEl && userData.email) {
+        userEmailEl.innerHTML = `<i class="fas fa-envelope"></i> ${userData.email}`;
+    }
+    
+    // Setup logout button
+    const logoutBtn = document.querySelector('a[href="login.html"].btn-login');
+    if (logoutBtn) {
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        logoutBtn.href = '#';
+        logoutBtn.onclick = logout;
+    }
+    
+    // Load user content
     displayUserWins();
     calculateUserStats();
     checkVerificationStatus();
-    
-    // Check if user is logged in (simulated)
-    const isLoggedIn = localStorage.getItem('trustcade_user') || true;
-    if (!isLoggedIn) {
-        window.location.href = 'login.html';
-    }
 });
+
+// Make functions available globally
+window.claimPrize = claimPrize;
+window.showVerificationRequired = showVerificationRequired;
+window.closeModal = closeModal;
+window.showPrizeDetails = showPrizeDetails;
