@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TrustCade - Win Prizes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial;
+            background: #2A5B8C;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 60px;
+            margin: 40px 0;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .prize {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+        }
+        .prize-name {
+            font-size: 32px;
+            color: #FFB347;
+            margin: 10px 0;
+        }
+        .timer {
+            font-family: monospace;
+            font-size: 40px;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        .spin-btn {
+            background: #FFB347;
+            color: #333;
+            border: none;
+            padding: 25px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50px;
+            width: 100%;
+            margin: 30px 0;
+            cursor: pointer;
+        }
+        .result {
+            min-height: 100px;
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+        }
+        .footer {
+            margin-top: 50px;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎮</div>
+        <h1>TrustCade</h1>
+        <p>Win amazing prizes every day</p>
+        
+        <div class="prize">
+            <div>🎁 TODAY'S PRIZE</div>
+            <div class="prize-name" id="prizeName">Nintendo Switch</div>
+            <div>Value: <span id="prizeValue">$349.99</span></div>
+        </div>
+        
+        <div class="timer" id="timer">24:00:00</div>
+        
+        <button class="spin-btn" onclick="spin()">🎡 SPIN NOW</button>
+        
+        <div class="result" id="result">
+            Tap SPIN NOW to play!
+        </div>
+        
+        <div class="footer">
+            © 2024 TrustCade<br>
+            <small>100% Verified • No purchase necessary</small>
+        </div>
+    </div>
+    
+    <script>
+        // Timer
+        function updateTimer() {
+            const now = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0,0,0,0);
+            
+            const diff = tomorrow - now;
+            const hours = Math.floor(diff / (1000*60*60));
+            const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+            const seconds = Math.floor((diff % (1000*60)) / 1000);
+            
+            document.getElementById('timer').textContent = 
+                hours.toString().padStart(2,'0') + ':' +
+                minutes.toString().padStart(2,'0') + ':' +
+                seconds.toString().padStart(2,'0');
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+        
+        // Spin function
+        function spin() {
+            const btn = document.querySelector('.spin-btn');
+            const result = document.getElementById('result');
+            
+            btn.disabled = true;
+            btn.textContent = 'SPINNING...';
+            result.innerHTML = '🎡 Spinning...';
+            
+            setTimeout(() => {
+                const prizes = [
+                    '🎉 You won $50 Gift Card!',
+                    '⭐ You got 3 Prize Entries!',
+                    '🏆 JACKPOT! Daily Grand Prize!',
+                    '🎁 You won an Extra Spin!'
+                ];
+                
+                const win = prizes[Math.floor(Math.random() * prizes.length)];
+                result.innerHTML = win;
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.textContent = 'COME BACK TOMORROW';
+                    btn.style.background = '#00C2B5';
+                    
+                    // Countdown
+                    let time = 10;
+                    const countdown = setInterval(() => {
+                        result.textContent = `Next spin in: ${time}s`;
+                        time--;
+                        if (time < 0) {
+                            clearInterval(countdown);
+                            btn.textContent = '🎡 SPIN NOW';
+                            btn.style.background = '#FFB347';
+                            result.textContent = 'Ready to spin!';
+                        }
+                    }, 1000);
+                }, 3000);
+            }, 2000);
+        }
+        
+        // Rotate prize
+        const prizes = [
+            {name:'Nintendo Switch', value:'$349.99'},
+            {name:'iPhone 14 Pro', value:'$999.99'},
+            {name:'PlayStation 5', value:'$499.99'}
+        ];
+        let current = 0;
+        setInterval(() => {
+            current = (current + 1) % prizes.length;
+            document.getElementById('prizeName').textContent = prizes[current].name;
+            document.getElementById('prizeValue').textContent = prizes[current].value;
+        }, 8000);
+    </script>
+</body>
+</html>
