@@ -1,1 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - TrustCade</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .register-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .register-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        
+        .register-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .register-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #e9ecef;
+            color: #666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-number {
+            background: #8B5CF6;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .step.completed .step-number {
+            background: #10B981;
+            color: white;
+        }
+        
+        .gift-card-section {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .gift-card-section h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .verification-note {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border-left: 4px solid #10B981;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .register-steps::before {
+                left: 15%;
+                right: 15%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="winners.html">Winners</a>
+                <a href="login.html">Login</a>
+                <a href="register.html" class="active">Register</a>
+            </nav>
+        </div>
+    </header>
 
+    <div class="register-container">
+        <div class="register-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2>Join TrustCade</h2>
+                <p>Register and verify with gift card to claim prizes</p>
+            </div>
+            
+            <!-- Registration Steps -->
+            <div class="register-steps">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Account</div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Gift Card</div>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+            
+            <!-- Step 1: Account Details -->
+            <div id="step1Content">
+                <form class="auth-form" id="accountForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="firstName" placeholder="First Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="lastName" placeholder="Last Name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="email" id="regEmail" placeholder="Email Address" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="password" id="regPassword" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="tel" id="phone" placeholder="Phone Number">
+                    </div>
+                    
+                    <div class="verification-note">
+                        <p><i class="fas fa-info-circle"></i> <strong>Important:</strong> You need a $100 Steam/Apple gift card to verify your account and claim prizes worth over $100.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: start; gap: 0.5rem; font-size: 0.9rem;">
+                            <input type="checkbox" required>
+                            <span>I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>. I confirm that I am 18+ years old.</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        Continue to Gift Card Verification <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Step 2: Gift Card Verification -->
+            <div id="step2Content" style="display: none;">
+                <div class="gift-card-section">
+                    <h3><i class="fas fa-gift"></i> $100 Gift Card Required</h3>
+                    <p>Enter your Steam or Apple gift card code to verify your account.</p>
+                    
+                    <div style="margin: 1.5rem 0;">
+                        <input type="text" 
+                               id="giftCardCode" 
+                               placeholder="Enter gift card code" 
+                               style="width: 100%; padding: 1rem; border: 2px solid white; border-radius: 10px; font-size: 1.1rem; text-align: center;">
+                    </div>
+                    
+                    <p style="font-size: 0.9rem; opacity: 0.9;">
+                        <i class="fas fa-shield-alt"></i> Your gift card balance will remain intact. This is only for verification.
+                    </p>
+                </div>
+                
+                <div class="verification-note">
+                    <h4><i class="fas fa-check-circle"></i> Why Gift Card Verification?</h4>
+                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                        <li>Prevents fraud and fake accounts</li>
+                        <li>Unlocks prize claiming for high-value items</li>
+                        <li>Gives you verified status</li>
+                        <li>Required for prizes over $100</li>
+                    </ul>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="auth-btn" style="background: #666;" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button type="button" class="auth-btn" onclick="verifyGiftCard()">
+                        Verify & Complete <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Completion -->
+            <div id="step3Content" style="display: none; text-align: center;">
+                <div style="font-size: 4rem; color: #10B981; margin: 2rem 0;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                
+                <h2>Registration Complete!</h2>
+                <p>Your account has been verified and is now ready to use.</p>
+                
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin: 2rem 0; text-align: left;">
+                    <h4><i class="fas fa-star"></i> Account Benefits:</h4>
+                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                        <li>✅ Claim unlimited prizes</li>
+                        <li>✅ Daily free spins</li>
+                        <li>✅ Verified badge on profile</li>
+                        <li>✅ Priority shipping</li>
+                        <li>✅ Join grand prize draws</li>
+                    </ul>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="index.html#spin" class="auth-btn">
+                        <i class="fas fa-redo"></i> Spin Now
+                    </a>
+                    <a href="profile.html" class="auth-btn" style="background: #10B981;">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                </div>
+            </div>
+            
+            <div class="auth-links">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        
+        function goToStep(step) {
+            // Hide all steps
+            document.getElementById('step1Content').style.display = 'none';
+            document.getElementById('step2Content').style.display = 'none';
+            document.getElementById('step3Content').style.display = 'none';
+            
+            // Remove active class from all steps
+            document.getElementById('step1').classList.remove('active', 'completed');
+            document.getElementById('step2').classList.remove('active', 'completed');
+            document.getElementById('step3').classList.remove('active', 'completed');
+            
+            // Show current step
+            document.getElementById(`step${step}Content`).style.display = 'block';
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            // Mark previous steps as completed
+            for (let i = 1; i < step; i++) {
+                document.getElementById(`step${i}`).classList.add('completed');
+            }
+            
+            currentStep = step;
+        }
+        
+        // Handle account form submission
+        document.getElementById('accountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Save account data to localStorage
+            const accountData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('regEmail').value,
+                phone: document.getElementById('phone').value
+            };
+            
+            localStorage.setItem('trustcade_registration', JSON.stringify(accountData));
+            
+            // Go to step 2
+            goToStep(2);
+        });
+        
+        function verifyGiftCard() {
+            const giftCardCode = document.getElementById('giftCardCode').value;
+            
+            if (!giftCardCode || giftCardCode.length < 10) {
+                alert('Please enter a valid gift card code');
+                return;
+            }
+            
+            // Simulate verification (in real app, this would be API call)
+            setTimeout(() => {
+                // Complete registration
+                const accountData = JSON.parse(localStorage.getItem('trustcade_registration'));
+                
+                const userData = {
+                    name: `${accountData.firstName} ${accountData.lastName}`,
+                    email: accountData.email,
+                    phone: accountData.phone,
+                    joined: new Date().toISOString(),
+                    verified: true,
+                    giftCardVerified: true,
+                    verificationDate: new Date().toISOString()
+                };
+                
+                // Save user data
+                localStorage.setItem('trustcade_user', JSON.stringify(userData));
+                localStorage.setItem('trustcade_verified', 'true');
+                
+                // Clear registration data
+                localStorage.removeItem('trustcade_registration');
+                
+                // Go to completion step
+                goToStep(3);
+            }, 1500);
+        }
+        
+        // Initialize first step
+        goToStep(1);
+    </script>
+</body>
+  </html>
