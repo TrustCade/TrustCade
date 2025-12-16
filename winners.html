@@ -1,1 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Winners - TrustCade</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .winners-page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+        
+        .winners-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+        
+        .winners-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .winners-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card-large {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card-large h3 {
+            font-size: 2.5rem;
+            color: #8B5CF6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .winners-table-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            overflow-x: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .winners-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .winners-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+            color: #555;
+        }
+        
+        .winners-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .winners-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .verified-badge {
+            background: #10B981;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .page-btn {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .page-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .page-btn.active {
+            background: #8B5CF6;
+            color: white;
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: #8B5CF6;
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+        }
+        
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0 2rem;
+        }
+        
+        .view-btn {
+            padding: 0.8rem 1.5rem;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .view-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .view-btn.active {
+            background: #8B5CF6;
+            color: white;
+        }
+        
+        .winner-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .winner-card-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .winner-card-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        @media (max-width: 768px) {
+            .winners-table {
+                font-size: 0.9rem;
+            }
+            
+            .winners-table th,
+            .winners-table td {
+                padding: 0.8rem;
+            }
+            
+            .winner-card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .winners-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="winners.html" class="active"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                <a href="index.html#spin" class="btn-spin">SPIN NOW</a>
+                <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            </nav>
+        </div>
+    </header>
 
+    <div class="winners-page">
+        <!-- Page Header -->
+        <div class="winners-header">
+            <h1><i class="fas fa-trophy"></i> 5,247+ WINNERS CLUB</h1>
+            <p class="subtitle">Real people winning real prizes every day!</p>
+        </div>
+        
+        <!-- Stats Overview -->
+        <div class="winners-stats">
+            <div class="stat-card-large">
+                <h3>5,247</h3>
+                <p>Total Winners</p>
+            </div>
+            <div class="stat-card-large">
+                <h3>$892,450</h3>
+                <p>Total Value Won</p>
+            </div>
+            <div class="stat-card-large">
+                <h3>324</h3>
+                <p>Wins This Week</p>
+            </div>
+            <div class="stat-card-large">
+                <h3>98%</h3>
+                <p>Verified Winners</p>
+            </div>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search winners by name or prize...">
+            <i class="fas fa-search"></i>
+        </div>
+        
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button id="tableViewBtn" class="view-btn active"><i class="fas fa-table"></i> Table View</button>
+            <button id="cardViewBtn" class="view-btn"><i class="fas fa-th-large"></i> Card View</button>
+        </div>
+        
+        <!-- Table View -->
+        <div class="winners-table-container" id="tableView">
+            <table class="winners-table">
+                <thead>
+                    <tr>
+                        <th>Winner</th>
+                        <th>Prize</th>
+                        <th>Value</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="winnersTableBody">
+                    <!-- Winners loaded via JavaScript -->
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Generated via JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Card View (Hidden by default) -->
+        <div class="winner-card-grid" id="cardView" style="display: none;">
+            <!-- Cards loaded via JavaScript -->
+        </div>
+        
+        <!-- Trust Message -->
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: white; border-radius: 15px;">
+            <h3><i class="fas fa-shield-alt"></i> 100% Verified Winners</h3>
+            <p>Every winner is verified with proof of delivery. No fake prizes, no fake winners!</p>
+            <a href="index.html#spin" class="btn-view-all" style="margin-top: 1rem;">Join Winners Today!</a>
+        </div>
+    </div>
+
+    <script src="winners.js"></script>
+</body>
+  </html>
