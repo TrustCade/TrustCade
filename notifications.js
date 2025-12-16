@@ -107,3 +107,19 @@ function showInAppNotification(prize, claimCode) {
         notification.remove();
     }, 10000);
 }
+// notifications.js
+class EmailService {
+    constructor() {
+        this.apiKey = 'your_email_service_key';
+    }
+    
+    async sendWelcome(email, name) {
+        console.log(`Welcome email sent to ${email}`);
+        return { success: true };
+    }
+    
+    async sendWinNotification(email, prize, claimCode) {
+        console.log(`Win notification sent to ${email}`);
+        return { success: true };
+    }
+}
