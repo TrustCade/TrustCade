@@ -5,7 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TrustCade</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #8B5CF6;
+            --secondary-color: #10B981;
+            --error-color: #EF4444;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        header .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav a:hover, nav a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Auth Container */
         .auth-container {
             min-height: 80vh;
             display: flex;
@@ -21,6 +88,18 @@
             width: 100%;
             max-width: 450px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
         
         .auth-header {
@@ -30,33 +109,121 @@
         
         .auth-logo {
             font-size: 3rem;
-            color: #8B5CF6;
+            color: var(--primary-color);
             margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
         }
         
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .auth-header h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* Form Styles */
         .auth-form .form-group {
             margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
         
         .auth-form input {
             width: 100%;
-            padding: 1rem;
+            padding: 1rem 1rem 1rem 3rem;
             border: 2px solid #e9ecef;
             border-radius: 10px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
         }
         
         .auth-form input:focus {
             outline: none;
-            border-color: #8B5CF6;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
         
+        .form-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.2rem;
+        }
+        
+        .form-group.password-field {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+        }
+        
+        /* Remember & Forgot */
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+        
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        /* Submit Button */
         .auth-btn {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(45deg, #8B5CF6, #667eea);
+            background: linear-gradient(45deg, var(--primary-color), #667eea);
             color: white;
             border: none;
             border-radius: 10px;
@@ -64,6 +231,31 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .auth-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .auth-btn:hover {
@@ -71,22 +263,45 @@
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
         }
         
-        .auth-links {
-            text-align: center;
-            margin-top: 2rem;
-            color: #666;
+        .auth-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
         }
         
-        .auth-links a {
-            color: #8B5CF6;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
+        /* Social Login */
         .social-login {
             margin-top: 2rem;
             border-top: 1px solid #e9ecef;
             padding-top: 2rem;
+        }
+        
+        .social-login p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        .social-login p::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: #e9ecef;
+        }
+        
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: #e9ecef;
         }
         
         .social-buttons {
@@ -107,31 +322,150 @@
             background: white;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
         }
         
         .social-btn:hover {
-            border-color: #8B5CF6;
+            border-color: var(--primary-color);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .social-btn.google i { color: #DB4437; }
+        .social-btn.facebook i { color: #4267B2; }
+        
+        /* Auth Links */
+        .auth-links {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .auth-links p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Verification Banner */
+        .verification-banner {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .verification-banner i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Error/Success Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+        
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-card {
+                padding: 2rem;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .social-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.5rem;
+            }
+            
+            .auth-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header>
         <div class="container">
-            <div class="logo">
+            <a href="index.html" class="logo">
                 <h1><i class="fas fa-gift"></i> TrustCade</h1>
-            </div>
+            </a>
             <nav>
-                <a href="index.html">Home</a>
-                <a href="winners.html">Winners</a>
-                <a href="login.html" class="active">Login</a>
-                <a href="register.html">Register</a>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="login.html" class="active"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
             </nav>
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="auth-container">
         <div class="auth-card">
+            <!-- Verification Banner -->
+            <div class="verification-banner">
+                <i class="fas fa-shield-alt"></i>
+                <p><strong>Verify with $100 Gift Card</strong> to unlock prize claiming!</p>
+            </div>
+            
+            <!-- Auth Header -->
             <div class="auth-header">
                 <div class="auth-logo">
                     <i class="fas fa-gift"></i>
@@ -140,79 +474,283 @@
                 <p>Login to access your account and spin the wheel</p>
             </div>
             
+            <!-- Error/Success Messages -->
+            <div id="errorMessage" class="message error"></div>
+            <div id="successMessage" class="message success"></div>
+            
+            <!-- Login Form -->
             <form class="auth-form" id="loginForm">
                 <div class="form-group">
-                    <input type="email" id="email" placeholder="Email Address" required>
+                    <label for="email">Email Address</label>
+                    <div class="form-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <input type="email" id="email" placeholder="you@example.com" required>
                 </div>
                 
-                <div class="form-group">
-                    <input type="password" id="password" placeholder="Password" required>
+                <div class="form-group password-field">
+                    <label for="password">Password</label>
+                    <div class="form-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
                 
-                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <div class="remember-forgot">
+                    <label class="remember-me">
                         <input type="checkbox" id="remember">
                         <span>Remember me</span>
                     </label>
-                    <a href="forgot-password.html" style="font-size: 0.9rem;">Forgot password?</a>
+                    <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
                 </div>
                 
-                <button type="submit" class="auth-btn">
-                    <i class="fas fa-sign-in-alt"></i> Login
+                <button type="submit" class="auth-btn" id="submitBtn">
+                    <i class="fas fa-sign-in-alt"></i> 
+                    <span id="btnText">Login</span>
                 </button>
             </form>
             
+            <!-- Social Login -->
             <div class="social-login">
-                <p style="text-align: center; color: #666; margin-bottom: 1rem;">Or continue with</p>
+                <p>Or continue with</p>
                 <div class="social-buttons">
-                    <button class="social-btn">
-                        <i class="fab fa-google" style="color: #DB4437;"></i> Google
+                    <button class="social-btn google" id="googleLogin">
+                        <i class="fab fa-google"></i> Google
                     </button>
-                    <button class="social-btn">
-                        <i class="fab fa-facebook" style="color: #4267B2;"></i> Facebook
+                    <button class="social-btn facebook" id="facebookLogin">
+                        <i class="fab fa-facebook"></i> Facebook
                     </button>
                 </div>
             </div>
             
+            <!-- Auth Links -->
             <div class="auth-links">
                 <p>Don't have an account? <a href="register.html">Register now</a></p>
                 <p>Need to verify with gift card? <a href="register.html#verify">Click here</a></p>
+                <p>By logging in, you agree to our <a href="terms.html">Terms</a> & <a href="privacy.html">Privacy Policy</a></p>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Password visibility toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = togglePassword.querySelector('i');
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+        
+        // Form submission
+        const loginForm = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
             const remember = document.getElementById('remember').checked;
             
-            // Simple validation
+            // Reset messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Validation
             if (!email || !password) {
-                alert('Please fill in all fields');
+                showError('Please fill in all fields');
                 return;
             }
             
-            // Simulate login (in real app, this would be API call)
-            const userData = {
-                email: email,
-                name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-                joined: new Date().toISOString(),
-                verified: false
-            };
+            if (!isValidEmail(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
             
-            // Save to localStorage
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<div class="loading-spinner"></div>';
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Check for test accounts
+                if (email === 'admin@trustcade.com' && password === 'Admin123!') {
+                    // Admin account
+                    const userData = {
+                        email: email,
+                        name: 'Admin',
+                        joined: new Date().toISOString(),
+                        verified: true,
+                        role: 'admin',
+                        totalWins: 5,
+                        totalValue: 2500
+                    };
+                    saveUser(userData, remember);
+                    showSuccess('Admin login successful!');
+                    setTimeout(() => window.location.href = 'index.html', 1000);
+                    return;
+                }
+                
+                if (email === 'test@trustcade.com' && password === 'Test123!') {
+                    // Test account with wins
+                    const userData = {
+                        email: email,
+                        name: 'Test User',
+                        joined: new Date().toISOString(),
+                        verified: true,
+                        role: 'user',
+                        totalWins: 3,
+                        totalValue: 1200
+                    };
+                    saveUser(userData, remember);
+                    
+                    // Add some test wins
+                    const testWins = [
+                        {
+                            id: Date.now() - 86400000,
+                            prize: "iPhone 17",
+                            value: "$1299",
+                            date: new Date(Date.now() - 86400000).toLocaleDateString(),
+                            time: new Date(Date.now() - 86400000).toLocaleTimeString(),
+                            status: "pending",
+                            claimCode: "TC-TEST123"
+                        },
+                        {
+                            id: Date.now() - 172800000,
+                            prize: "$100 Gift Card",
+                            value: "$100",
+                            date: new Date(Date.now() - 172800000).toLocaleDateString(),
+                            time: new Date(Date.now() - 172800000).toLocaleTimeString(),
+                            status: "claimed",
+                            claimCode: "TC-TEST456"
+                        }
+                    ];
+                    localStorage.setItem('trustcade_wins', JSON.stringify(testWins));
+                    
+                    showSuccess('Login successful! Loading your wins...');
+                    setTimeout(() => window.location.href = 'profile.html', 1000);
+                    return;
+                }
+                
+                // Regular user login simulation
+                const userData = {
+                    email: email,
+                    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+                    joined: new Date().toISOString(),
+                    verified: Math.random() > 0.5, // Random verification status
+                    role: 'user',
+                    totalWins: 0,
+                    totalValue: 0
+                };
+                
+                saveUser(userData, remember);
+                showSuccess('Login successful! Redirecting...');
+                
+                // Redirect based on verification status
+                setTimeout(() => {
+                    if (userData.verified) {
+                        window.location.href = 'index.html';
+                    } else {
+                        window.location.href = 'verify.html';
+                    }
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Login failed. Please try again.');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.textContent = 'Login';
+            }
+        });
+        
+        // Social login buttons
+        document.getElementById('googleLogin').addEventListener('click', function() {
+            showMessage('Google login would be implemented in a production app.', 'info');
+        });
+        
+        document.getElementById('facebookLogin').addEventListener('click', function() {
+            showMessage('Facebook login would be implemented in a production app.', 'info');
+        });
+        
+        // Helper functions
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function saveUser(userData, remember) {
             localStorage.setItem('trustcade_user', JSON.stringify(userData));
             if (remember) {
                 localStorage.setItem('trustcade_remember', 'true');
+                localStorage.setItem('trustcade_remember_email', userData.email);
+            } else {
+                localStorage.removeItem('trustcade_remember');
+                localStorage.removeItem('trustcade_remember_email');
+            }
+        }
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            shakeElement(loginForm);
+        }
+        
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+        }
+        
+        function showMessage(message, type = 'info') {
+            alert(message); // In production, use a proper notification system
+        }
+        
+        function shakeElement(element) {
+            element.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 500);
+        }
+        
+        // Check for remembered email
+        document.addEventListener('DOMContentLoaded', function() {
+            const remembered = localStorage.getItem('trustcade_remember');
+            const rememberedEmail = localStorage.getItem('trustcade_remember_email');
+            
+            if (remembered === 'true' && rememberedEmail) {
+                document.getElementById('email').value = rememberedEmail;
+                document.getElementById('remember').checked = true;
             }
             
-            // Show success and redirect
-            alert('Login successful! Redirecting to home page...');
-            window.location.href = 'index.html';
+            // Add shake animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 </body>
-  </html>
+    </html>
