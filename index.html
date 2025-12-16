@@ -8,8 +8,365 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    
+    <!-- Additional CSS for JavaScript elements -->
+    <style>
+        /* Loading Screen */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .spinner {
+            text-align: center;
+            color: white;
+        }
+        
+        .spinner i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: spin 2s linear infinite;
+        }
+        
+        .spinner p {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem;
+            z-index: 10000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-success {
+            border-left-color: var(--secondary-color);
+        }
+        
+        .notification-error {
+            border-left-color: var(--accent-color);
+        }
+        
+        .notification-info {
+            border-left-color: var(--primary-color);
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        
+        .notification-content i {
+            font-size: 1.2rem;
+        }
+        
+        .notification-success i {
+            color: var(--secondary-color);
+        }
+        
+        .notification-error i {
+            color: var(--accent-color);
+        }
+        
+        .notification-info i {
+            color: var(--primary-color);
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+        
+        .notification-close:hover {
+            opacity: 1;
+        }
+        
+        /* Progress Bar for Spin Timer */
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-secondary);
+            width: 0%;
+            transition: width 1s linear;
+            border-radius: var(--radius-sm);
+        }
+        
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #backToTop.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        #backToTop:hover {
+            background: #7c3aed;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Mobile Menu Close Button */
+        #mobileMenuClose {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        /* Leaderboard Rank Colors */
+        .rank {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+            margin-right: 0.5rem;
+        }
+        
+        .rank.gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+        
+        .rank.silver {
+            background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+        }
+        
+        .rank.bronze {
+            background: linear-gradient(135deg, #CD7F32, #A6692E);
+        }
+        
+        /* Status Badges */
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status.verified {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+        
+        /* Winner Avatar */
+        .winner-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0 auto 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Spin Progress Indicator */
+        #spinProgressContainer {
+            margin: 1rem 0;
+        }
+        
+        #spinProgress {
+            height: 8px;
+            background: var(--light-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        #spinProgressFill {
+            height: 100%;
+            background: var(--gradient-secondary);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: var(--radius-sm);
+        }
+        
+        /* Next Spin Time */
+        .next-spin-time {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Refresh Buttons */
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        /* Login Modal Updates */
+        .login-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .login-option-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: var(--radius-sm);
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .login-option-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--light-color);
+        }
+        
+        /* Developer Debug Panel (Hidden by default) */
+        #debugPanel {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            z-index: 9999;
+            display: none;
+        }
+        
+        #debugPanel.show {
+            display: block;
+        }
+        
+        /* Update mobile menu to include close button */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 999;
+            flex-direction: column;
+            padding: 4rem 2rem 2rem;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+    </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="spinner">
+            <i class="fas fa-gift"></i>
+            <p>Loading TrustCade...</p>
+        </div>
+    </div>
+    
     <!-- Header -->
     <header>
         <div class="container">
@@ -20,7 +377,7 @@
             <nav>
                 <a href="#spin" class="btn-spin">SPIN NOW</a>
                 <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
-                <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+                <a href="profile.html" id="profileBtn"><i class="fas fa-user"></i> My Prizes</a>
                 <a href="#prizes">Prizes</a>
                 <a href="login.html" class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
             </nav>
@@ -32,19 +389,27 @@
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html">Home</a>
+        <button id="mobileMenuClose" class="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html" class="active">Home</a>
+        <a href="#spin">Spin Wheel</a>
         <a href="winners.html">Winners</a>
         <a href="profile.html">My Prizes</a>
         <a href="#prizes">Prizes</a>
+        <a href="#how-it-works">How It Works</a>
         <a href="login.html" id="mobileLoginBtn">Login</a>
         <a href="register.html">Register</a>
+        <div class="mobile-menu-footer">
+            <p>Need help? <a href="mailto:support@trustcade.com">Contact Support</a></p>
+        </div>
     </div>
 
     <!-- Trust Badges -->
     <div class="trust-badges">
         <div class="container">
             <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
-            <span><i class="fas fa-trophy"></i> 5,247+ Winners</span>
+            <span><i class="fas fa-trophy"></i> <span id="totalWinnersCount">5,247</span>+ Winners</span>
             <span><i class="fas fa-box-open"></i> Real Prizes</span>
             <span><i class="fas fa-clock"></i> Free Daily Spin</span>
         </div>
@@ -138,6 +503,17 @@
                                 <small>Seconds</small>
                             </div>
                         </div>
+                        
+                        <!-- Progress Bar -->
+                        <div id="spinProgressContainer">
+                            <div id="spinProgress">
+                                <div id="spinProgressFill"></div>
+                            </div>
+                            <div class="next-spin-time">
+                                <i class="far fa-clock"></i>
+                                Next spin at: <span id="nextSpinTime">--:--</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <button class="spin-btn" id="spinButton" disabled>
@@ -185,14 +561,19 @@
         <section class="winners-section">
             <div class="section-header">
                 <h2><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
-                <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
+                <div>
+                    <button class="refresh-btn" id="refreshWinners" title="Refresh winners">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
             <div class="winners-grid" id="recentWinnersGrid">
                 <!-- Winners loaded via JavaScript -->
             </div>
             <div class="section-footer">
                 <a href="winners.html" class="btn-view-all">
-                    <i class="fas fa-users"></i> View All 5,247+ Winners
+                    <i class="fas fa-users"></i> View All <span id="totalWinners">5,247</span>+ Winners
                 </a>
             </div>
         </section>
@@ -201,7 +582,12 @@
         <section class="leaderboard-section">
             <div class="section-header">
                 <h2><i class="fas fa-medal"></i> TOP WINNERS LEADERBOARD</h2>
-                <p class="section-subtitle">Our most successful players this month</p>
+                <div>
+                    <button class="refresh-btn" id="refreshLeaderboard" title="Refresh leaderboard">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <p class="section-subtitle">Updated: <span id="leaderboardUpdate">Just now</span></p>
+                </div>
             </div>
             <div class="leaderboard-container">
                 <div class="leaderboard-header">
@@ -215,7 +601,7 @@
                     <!-- Leaderboard loaded via JavaScript -->
                 </div>
                 <div class="leaderboard-footer">
-                    <p><i class="fas fa-sync-alt"></i> Updated every hour</p>
+                    <p><i class="fas fa-sync-alt"></i> Updates every hour</p>
                 </div>
             </div>
         </section>
@@ -224,7 +610,12 @@
         <section class="stats-section">
             <div class="section-header">
                 <h2><i class="fas fa-chart-line"></i> LIVE STATISTICS</h2>
-                <p class="section-subtitle">Real-time data from TrustCade</p>
+                <div>
+                    <button class="refresh-btn" id="refreshStats" title="Refresh statistics">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <p class="section-subtitle">Real-time data from TrustCade</p>
+                </div>
             </div>
             <div class="stats-grid">
                 <div class="stat-card stat-primary">
@@ -232,7 +623,7 @@
                         <i class="fas fa-trophy"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="totalWinners">5,247</h3>
+                        <h3 id="totalWinnersStat">5,247</h3>
                         <p>Total Winners</p>
                         <span class="stat-trend"><i class="fas fa-arrow-up"></i> +24 today</span>
                     </div>
@@ -242,7 +633,7 @@
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="totalValue">$892,450</h3>
+                        <h3 id="totalValueStat">$892,450</h3>
                         <p>Prizes Distributed</p>
                         <span class="stat-trend"><i class="fas fa-arrow-up"></i> +$12,450 today</span>
                     </div>
@@ -252,7 +643,7 @@
                         <i class="fas fa-bolt"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="winsToday">324</h3>
+                        <h3 id="winsTodayStat">324</h3>
                         <p>Wins Today</p>
                         <span class="stat-trend"><i class="fas fa-chart-line"></i> 1 win every 4.5 minutes</span>
                     </div>
@@ -262,7 +653,7 @@
                         <i class="fas fa-percentage"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="winRate">1:8</h3>
+                        <h3 id="winRateStat">1:8</h3>
                         <p>Win Rate</p>
                         <span class="stat-trend"><i class="fas fa-user-friends"></i> 12.5% of spins win</span>
                     </div>
@@ -328,7 +719,7 @@
         </section>
 
         <!-- How It Works -->
-        <section class="how-it-works">
+        <section class="how-it-works" id="how-it-works">
             <div class="section-header">
                 <h2><i class="fas fa-play-circle"></i> HOW IT WORKS</h2>
                 <p class="section-subtitle">Win prizes in 3 easy steps</p>
@@ -487,8 +878,8 @@
                     <div class="newsletter">
                         <h5>Get Updates</h5>
                         <div class="newsletter-input">
-                            <input type="email" placeholder="Your email">
-                            <button><i class="fas fa-paper-plane"></i></button>
+                            <input type="email" placeholder="Your email" id="newsletterEmail">
+                            <button id="newsletterBtn"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                 </div>
@@ -502,11 +893,16 @@
                     <i class="fab fa-cc-amex" title="American Express"></i>
                     <i class="fab fa-cc-paypal" title="PayPal"></i>
                     <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
-                    <i class="fab fa-google-pay" title="Google Pay"></i>
+                    <i class="fab fa-cc-google-pay" title="Google Pay"></i>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <!-- Win Notification (Hidden by default) -->
     <div id="winNotification" class="win-notification">
@@ -531,6 +927,15 @@
                 <input type="email" placeholder="Email Address" required>
                 <input type="password" placeholder="Password" required>
                 <button type="submit" class="spin-btn">Login</button>
+                
+                <div class="login-options">
+                    <button type="button" class="login-option-btn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="login-option-btn">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                </div>
             </form>
             <p class="modal-footer">
                 New user? <a href="register.html">Register here</a> |
@@ -539,6 +944,50 @@
         </div>
     </div>
 
+    <!-- Developer Debug Panel (Toggle with Ctrl+Shift+D) -->
+    <div id="debugPanel">
+        <div>Spins: <span id="debugSpins">0</span></div>
+        <div>Wins: <span id="debugWins">0</span></div>
+        <div>Next Spin: <span id="debugNextSpin">--:--</span></div>
+        <button onclick="window.resetTrustCadeData()" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; margin-top: 0.3rem;">Reset Data</button>
+    </div>
+
     <script src="script.js"></script>
+    
+    <!-- Initialize debug panel -->
+    <script>
+        // Debug panel toggle with Ctrl+Shift+D
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                const debugPanel = document.getElementById('debugPanel');
+                debugPanel.classList.toggle('show');
+                e.preventDefault();
+            }
+        });
+        
+        // Update debug panel every 10 seconds
+        setInterval(() => {
+            if (document.getElementById('debugPanel').classList.contains('show')) {
+                const spins = localStorage.getItem('trustcade_spins') || 0;
+                const wins = JSON.parse(localStorage.getItem('trustcade_wins') || '[]').length;
+                const nextSpin = localStorage.getItem('trustcade_nextSpin');
+                
+                document.getElementById('debugSpins').textContent = spins;
+                document.getElementById('debugWins').textContent = wins;
+                
+                if (nextSpin) {
+                    const timeLeft = nextSpin - Date.now();
+                    if (timeLeft > 0) {
+                        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        document.getElementById('debugNextSpin').textContent = 
+                            `${hours}h ${minutes}m`;
+                    } else {
+                        document.getElementById('debugNextSpin').textContent = 'READY';
+                    }
+                }
+            }
+        }, 10000);
+    </script>
 </body>
     </html>
