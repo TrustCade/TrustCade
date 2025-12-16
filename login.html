@@ -1,1 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TrustCade</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-logo {
+            font-size: 3rem;
+            color: #8B5CF6;
+            margin-bottom: 1rem;
+        }
+        
+        .auth-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-form input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-form input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #8B5CF6, #667eea);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .auth-links {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+        }
+        
+        .auth-links a {
+            color: #8B5CF6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .social-login {
+            margin-top: 2rem;
+            border-top: 1px solid #e9ecef;
+            padding-top: 2rem;
+        }
+        
+        .social-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            border-color: #8B5CF6;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="winners.html">Winners</a>
+                <a href="login.html" class="active">Login</a>
+                <a href="register.html">Register</a>
+            </nav>
+        </div>
+    </header>
 
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h2>Welcome Back!</h2>
+                <p>Login to access your account and spin the wheel</p>
+            </div>
+            
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="forgot-password.html" style="font-size: 0.9rem;">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            
+            <div class="social-login">
+                <p style="text-align: center; color: #666; margin-bottom: 1rem;">Or continue with</p>
+                <div class="social-buttons">
+                    <button class="social-btn">
+                        <i class="fab fa-google" style="color: #DB4437;"></i> Google
+                    </button>
+                    <button class="social-btn">
+                        <i class="fab fa-facebook" style="color: #4267B2;"></i> Facebook
+                    </button>
+                </div>
+            </div>
+            
+            <div class="auth-links">
+                <p>Don't have an account? <a href="register.html">Register now</a></p>
+                <p>Need to verify with gift card? <a href="register.html#verify">Click here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            
+            // Simple validation
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Simulate login (in real app, this would be API call)
+            const userData = {
+                email: email,
+                name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+                joined: new Date().toISOString(),
+                verified: false
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('trustcade_user', JSON.stringify(userData));
+            if (remember) {
+                localStorage.setItem('trustcade_remember', 'true');
+            }
+            
+            // Show success and redirect
+            alert('Login successful! Redirecting to home page...');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+  </html>
