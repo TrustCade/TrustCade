@@ -691,3 +691,14 @@ window.saveUserWin = saveUserWin;
 window.showWinNotification = showWinNotification;
 window.showLoginModal = showLoginModal;
 window.updateAuthUI = updateAuthUI;
+// Secret admin access (Ctrl + Shift + A)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        const password = prompt('Enter admin password:');
+        if (password === 'Admin123!') {
+            localStorage.setItem('trustcade_admin', 'true');
+            alert('Admin mode activated!');
+            location.reload();
+        }
+    }
+});
