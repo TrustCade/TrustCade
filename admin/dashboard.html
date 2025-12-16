@@ -1,1 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TrustCade</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        
+        .admin-sidebar {
+            width: 250px;
+            background: #1a1a1a;
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .admin-logo {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .admin-nav {
+            padding: 0 1rem;
+        }
+        
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            color: #b0b0b0;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: white;
+        }
+        
+        .admin-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .admin-stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #8B5CF6;
+        }
+        
+        .admin-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .admin-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .admin-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .admin-table td {
+            padding: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-approved { background: #D1FAE5; color: #065F46; }
+        .status-shipped { background: #DBEAFE; color: #1E40AF; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-approve { background: #10B981; color: white; }
+        .btn-ship { background: #3B82F6; color: white; }
+        .btn-view { background: #8B5CF6; color: white; }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .action-card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .action-card input,
+        .action-card textarea,
+        .action-card select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+        }
+        
+        .action-card button {
+            width: 100%;
+            padding: 0.8rem;
+            background: #8B5CF6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .admin-content {
+                margin-left: 0;
+            }
+            
+            .admin-nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .admin-nav a {
+                flex: 1;
+                min-width: 150px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2><i class="fas fa-crown"></i> Admin Panel</h2>
+                <p style="color: #666; font-size: 0.9rem;">TrustCade Management</p>
+            </div>
+            
+            <nav class="admin-nav">
+                <a href="#" class="active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="manage-prizes.html">
+                    <i class="fas fa-gift"></i> Manage Prizes
+                </a>
+                <a href="manage-winners.html">
+                    <i class="fas fa-trophy"></i> Manage Winners
+                </a>
+                <a href="manage-users.html">
+                    <i class="fas fa-users"></i> Manage Users
+                </a>
+                <a href="post-updates.html">
+                    <i class="fas fa-bullhorn"></i> Post Updates
+                </a>
+                <a href="transactions.html">
+                    <i class="fas fa-money-bill-wave"></i> Transactions
+                </a>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+                <a href="../index.html" style="margin-top: 2rem; background: rgba(239, 68, 68, 0.2);">
+                    <i class="fas fa-sign-out-alt"></i> Back to Site
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1>Admin Dashboard</h1>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span id="currentTime">Loading...</span>
+                    <button class="btn-spin" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="admin-stats">
+                <div class="admin-stat-card">
+                    <h3>5,247</h3>
+                    <p>Total Winners</p>
+                    <small>+24 today</small>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>$892K</h3>
+                    <p>Total Payout</p>
+                    <small>+$12,450 today</small>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>24,891</h3>
+                    <p>Total Users</p>
+                    <small>+189 today</small>
+                </div>
+                <div class="admin-stat-card">
+                    <h3>324</h3>
+                    <p>Spins Today</p>
+                    <small>1:8 win rate</small>
+                </div>
+            </div>
+            
+            <!-- Recent Claims -->
+            <div class="admin-table">
+                <h3 style="padding: 1rem; margin: 0; background: #f8f9fa;">Recent Prize Claims</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Prize</th>
+                            <th>Value</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="claimsTable">
+                        <!-- Claims loaded via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add New Prize</h3>
+                    <form id="addPrizeForm">
+                        <input type="text" placeholder="Prize Name" required>
+                        <input type="number" placeholder="Value ($)" required>
+                        <select required>
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="cash">Cash</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="lifestyle">Lifestyle</option>
+                        </select>
+                        <input type="number" placeholder="Quantity Available" required>
+                        <button type="submit">Add Prize</button>
+                    </form>
+                </div>
+                
+                <div class="action-card">
+                    <h3><i class="fas fa-bullhorn"></i> Post Update</h3>
+                    <form id="postUpdateForm">
+                        <input type="text" placeholder="Update Title" required>
+                        <textarea placeholder="Update Content" rows="3" required></textarea>
+                        <input type="url" placeholder="Image URL (optional)">
+                        <button type="submit">Post Update</button>
+                    </form>
+                </div>
+                
+                <div class="action-card">
+                    <h3><i class="fas fa-chart-line"></i> Today's Stats</h3>
+                    <div id="todayStats">
+                        <!-- Stats loaded via JavaScript -->
+                    </div>
+                    <button onclick="viewDetailedStats()">
+                        <i class="fas fa-chart-bar"></i> View Detailed Analytics
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
 
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = 
+                now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+        }
+        
+        // Generate sample claims data
+        function generateClaimsData() {
+            const users = ["Alex Johnson", "Maria Garcia", "David Chen", "Sarah Williams", "Mike Thompson"];
+            const prizes = ["iPhone 17 Pro", "$500 Cash", "PlayStation 5", "MacBook Air", "AirPods Pro"];
+            const values = ["$1299", "$500", "$499", "$999", "$249"];
+            const statuses = ["pending", "approved", "shipped"];
+            
+            const claims = [];
+            for (let i = 0; i < 5; i++) {
+                claims.push({
+                    user: users[i],
+                    prize: prizes[i],
+                    value: values[i],
+                    date: new Date(Date.now() - Math.random() * 86400000 * 7).toLocaleDateString(),
+                    status: statuses[Math.floor(Math.random() * statuses.length)]
+                });
+            }
+            
+            return claims;
+        }
+        
+        // Load claims table
+        function loadClaimsTable() {
+            const claims = generateClaimsData();
+            const table = document.getElementById('claimsTable');
+            
+            table.innerHTML = claims.map(claim => `
+                <tr>
+                    <td>${claim.user}</td>
+                    <td>${claim.prize}</td>
+                    <td>${claim.value}</td>
+                    <td>${claim.date}</td>
+                    <td>
+                        <span class="status-badge status-${claim.status}">
+                            ${claim.status.charAt(0).toUpperCase() + claim.status.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            ${claim.status === 'pending' ? 
+                                `<button class="action-btn btn-approve" onclick="approveClaim('${claim.user}')">
+                                    <i class="fas fa-check"></i>
+                                </button>` : ''}
+                            ${claim.status === 'approved' ? 
+                                `<button class="action-btn btn-ship" onclick="shipPrize('${claim.user}')">
+                                    <i class="fas fa-truck"></i>
+                                </button>` : ''}
+                            <button class="action-btn btn-view" onclick="viewClaim('${claim.user}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Load today's stats
+        function loadTodayStats() {
+            const stats = {
+                spins: 324,
+                wins: 41,
+                newUsers: 189,
+                revenue: 12450
+            };
+            
+            document.getElementById('todayStats').innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <p><strong>Spins:</strong> ${stats.spins.toLocaleString()}</p>
+                    <p><strong>Wins:</strong> ${stats.wins.toLocaleString()} (${((stats.wins/stats.spins)*100).toFixed(1)}%)</p>
+                    <p><strong>New Users:</strong> ${stats.newUsers.toLocaleString()}</p>
+                    <p><strong>Revenue:</strong> $${stats.revenue.toLocaleString()}</p>
+                </div>
+            `;
+        }
+        
+        // Form handlers
+        document.getElementById('addPrizeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Prize added successfully!');
+            this.reset();
+        });
+        
+        document.getElementById('postUpdateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Update posted successfully!');
+            this.reset();
+        });
+        
+        // Action functions
+        function approveClaim(user) {
+            if (confirm(`Approve claim for ${user}?`)) {
+                alert(`Claim approved for ${user}`);
+                loadClaimsTable();
+            }
+        }
+        
+        function shipPrize(user) {
+            if (confirm(`Mark prize as shipped for ${user}?`)) {
+                alert(`Prize marked as shipped for ${user}`);
+                loadClaimsTable();
+            }
+        }
+        
+        function viewClaim(user) {
+            alert(`Viewing details for ${user}'s claim`);
+        }
+        
+        function refreshData() {
+            loadClaimsTable();
+            loadTodayStats();
+            updateTime();
+            alert('Data refreshed!');
+        }
+        
+        function viewDetailedStats() {
+            alert('Opening detailed analytics dashboard...');
+            // In real app, this would open analytics page
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            loadClaimsTable();
+            loadTodayStats();
+            
+            // Update time every second
+            setInterval(updateTime, 1000);
+            
+            // Check admin authentication
+            const isAdmin = localStorage.getItem('trustcade_admin');
+            if (!isAdmin) {
+                // In real app, this would redirect to admin login
+                console.log('Admin authentication required');
+            }
+        });
+    </script>
+</body>
+  </html>
