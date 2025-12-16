@@ -1,199 +1,180 @@
-// Main JavaScript for TrustCade - COMPLETE VERSION
+// TrustCade - Complete JavaScript
+// Version 2.0 - Optimized for Mobile
 
-// Prize segments for the wheel
+// ========== CONFIGURATION ==========
+const CONFIG = {
+    FREE_SPIN_INTERVAL: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+    SPIN_ANIMATION_DURATION: 5000, // 5 seconds
+    WIN_RATE: 0.125, // 12.5% win rate
+    MIN_PRIZE_VALUE: 0,
+    MAX_PRIZE_VALUE: 1599,
+    REFRESH_INTERVAL: 60000 // 1 minute
+};
+
+// ========== DATA MODELS ==========
 const prizes = [
-    { name: "iPhone 17", value: "$1299", color: "#8B5CF6" },
-    { name: "$500 Cash", value: "$500", color: "#10B981" },
-    { name: "Headphones", value: "$299", color: "#3B82F6" },
-    { name: "Try Again", value: "$0", color: "#6B7280" },
-    { name: "PlayStation 5", value: "$499", color: "#EF4444" },
-    { name: "$100 Gift Card", value: "$100", color: "#F59E0B" },
-    { name: "Smart Watch", value: "$399", color: "#8B5CF6" },
-    { name: "MacBook Pro", value: "$1599", color: "#10B981" }
+    { name: "iPhone 17", value: "$1299", color: "#8B5CF6", weight: 2 },
+    { name: "$500 Cash", value: "$500", color: "#10B981", weight: 2 },
+    { name: "Headphones", value: "$299", color: "#3B82F6", weight: 2 },
+    { name: "Try Again", value: "$0", color: "#6B7280", weight: 1 },
+    { name: "PlayStation 5", value: "$499", color: "#EF4444", weight: 2 },
+    { name: "$100 Gift Card", value: "$100", color: "#F59E0B", weight: 2 },
+    { name: "Smart Watch", value: "$399", color: "#8B5CF6", weight: 2 },
+    { name: "MacBook Pro", value: "$1599", color: "#10B981", weight: 2 }
 ];
 
-// Generate fake winners for homepage
-function generateRecentWinners(count = 8) {
-    const firstNames = ["Alex", "Jamie", "Taylor", "Morgan", "Casey", "Jordan", "Riley", "Quinn", "Avery", "Blake"];
-    const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"];
-    const prizeItems = [
-        { name: "iPhone 15 Pro", value: "$999" },
-        { name: "PlayStation 5", value: "$499" },
-        { name: "$1000 Cash", value: "$1000" },
-        { name: "MacBook Air", value: "$999" },
-        { name: "AirPods Pro", value: "$249" },
-        { name: "Smart TV", value: "$699" },
-        { name: "Nintendo Switch", value: "$299" },
-        { name: "iPad Pro", value: "$799" }
-    ];
+// ========== UTILITY FUNCTIONS ==========
+const utils = {
+    // Format numbers with commas
+    formatNumber: (num) => num.toLocaleString(),
     
-    const winners = [];
-    for (let i = 0; i < count; i++) {
-        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-        const prize = prizeItems[Math.floor(Math.random() * prizeItems.length)];
-        const timeOptions = ["Just now", "5m ago", "15m ago", "1h ago", "2h ago", "5h ago"];
-        const time = timeOptions[Math.floor(Math.random() * timeOptions.length)];
-        
-        winners.push({
-            name: `${firstName} ${lastName}`,
-            prize: prize.name,
-            value: prize.value,
-            time: time,
-            initial: firstName[0] + lastName[0],
-            location: ["NY", "CA", "TX", "FL", "IL"][Math.floor(Math.random() * 5)]
-        });
+    // Format currency
+    formatCurrency: (amount) => `$${amount.toLocaleString()}`,
+    
+    // Generate random ID
+    generateId: () => Date.now() + Math.random().toString(36).substr(2, 9),
+    
+    // Debounce function for performance
+    debounce: (func, wait) => {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+    
+    // Throttle function for scroll events
+    throttle: (func, limit) => {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
     }
-    return winners;
-}
+};
 
-// Display recent winners on homepage
-function displayRecentWinners() {
-    const winnersGrid = document.getElementById('recentWinnersGrid');
-    if (!winnersGrid) return;
-    
-    const winners = generateRecentWinners(8);
-    
-    winnersGrid.innerHTML = winners.map(winner => `
-        <div class="winner-card">
-            <div class="winner-avatar">${winner.initial}</div>
-            <h4>${winner.name}</h4>
-            <p class="prize-won">Won: ${winner.prize}</p>
-            <p class="prize-value">${winner.value}</p>
-            <div class="winner-info">
-                <small class="win-time"><i class="far fa-clock"></i> ${winner.time}</small>
-                <small class="win-location"><i class="fas fa-map-marker-alt"></i> ${winner.location}</small>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Update live statistics
-function updateLiveStats() {
-    const stats = {
-        totalWinners: 5247 + Math.floor(Math.random() * 10),
-        totalValue: 892450 + Math.floor(Math.random() * 1000),
-        winsToday: 324 + Math.floor(Math.random() * 5),
-        winRate: "1:8"
-    };
-    
-    // Update DOM elements if they exist
-    const elements = {
-        totalWinners: document.getElementById('totalWinners'),
-        totalValue: document.getElementById('totalValue'),
-        winsToday: document.getElementById('winsToday'),
-        winRate: document.getElementById('winRate'),
-        lastUpdated: document.getElementById('lastUpdated')
-    };
-    
-    if (elements.totalWinners) elements.totalWinners.textContent = stats.totalWinners.toLocaleString();
-    if (elements.totalValue) elements.totalValue.textContent = `$${stats.totalValue.toLocaleString()}`;
-    if (elements.winsToday) elements.winsToday.textContent = stats.winsToday;
-    if (elements.winRate) elements.winRate.textContent = stats.winRate;
-    if (elements.lastUpdated) {
-        const now = new Date();
-        elements.lastUpdated.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-}
-
-// Grand prize timer
-function startGrandPrizeTimer() {
-    const timerElement = document.getElementById('grandPrizeTimer');
-    if (!timerElement) return;
-    
-    // Set next grand prize draw to 8 PM today
-    const now = new Date();
-    const nextDraw = new Date();
-    nextDraw.setHours(20, 0, 0, 0); // 8:00 PM
-    
-    // If it's already past 8 PM, set for tomorrow
-    if (now > nextDraw) {
-        nextDraw.setDate(nextDraw.getDate() + 1);
-    }
-    
-    function updateGrandPrizeTimer() {
-        const now = new Date();
-        const timeLeft = nextDraw - now;
-        
-        if (timeLeft <= 0) {
-            timerElement.textContent = "Drawing now!";
-            return;
+// ========== STORAGE MANAGER ==========
+const storage = {
+    // User data
+    getUser: () => {
+        try {
+            return JSON.parse(localStorage.getItem('trustcade_user'));
+        } catch (e) {
+            console.error('Error reading user data:', e);
+            return null;
         }
-        
-        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        
-        timerElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
+    },
     
-    updateGrandPrizeTimer();
-    setInterval(updateGrandPrizeTimer, 1000);
-}
-
-// Countdown Timer for daily spin
-function startCountdown() {
-    const hoursElement = document.getElementById('hours');
-    const minutesElement = document.getElementById('minutes');
-    const secondsElement = document.getElementById('seconds');
-    const spinButton = document.getElementById('spinButton');
-    const timeLeftElement = document.getElementById('timeLeft');
-    
-    if (!hoursElement || !spinButton) return;
-    
-    let nextSpinTime = localStorage.getItem('trustcade_nextSpin');
-    
-    if (!nextSpinTime) {
-        nextSpinTime = Date.now() + (24 * 60 * 60 * 1000);
-        localStorage.setItem('trustcade_nextSpin', nextSpinTime);
-    }
-    
-    function updateTimer() {
-        const now = Date.now();
-        const timeLeft = parseInt(nextSpinTime) - now;
-        
-        if (timeLeft <= 0) {
-            spinButton.disabled = false;
-            spinButton.innerHTML = '<i class="fas fa-redo"></i> SPIN NOW!';
-            if (hoursElement) hoursElement.textContent = '00';
-            if (minutesElement) minutesElement.textContent = '00';
-            if (secondsElement) secondsElement.textContent = '00';
-            if (timeLeftElement) timeLeftElement.textContent = 'Ready!';
-            return;
+    setUser: (userData) => {
+        try {
+            localStorage.setItem('trustcade_user', JSON.stringify(userData));
+        } catch (e) {
+            console.error('Error saving user data:', e);
         }
-        
-        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        
-        if (hoursElement) hoursElement.textContent = hours.toString().padStart(2, '0');
-        if (minutesElement) minutesElement.textContent = minutes.toString().padStart(2, '0');
-        if (secondsElement) secondsElement.textContent = seconds.toString().padStart(2, '0');
-        if (timeLeftElement) timeLeftElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
-        spinButton.disabled = true;
+    },
+    
+    // Wins data
+    getWins: () => {
+        try {
+            return JSON.parse(localStorage.getItem('trustcade_wins')) || [];
+        } catch (e) {
+            console.error('Error reading wins:', e);
+            return [];
+        }
+    },
+    
+    setWins: (wins) => {
+        try {
+            localStorage.setItem('trustcade_wins', JSON.stringify(wins));
+        } catch (e) {
+            console.error('Error saving wins:', e);
+        }
+    },
+    
+    // Next spin time
+    getNextSpin: () => {
+        const nextSpin = localStorage.getItem('trustcade_nextSpin');
+        return nextSpin ? parseInt(nextSpin) : Date.now() + CONFIG.FREE_SPIN_INTERVAL;
+    },
+    
+    setNextSpin: (time) => {
+        localStorage.setItem('trustcade_nextSpin', time.toString());
+    },
+    
+    // Spin count
+    getSpinCount: () => {
+        return parseInt(localStorage.getItem('trustcade_spins')) || 0;
+    },
+    
+    incrementSpinCount: () => {
+        const count = storage.getSpinCount() + 1;
+        localStorage.setItem('trustcade_spins', count.toString());
+        return count;
+    },
+    
+    // Clear all data
+    clearAll: () => {
+        localStorage.clear();
     }
-    
-    updateTimer();
-    setInterval(updateTimer, 1000);
-}
+};
 
-// Enhanced Spin Wheel Animation
-function initializeWheel() {
-    const canvas = document.getElementById('wheelCanvas');
-    const spinButton = document.getElementById('spinButton');
+// ========== WHEEL MANAGEMENT ==========
+const wheel = {
+    canvas: null,
+    ctx: null,
+    isSpinning: false,
+    currentRotation: 0,
+    animationId: null,
     
-    if (!canvas || !spinButton) return;
+    init: () => {
+        wheel.canvas = document.getElementById('wheelCanvas');
+        if (!wheel.canvas) return;
+        
+        wheel.ctx = wheel.canvas.getContext('2d');
+        wheel.resizeCanvas();
+        wheel.draw();
+        
+        // Handle window resize
+        window.addEventListener('resize', utils.throttle(wheel.resizeCanvas, 250));
+        
+        // Add spin button event
+        const spinButton = document.getElementById('spinButton');
+        if (spinButton) {
+            spinButton.addEventListener('click', wheel.spin);
+        }
+    },
     
-    const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = 200;
-    let isSpinning = false;
-    let currentRotation = 0;
+    resizeCanvas: () => {
+        if (!wheel.canvas) return;
+        
+        const container = wheel.canvas.parentElement;
+        if (!container) return;
+        
+        const size = Math.min(container.clientWidth, container.clientHeight) * 0.9;
+        wheel.canvas.width = size;
+        wheel.canvas.height = size;
+        wheel.draw();
+    },
     
-    function drawWheel(rotation = 0) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    draw: (rotation = 0) => {
+        if (!wheel.canvas || !wheel.ctx) return;
+        
+        const ctx = wheel.ctx;
+        const centerX = wheel.canvas.width / 2;
+        const centerY = wheel.canvas.height / 2;
+        const radius = Math.min(centerX, centerY) * 0.9;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, wheel.canvas.width, wheel.canvas.height);
         
         // Draw wheel segments
         const segmentAngle = (2 * Math.PI) / prizes.length;
@@ -213,41 +194,46 @@ function initializeWheel() {
             // Draw segment border
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
             ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-            ctx.closePath();
             ctx.stroke();
             
             // Draw text
             ctx.save();
             ctx.translate(centerX, centerY);
             ctx.rotate(startAngle + segmentAngle / 2);
+            
+            // Adjust font size based on canvas size
+            const fontSize = Math.max(10, radius / 20);
+            const valueFontSize = Math.max(8, fontSize * 0.7);
+            
             ctx.textAlign = 'right';
             ctx.fillStyle = 'white';
-            ctx.font = 'bold 14px Poppins';
-            ctx.fillText(prizes[i].name, radius - 25, 5);
+            ctx.font = `bold ${fontSize}px Poppins`;
+            ctx.fillText(prizes[i].name, radius - (radius * 0.15), 0);
             
             // Draw value
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.font = '10px Poppins';
-            ctx.fillText(prizes[i].value, radius - 25, 20);
+            ctx.font = `${valueFontSize}px Poppins`;
+            ctx.fillText(prizes[i].value, radius - (radius * 0.15), fontSize);
             ctx.restore();
         }
         
         // Draw center circle
-        const gradient = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, 30);
-        gradient.addColorStop(0, '#FF6B6B');
-        gradient.addColorStop(1, '#EF4444');
+        const centerGradient = ctx.createRadialGradient(
+            centerX, centerY, 5,
+            centerX, centerY, radius * 0.15
+        );
+        centerGradient.addColorStop(0, '#FF6B6B');
+        centerGradient.addColorStop(1, '#EF4444');
         
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = centerGradient;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
+        ctx.arc(centerX, centerY, radius * 0.15, 0, 2 * Math.PI);
         ctx.fill();
         
         // Draw center text
+        const centerFontSize = Math.max(12, radius * 0.06);
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 18px Poppins';
+        ctx.font = `bold ${centerFontSize}px Poppins`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('SPIN', centerX, centerY);
@@ -255,328 +241,529 @@ function initializeWheel() {
         // Draw center border
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
         ctx.stroke();
-    }
+    },
     
-    // Draw initial wheel
-    drawWheel();
-    
-    // Spin functionality
-    spinButton.addEventListener('click', function() {
-        if (this.disabled || isSpinning) return;
+    spin: () => {
+        if (wheel.isSpinning) return;
         
-        // Check if user is logged in
-        const user = localStorage.getItem('trustcade_user');
-        if (!user) {
-            showLoginModal();
+        // Check authentication
+        if (!auth.check()) {
+            modals.showLogin();
             return;
         }
         
-        isSpinning = true;
-        this.disabled = true;
+        // Check if spin is available
+        const nextSpin = storage.getNextSpin();
+        if (Date.now() < nextSpin) {
+            notifications.show('Please wait for your next free spin!', 'info');
+            return;
+        }
         
-        // Update spin count
-        let spinsUsed = parseInt(localStorage.getItem('trustcade_spins')) || 0;
-        localStorage.setItem('trustcade_spins', spinsUsed + 1);
+        // Start spin animation
+        wheel.isSpinning = true;
+        const spinButton = document.getElementById('spinButton');
+        if (spinButton) spinButton.disabled = true;
         
-        // Set next spin time (24 hours from now)
-        const nextSpinTime = Date.now() + (24 * 60 * 60 * 1000);
-        localStorage.setItem('trustcade_nextSpin', nextSpinTime);
+        // Increment spin count
+        storage.incrementSpinCount();
         
-        // Random winning segment (weighted towards better prizes)
+        // Set next spin time
+        storage.setNextSpin(Date.now() + CONFIG.FREE_SPIN_INTERVAL);
+        
+        // Determine winning prize
+        const winningPrize = wheel.selectWinningPrize();
+        
+        // Calculate animation parameters
+        const spins = 5 + Math.random() * 3;
+        const segmentAngle = (2 * Math.PI) / prizes.length;
+        const targetRotation = spins * 2 * Math.PI + 
+            (prizes.indexOf(winningPrize) * segmentAngle) + 
+            (segmentAngle / 2);
+        
+        // Animate spin
+        wheel.animateSpin(targetRotation, winningPrize);
+        
+        // Update countdown timer
+        countdown.update();
+    },
+    
+    selectWinningPrize: () => {
+        // Create weighted array
         const weightedPrizes = [];
         prizes.forEach((prize, index) => {
-            const weight = prize.value === "$0" ? 1 : 2; // Better prizes have higher weight
-            for (let i = 0; i < weight; i++) {
+            for (let i = 0; i < prize.weight; i++) {
                 weightedPrizes.push(index);
             }
         });
         
         const winningIndex = weightedPrizes[Math.floor(Math.random() * weightedPrizes.length)];
-        const winningPrize = prizes[winningIndex];
+        return prizes[winningIndex];
+    },
+    
+    animateSpin: (targetRotation, winningPrize) => {
+        const startTime = Date.now();
         
-        // Calculate spin parameters
-        const spins = 5 + Math.random() * 3; // 5-8 full rotations
-        const segmentAngle = (2 * Math.PI) / prizes.length;
-        const targetRotation = spins * 2 * Math.PI + (winningIndex * segmentAngle) + (segmentAngle / 2);
-        
-        // Animation variables
-        let startTime = null;
-        const duration = 5000; // 5 seconds
-        const easeOut = (t) => 1 - Math.pow(1 - t, 3); // Cubic ease-out
-        
-        function spinAnimation(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / CONFIG.SPIN_ANIMATION_DURATION, 1);
             
-            // Eased progress for smooth deceleration
-            const easedProgress = easeOut(progress);
+            // Cubic ease-out for smooth deceleration
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
             
-            // Calculate current rotation
-            currentRotation = easedProgress * targetRotation;
-            drawWheel(currentRotation);
+            // Update rotation
+            wheel.currentRotation = easedProgress * targetRotation;
+            wheel.draw(wheel.currentRotation);
             
             if (progress < 1) {
-                requestAnimationFrame(spinAnimation);
+                wheel.animationId = requestAnimationFrame(animate);
             } else {
                 // Animation complete
-                isSpinning = false;
+                wheel.isSpinning = false;
                 
-                // Save the win
-                const newWin = saveUserWin(winningPrize.name, winningPrize.value);
-                
-                // Show win notification after a short delay
+                // Save win and show notification
                 setTimeout(() => {
-                    showWinNotification(winningPrize.name, winningPrize.value, newWin.claimCode);
-                    startCountdown(); // Reset timer
+                    const winData = wins.addWin(winningPrize);
+                    notifications.showWin(winningPrize.name, winningPrize.value, winData.claimCode);
                     
-                    // Re-enable spin button after countdown reset
-                    setTimeout(() => {
-                        spinButton.disabled = false;
-                    }, 100);
+                    // Re-enable spin button
+                    const spinButton = document.getElementById('spinButton');
+                    if (spinButton) spinButton.disabled = true; // Will be re-enabled by countdown
                 }, 500);
             }
-        }
-        
-        requestAnimationFrame(spinAnimation);
-    });
-}
-
-// Save user win to localStorage
-function saveUserWin(prize, value) {
-    let userWins = JSON.parse(localStorage.getItem('trustcade_wins')) || [];
-    
-    const newWin = {
-        id: Date.now(),
-        prize: prize,
-        value: value,
-        date: new Date().toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-        }),
-        time: new Date().toLocaleTimeString('en-US', { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-        }),
-        status: "pending",
-        claimCode: `TC-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-        requiresVerification: parseInt(value.replace(/\$|,/g, '')) > 100
-    };
-    
-    userWins.push(newWin);
-    localStorage.setItem('trustcade_wins', JSON.stringify(userWins));
-    
-    // Update user stats
-    updateUserStats();
-    
-    return newWin;
-}
-
-// Update user statistics
-function updateUserStats() {
-    const userWins = JSON.parse(localStorage.getItem('trustcade_wins')) || [];
-    const totalWins = userWins.length;
-    const totalValue = userWins.reduce((sum, win) => {
-        const value = parseInt(win.value.replace(/\$|,/g, '')) || 0;
-        return sum + value;
-    }, 0);
-    
-    // Save stats to localStorage for profile page
-    localStorage.setItem('trustcade_user_stats', JSON.stringify({
-        totalWins,
-        totalValue,
-        lastUpdated: new Date().toISOString()
-    }));
-}
-
-// Show win notification using the built-in notification system
-function showWinNotification(prize, value, claimCode) {
-    const notification = document.getElementById('winNotification');
-    if (!notification) return;
-    
-    // Update notification content
-    document.getElementById('wonPrize').textContent = prize;
-    document.getElementById('wonValue').textContent = value;
-    
-    // Show notification
-    notification.classList.add('show');
-    
-    // Auto-hide after 10 seconds
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 10000);
-    
-    // Setup close button
-    const closeBtn = notification.querySelector('.notification-close');
-    if (closeBtn) {
-        closeBtn.onclick = () => notification.classList.remove('show');
-    }
-    
-    // Setup claim button
-    const claimBtn = notification.querySelector('.notification-btn');
-    if (claimBtn) {
-        claimBtn.onclick = () => {
-            notification.classList.remove('show');
-            window.location.href = 'profile.html';
         };
+        
+        wheel.animationId = requestAnimationFrame(animate);
+    },
+    
+    stopAnimation: () => {
+        if (wheel.animationId) {
+            cancelAnimationFrame(wheel.animationId);
+            wheel.isSpinning = false;
+        }
     }
-}
+};
 
-// Leaderboard data
-const leaderboardData = [
-    { name: "Alex Johnson", wins: 8, value: 5850, avatar: "AJ", status: "Verified" },
-    { name: "Maria Garcia", wins: 6, value: 4200, avatar: "MG", status: "Verified" },
-    { name: "David Chen", wins: 5, value: 3500, avatar: "DC", status: "Verified" },
-    { name: "Sarah Williams", wins: 4, value: 2800, avatar: "SW", status: "Verified" },
-    { name: "Mike Thompson", wins: 3, value: 2100, avatar: "MT", status: "Pending" },
-    { name: "Emma Wilson", wins: 3, value: 1950, avatar: "EW", status: "Verified" },
-    { name: "James Brown", wins: 2, value: 1500, avatar: "JB", status: "Verified" },
-    { name: "Lisa Taylor", wins: 2, value: 1200, avatar: "LT", status: "Verified" },
-    { name: "Robert Miller", wins: 1, value: 999, avatar: "RM", status: "Pending" },
-    { name: "Jennifer Davis", wins: 1, value: 899, avatar: "JD", status: "Verified" }
-];
-
-// Display leaderboard
-function displayLeaderboard() {
-    const leaderboard = document.getElementById('leaderboard');
-    if (!leaderboard) return;
+// ========== COUNTDOWN TIMER ==========
+const countdown = {
+    elements: {},
     
-    leaderboard.innerHTML = leaderboardData.map((player, index) => `
-        <div class="leaderboard-item">
-            <div>
-                <div class="rank-badge ${getRankClass(index)}">
-                    ${index + 1}
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="winner-avatar">${player.avatar}</div>
-                <div>
-                    <strong>${player.name}</strong>
-                    <small style="color: #666; font-size: 0.8rem;">Player</small>
-                </div>
-            </div>
-            <div>
-                <strong>${player.wins}</strong> wins
-            </div>
-            <div>
-                <strong>$${player.value.toLocaleString()}</strong>
-            </div>
-            <div>
-                <span class="${player.status === 'Verified' ? 'verified-badge' : 'pending-badge'}">
-                    ${player.status}
-                </span>
-            </div>
-        </div>
-    `).join('');
-}
-
-function getRankClass(index) {
-    if (index === 0) return 'rank-1';
-    if (index === 1) return 'rank-2';
-    if (index === 2) return 'rank-3';
-    return 'rank-other';
-}
-
-// Mobile menu functionality
-function setupMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+    init: () => {
+        countdown.elements = {
+            hours: document.getElementById('hours'),
+            minutes: document.getElementById('minutes'),
+            seconds: document.getElementById('seconds'),
+            spinButton: document.getElementById('spinButton'),
+            timeLeft: document.getElementById('timeLeft'),
+            nextSpinTime: document.getElementById('nextSpinTime'),
+            spinProgress: document.getElementById('spinProgress')
+        };
+        
+        countdown.update();
+        setInterval(countdown.update, 1000);
+    },
     
-    if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('show');
-        });
+    update: () => {
+        const now = Date.now();
+        const nextSpin = storage.getNextSpin();
+        const timeLeft = nextSpin - now;
         
-        // Close menu when clicking outside
-        document.addEventListener('click', (event) => {
-            if (!mobileMenuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
-                mobileMenu.classList.remove('show');
-            }
-        });
+        if (timeLeft <= 0) {
+            countdown.setReadyState();
+            return;
+        }
         
-        // Close menu when clicking a link
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('show');
+        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        
+        // Update time display
+        if (countdown.elements.hours) {
+            countdown.elements.hours.textContent = hours.toString().padStart(2, '0');
+        }
+        if (countdown.elements.minutes) {
+            countdown.elements.minutes.textContent = minutes.toString().padStart(2, '0');
+        }
+        if (countdown.elements.seconds) {
+            countdown.elements.seconds.textContent = seconds.toString().padStart(2, '0');
+        }
+        if (countdown.elements.timeLeft) {
+            countdown.elements.timeLeft.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Update progress bar
+        const progressPercent = 100 - ((timeLeft / CONFIG.FREE_SPIN_INTERVAL) * 100);
+        if (countdown.elements.spinProgress) {
+            countdown.elements.spinProgress.style.width = `${progressPercent}%`;
+        }
+        
+        // Update next spin time
+        if (countdown.elements.nextSpinTime) {
+            const nextDate = new Date(nextSpin);
+            countdown.elements.nextSpinTime.textContent = 
+                nextDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        // Disable spin button
+        if (countdown.elements.spinButton) {
+            countdown.elements.spinButton.disabled = true;
+            countdown.elements.spinButton.innerHTML = `
+                <i class="fas fa-redo"></i> SPIN NOW
+                <span class="btn-subtext">Free spin available in <span id="timeLeft">${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}</span></span>
+            `;
+        }
+    },
+    
+    setReadyState: () => {
+        if (countdown.elements.spinButton) {
+            countdown.elements.spinButton.disabled = false;
+            countdown.elements.spinButton.innerHTML = `
+                <i class="fas fa-redo"></i> SPIN NOW!
+                <span class="btn-subtext">Free spin available!</span>
+            `;
+        }
+        
+        if (countdown.elements.hours) countdown.elements.hours.textContent = '00';
+        if (countdown.elements.minutes) countdown.elements.minutes.textContent = '00';
+        if (countdown.elements.seconds) countdown.elements.seconds.textContent = '00';
+        if (countdown.elements.timeLeft) countdown.elements.timeLeft.textContent = 'Ready!';
+        if (countdown.elements.spinProgress) countdown.elements.spinProgress.style.width = '100%';
+    }
+};
+
+// ========== WINS MANAGEMENT ==========
+const wins = {
+    addWin: (prize) => {
+        const userWins = storage.getWins();
+        
+        const newWin = {
+            id: utils.generateId(),
+            prize: prize.name,
+            value: prize.value,
+            date: new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            }),
+            time: new Date().toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            }),
+            timestamp: Date.now(),
+            status: "pending",
+            claimCode: `TC-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+            requiresVerification: parseInt(prize.value.replace(/\$|,/g, '')) > 100
+        };
+        
+        userWins.push(newWin);
+        storage.setWins(userWins);
+        stats.update();
+        
+        return newWin;
+    },
+    
+    getRecentWins: (limit = 8) => {
+        const userWins = storage.getWins();
+        return userWins
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .slice(0, limit);
+    },
+    
+    getTotalValue: () => {
+        const userWins = storage.getWins();
+        return userWins.reduce((total, win) => {
+            const value = parseInt(win.value.replace(/\$|,/g, '')) || 0;
+            return total + value;
+        }, 0);
+    },
+    
+    getWinCount: () => {
+        return storage.getWins().length;
+    }
+};
+
+// ========== STATISTICS ==========
+const stats = {
+    init: () => {
+        stats.update();
+        setInterval(stats.update, CONFIG.REFRESH_INTERVAL);
+    },
+    
+    update: () => {
+        // Update user stats
+        const userWins = storage.getWins();
+        const totalWins = userWins.length;
+        const totalValue = wins.getTotalValue();
+        
+        // Save stats
+        localStorage.setItem('trustcade_user_stats', JSON.stringify({
+            totalWins,
+            totalValue,
+            lastUpdated: new Date().toISOString()
+        }));
+        
+        // Update live stats display
+        stats.updateLiveStats();
+    },
+    
+    updateLiveStats: () => {
+        const elements = {
+            totalWinners: document.getElementById('totalWinners'),
+            totalValue: document.getElementById('totalValue'),
+            winsToday: document.getElementById('winsToday'),
+            winRate: document.getElementById('winRate'),
+            lastUpdated: document.getElementById('lastUpdated'),
+            leaderboardUpdate: document.getElementById('leaderboardUpdate')
+        };
+        
+        // Generate realistic live stats
+        const baseStats = {
+            totalWinners: 5247,
+            totalValue: 892450,
+            winsToday: 324
+        };
+        
+        // Add some randomness to make it look live
+        const now = new Date();
+        const hourMultiplier = now.getHours() / 24; // More activity during daytime
+        const randomFactor = 1 + (Math.random() * 0.2 - 0.1); // ±10% random
+        
+        const liveStats = {
+            totalWinners: Math.floor(baseStats.totalWinners * (1 + hourMultiplier * 0.1) * randomFactor),
+            totalValue: Math.floor(baseStats.totalValue * (1 + hourMultiplier * 0.15) * randomFactor),
+            winsToday: Math.floor(baseStats.winsToday * (1 + hourMultiplier * 0.2) * randomFactor),
+            winRate: "1:8"
+        };
+        
+        // Update DOM
+        if (elements.totalWinners) {
+            elements.totalWinners.textContent = utils.formatNumber(liveStats.totalWinners);
+        }
+        if (elements.totalValue) {
+            elements.totalValue.textContent = utils.formatCurrency(liveStats.totalValue);
+        }
+        if (elements.winsToday) {
+            elements.winsToday.textContent = liveStats.winsToday;
+        }
+        if (elements.winRate) {
+            elements.winRate.textContent = liveStats.winRate;
+        }
+        if (elements.lastUpdated) {
+            elements.lastUpdated.textContent = now.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
             });
-        });
-    }
+        }
+        if (elements.leaderboardUpdate) {
+            elements.leaderboardUpdate.textContent = now.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+        }
+    },
     
-    // Update mobile login button based on auth status
-    if (mobileLoginBtn) {
-        const user = localStorage.getItem('trustcade_user');
+    // Grand prize timer
+    initGrandPrizeTimer: () => {
+        const timerElement = document.getElementById('grandPrizeTimer');
+        if (!timerElement) return;
+        
+        // Set next draw to 8 PM
+        const now = new Date();
+        const nextDraw = new Date();
+        nextDraw.setHours(20, 0, 0, 0);
+        
+        if (now > nextDraw) {
+            nextDraw.setDate(nextDraw.getDate() + 1);
+        }
+        
+        const updateTimer = () => {
+            const now = new Date();
+            const timeLeft = nextDraw - now;
+            
+            if (timeLeft <= 0) {
+                timerElement.textContent = "Drawing now!";
+                return;
+            }
+            
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            timerElement.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        };
+        
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+};
+
+// ========== AUTHENTICATION ==========
+const auth = {
+    check: () => {
+        return !!storage.getUser();
+    },
+    
+    login: (email, password) => {
+        // In a real app, this would be an API call
+        if (email && password) {
+            const userData = {
+                email: email,
+                name: email.split('@')[0],
+                joined: new Date().toISOString(),
+                verified: false,
+                id: utils.generateId()
+            };
+            
+            storage.setUser(userData);
+            auth.updateUI();
+            return { success: true, user: userData };
+        }
+        return { success: false, error: 'Please enter both email and password.' };
+    },
+    
+    logout: () => {
+        storage.setUser(null);
+        auth.updateUI();
+    },
+    
+    updateUI: () => {
+        const user = storage.getUser();
+        const loginBtn = document.getElementById('loginBtn');
+        const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+        const profileBtn = document.getElementById('profileBtn');
+        
         if (user) {
-            mobileLoginBtn.textContent = 'Profile';
-            mobileLoginBtn.href = 'profile.html';
+            // User is logged in
+            if (loginBtn) {
+                loginBtn.innerHTML = '<i class="fas fa-user"></i> Profile';
+                loginBtn.href = 'profile.html';
+                loginBtn.id = 'profileBtn';
+            }
+            if (mobileLoginBtn) {
+                mobileLoginBtn.innerHTML = '<i class="fas fa-user"></i> Profile';
+                mobileLoginBtn.href = 'profile.html';
+            }
+        } else {
+            // User is logged out
+            if (profileBtn) {
+                profileBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                profileBtn.href = 'login.html';
+                profileBtn.id = 'loginBtn';
+            }
+            if (mobileLoginBtn) {
+                mobileLoginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                mobileLoginBtn.href = 'login.html';
+            }
         }
     }
-}
+};
 
-// Update authentication UI
-function updateAuthUI() {
-    const user = localStorage.getItem('trustcade_user');
-    const loginBtn = document.querySelector('a.btn-login');
-    const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+// ========== NOTIFICATIONS ==========
+const notifications = {
+    show: (message, type = 'info') => {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+                <button class="notification-close">&times;</button>
+            </div>
+        `;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Show with animation
+        setTimeout(() => notification.classList.add('show'), 10);
+        
+        // Auto remove
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+        
+        // Close button
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', () => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        });
+    },
     
-    if (user) {
-        const userData = JSON.parse(user);
+    showWin: (prize, value, claimCode) => {
+        const notification = document.getElementById('winNotification');
+        if (!notification) return;
         
-        // Update desktop login button
-        if (loginBtn) {
-            loginBtn.innerHTML = '<i class="fas fa-user"></i> Profile';
-            loginBtn.href = 'profile.html';
-            loginBtn.classList.remove('btn-login');
-            loginBtn.classList.add('btn-profile');
-            loginBtn.id = 'profileBtn';
-        }
+        // Update content
+        const wonPrizeElement = notification.querySelector('#wonPrize');
+        const wonValueElement = notification.querySelector('#wonValue');
         
-        // Update mobile login button
-        if (mobileLoginBtn) {
-            mobileLoginBtn.textContent = 'Profile';
-            mobileLoginBtn.href = 'profile.html';
-        }
-    } else {
-        // Reset to login buttons
-        if (loginBtn) {
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
-            loginBtn.href = 'login.html';
-            loginBtn.classList.remove('btn-profile');
-            loginBtn.classList.add('btn-login');
-            loginBtn.id = 'loginBtn';
+        if (wonPrizeElement) wonPrizeElement.textContent = prize;
+        if (wonValueElement) wonValueElement.textContent = value;
+        
+        // Show notification
+        notification.classList.add('show');
+        
+        // Auto hide
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 10000);
+        
+        // Setup close button
+        const closeBtn = notification.querySelector('.notification-close');
+        if (closeBtn) {
+            closeBtn.onclick = () => notification.classList.remove('show');
         }
         
-        if (mobileLoginBtn) {
-            mobileLoginBtn.textContent = 'Login';
-            mobileLoginBtn.href = 'login.html';
+        // Setup claim button
+        const claimBtn = notification.querySelector('.notification-btn');
+        if (claimBtn) {
+            claimBtn.onclick = () => {
+                notification.classList.remove('show');
+                if (auth.check()) {
+                    window.location.href = 'profile.html';
+                } else {
+                    modals.showLogin();
+                }
+            };
         }
+        
+        // Log win for debugging
+        console.log(`🎉 User won: ${prize} (${value}) - Claim Code: ${claimCode}`);
     }
-}
+};
 
-// Login modal functionality
-function showLoginModal() {
-    const modal = document.getElementById('loginModal');
-    if (modal) {
+// ========== MODALS ==========
+const modals = {
+    showLogin: () => {
+        const modal = document.getElementById('loginModal');
+        if (!modal) {
+            // Fallback: redirect to login page
+            window.location.href = 'login.html';
+            return;
+        }
+        
         modal.classList.add('show');
         
-        // Close modal when clicking X
+        // Close button
         const closeBtn = modal.querySelector('.modal-close');
         if (closeBtn) {
             closeBtn.onclick = () => modal.classList.remove('show');
         }
         
-        // Close modal when clicking outside
+        // Close on outside click
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.remove('show');
             }
         });
         
-        // Handle quick login form
+        // Handle form submission
         const form = modal.querySelector('#quickLoginForm');
         if (form) {
             form.onsubmit = (e) => {
@@ -584,121 +771,326 @@ function showLoginModal() {
                 const email = form.querySelector('input[type="email"]').value;
                 const password = form.querySelector('input[type="password"]').value;
                 
-                // Simple validation
-                if (email && password) {
-                    // Simulate login (in real app, this would be an API call)
-                    const userData = {
-                        email: email,
-                        name: email.split('@')[0],
-                        joined: new Date().toISOString(),
-                        verified: false
-                    };
-                    
-                    localStorage.setItem('trustcade_user', JSON.stringify(userData));
-                    updateAuthUI();
+                const result = auth.login(email, password);
+                if (result.success) {
                     modal.classList.remove('show');
-                    alert('Login successful! You can now spin the wheel.');
+                    notifications.show('Login successful! You can now spin the wheel.', 'success');
                 } else {
-                    alert('Please enter both email and password.');
+                    notifications.show(result.error, 'error');
                 }
             };
         }
-    }
-}
-
-// Handle profile button click
-function setupProfileButton() {
-    const profileBtn = document.getElementById('profileBtn');
-    if (profileBtn) {
-        profileBtn.addEventListener('click', (e) => {
-            const user = localStorage.getItem('trustcade_user');
-            if (!user) {
-                e.preventDefault();
-                showLoginModal();
-            }
+        
+        // Social login buttons
+        const socialButtons = modal.querySelectorAll('.login-option-btn');
+        socialButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                notifications.show('Social login would be implemented in a production app.', 'info');
+            });
         });
     }
-}
+};
 
-// Initialize newsletter form
-function setupNewsletter() {
-    const newsletterForm = document.querySelector('.newsletter-input');
-    if (newsletterForm) {
-        const input = newsletterForm.querySelector('input');
+// ========== MOBILE MENU ==========
+const mobileMenu = {
+    init: () => {
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const menu = document.getElementById('mobileMenu');
+        const closeBtn = document.getElementById('mobileMenuClose');
+        
+        if (!menuBtn || !menu) return;
+        
+        // Open menu
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Close menu
+        const closeMenu = () => {
+            menu.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeMenu);
+        }
+        
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                closeMenu();
+            }
+        });
+        
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menu.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+        
+        // Close when clicking links (optional delay)
+        const menuLinks = menu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                setTimeout(closeMenu, 300); // Small delay for better UX
+            });
+        });
+    }
+};
+
+// ========== UI COMPONENTS ==========
+const ui = {
+    initRecentWinners: () => {
+        const winnersGrid = document.getElementById('recentWinnersGrid');
+        if (!winnersGrid) return;
+        
+        const winners = [
+            { name: "LuckyStar23", prize: "iPhone 17 Pro", value: "$1,299", time: "2 minutes ago", initial: "LS" },
+            { name: "MikeWins", prize: "$500 Cash", value: "$500", time: "15 minutes ago", initial: "MW" },
+            { name: "SarahG", prize: "PS5 Pro", value: "$499", time: "1 hour ago", initial: "SG" },
+            { name: "JohnDoe", prize: "MacBook Pro", value: "$1,599", time: "3 hours ago", initial: "JD" },
+            { name: "PrizeHunter", prize: "AirPods Pro", value: "$249", time: "5 hours ago", initial: "PH" },
+            { name: "WinMaster", prize: "$100 Gift Card", value: "$100", time: "8 hours ago", initial: "WM" },
+            { name: "GamerGirl", prize: "Nintendo Switch", value: "$299", time: "1 day ago", initial: "GG" },
+            { name: "SpinKing", prize: "Smart Watch", value: "$399", time: "1 day ago", initial: "SK" }
+        ];
+        
+        winnersGrid.innerHTML = winners.map(winner => `
+            <div class="winner-card">
+                <div class="winner-avatar">${winner.initial}</div>
+                <div class="winner-info">
+                    <h4>${winner.name}</h4>
+                    <p class="winner-prize">${winner.prize}</p>
+                    <span class="winner-time"><i class="far fa-clock"></i> ${winner.time}</span>
+                </div>
+            </div>
+        `).join('');
+    },
+    
+    initLeaderboard: () => {
+        const leaderboard = document.getElementById('leaderboard');
+        if (!leaderboard) return;
+        
+        const leaderboardData = [
+            { rank: 1, name: "LuckyStar23", wins: 47, value: 12450, avatar: "LS", status: "verified" },
+            { rank: 2, name: "PrizeHunter", wins: 32, value: 8760, avatar: "PH", status: "verified" },
+            { rank: 3, name: "WinMaster", wins: 28, value: 7230, avatar: "WM", status: "verified" },
+            { rank: 4, name: "SarahG", wins: 25, value: 6450, avatar: "SG", status: "verified" },
+            { rank: 5, name: "MikeWins", wins: 22, value: 5890, avatar: "MW", status: "pending" }
+        ];
+        
+        leaderboard.innerHTML = leaderboardData.map(player => `
+            <div class="leaderboard-item" role="listitem">
+                <span class="rank ${player.rank <= 3 ? ['gold', 'silver', 'bronze'][player.rank - 1] : ''}">
+                    ${player.rank}
+                </span>
+                <span class="player">
+                    <i class="fas fa-${player.rank === 1 ? 'crown' : 'user'}"></i> ${player.name}
+                </span>
+                <span class="wins">${player.wins} wins</span>
+                <span class="value">$${utils.formatNumber(player.value)}</span>
+                <span class="status ${player.status}">${player.status}</span>
+            </div>
+        `).join('');
+    },
+    
+    initNewsletter: () => {
+        const newsletterForm = document.querySelector('.newsletter-input');
+        if (!newsletterForm) return;
+        
+        const input = newsletterForm.querySelector('input[type="email"]');
         const button = newsletterForm.querySelector('button');
         
-        button.addEventListener('click', () => {
-            if (input.value && input.value.includes('@')) {
-                alert('Thank you for subscribing to our newsletter!');
-                input.value = '';
-            } else {
-                alert('Please enter a valid email address.');
+        const handleSubmit = () => {
+            const email = input.value.trim();
+            
+            if (!email || !email.includes('@')) {
+                notifications.show('Please enter a valid email address.', 'error');
+                return;
             }
-        });
+            
+            // In a real app, this would be an API call
+            notifications.show('Thank you for subscribing to our newsletter!', 'success');
+            input.value = '';
+            
+            // Log subscription
+            const subscriptions = JSON.parse(localStorage.getItem('trustcade_newsletter') || '[]');
+            subscriptions.push({ email, date: new Date().toISOString() });
+            localStorage.setItem('trustcade_newsletter', JSON.stringify(subscriptions));
+        };
         
+        button.addEventListener('click', handleSubmit);
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                button.click();
+                handleSubmit();
+            }
+        });
+    },
+    
+    initSmoothScrolling: () => {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    },
+    
+    initBackToTop: () => {
+        const backToTopBtn = document.getElementById('backToTop');
+        if (!backToTopBtn) return;
+        
+        const toggleVisibility = () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        };
+        
+        window.addEventListener('scroll', utils.throttle(toggleVisibility, 100));
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    },
+    
+    initRefreshButtons: () => {
+        // Leaderboard refresh
+        const refreshLeaderboardBtn = document.getElementById('refreshLeaderboard');
+        if (refreshLeaderboardBtn) {
+            refreshLeaderboardBtn.addEventListener('click', () => {
+                ui.initLeaderboard();
+                notifications.show('Leaderboard refreshed!', 'success');
+            });
+        }
+        
+        // Stats refresh
+        const refreshStatsBtn = document.getElementById('refreshStats');
+        if (refreshStatsBtn) {
+            refreshStatsBtn.addEventListener('click', () => {
+                stats.updateLiveStats();
+                notifications.show('Statistics updated!', 'success');
+            });
+        }
+    }
+};
+
+// ========== INITIALIZATION ==========
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize loading screen (if present)
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+        setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 300);
+        }, 500);
+    }
+    
+    // Initialize all components
+    wheel.init();
+    countdown.init();
+    stats.init();
+    stats.initGrandPrizeTimer();
+    mobileMenu.init();
+    auth.updateUI();
+    ui.initRecentWinners();
+    ui.initLeaderboard();
+    ui.initNewsletter();
+    ui.initSmoothScrolling();
+    ui.initBackToTop();
+    ui.initRefreshButtons();
+    
+    // Setup login button
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+            if (auth.check()) {
+                // Already logged in, go to profile
+                window.location.href = 'profile.html';
+            } else {
+                // Not logged in, show modal or go to login page
+                if (window.location.pathname.includes('index.html') || 
+                    window.location.pathname === '/') {
+                    e.preventDefault();
+                    modals.showLogin();
+                }
+                // Otherwise, default link behavior to login.html
             }
         });
     }
-}
-
-// Setup smooth scrolling for anchor links
-function setupSmoothScrolling() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href === '#') return;
-            
-            const target = document.querySelector(href);
-            if (target) {
+    
+    // Setup profile button (if created by auth.updateUI)
+    const profileBtn = document.getElementById('profileBtn');
+    if (profileBtn) {
+        profileBtn.addEventListener('click', (e) => {
+            if (!auth.check()) {
                 e.preventDefault();
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                modals.showLogin();
             }
         });
-    });
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components
-    displayRecentWinners();
-    updateLiveStats();
-    startGrandPrizeTimer();
-    startCountdown();
-    initializeWheel();
-    displayLeaderboard();
-    setupMobileMenu();
-    updateAuthUI();
-    setupProfileButton();
-    setupNewsletter();
-    setupSmoothScrolling();
+    }
     
-    // Update live stats every minute
-    setInterval(updateLiveStats, 60000);
+    // Check online status
+    window.addEventListener('online', () => {
+        notifications.show('You are back online!', 'success');
+    });
+    
+    window.addEventListener('offline', () => {
+        notifications.show('You are offline. Some features may not work.', 'error');
+    });
     
     // Log initialization
     console.log('TrustCade initialized successfully!');
+    console.log('Features loaded:', {
+        wheel: !!wheel.canvas,
+        countdown: !!countdown.elements.spinButton,
+        auth: auth.check(),
+        wins: wins.getWinCount()
+    });
 });
 
-// Make functions available globally
-window.saveUserWin = saveUserWin;
-window.showWinNotification = showWinNotification;
-window.showLoginModal = showLoginModal;
-window.updateAuthUI = updateAuthUI;
-// Secret admin access (Ctrl + Shift + A)
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-        const password = prompt('Enter admin password:');
-        if (password === 'Admin123!') {
-            localStorage.setItem('trustcade_admin', 'true');
-            alert('Admin mode activated!');
-            location.reload();
-        }
+// ========== GLOBAL EXPORTS ==========
+// Make key functions available globally
+window.TrustCade = {
+    wheel,
+    auth,
+    wins,
+    stats,
+    notifications,
+    utils
+};
+
+// Development helper: Reset all data
+window.resetTrustCadeData = () => {
+    if (confirm('Are you sure you want to reset all TrustCade data?')) {
+        storage.clearAll();
+        location.reload();
     }
-});
+};
+
+// Development helper: Add test win
+window.addTestWin = (prizeName = 'iPhone 17') => {
+    const prize = prizes.find(p => p.name.includes(prizeName)) || prizes[0];
+    const winData = wins.addWin(prize);
+    notifications.showWin(prize.name, prize.value, winData.claimCode);
+    return winData;
+};
