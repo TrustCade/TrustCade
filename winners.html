@@ -1,1022 +1,933 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Winners - TrustCade</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .winners-page {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem 20px;
-            min-height: 100vh;
-        }
-        
-        .winners-hero {
-            text-align: center;
-            margin-bottom: 3rem;
-            color: white;
-            padding: 3rem 2rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .winners-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
-            background-size: cover;
-        }
-        
-        .winners-hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            position: relative;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .winners-hero .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-            position: relative;
-        }
-        
-        .hero-stat {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            border-radius: 15px;
-            min-width: 180px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .hero-stat h3 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: white;
-        }
-        
-        .hero-stat p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
-        .winners-controls {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .controls-grid {
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            gap: 1.5rem;
-            align-items: center;
-        }
-        
-        .search-container {
-            position: relative;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 1rem 3rem 1rem 1.5rem;
-            border: 2px solid #e9ecef;
-            border-radius: 50px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: #8B5CF6;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-        }
-        
-        .search-icon {
-            position: absolute;
-            right: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #667eea;
-        }
-        
-        .filter-group {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .filter-select {
-            padding: 1rem 1.5rem;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            background: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 150px;
-        }
-        
-        .filter-select:focus {
-            outline: none;
-            border-color: #8B5CF6;
-        }
-        
-        .view-toggle {
-            display: flex;
-            gap: 0.5rem;
-            background: #f8f9fa;
-            padding: 0.5rem;
-            border-radius: 10px;
-        }
-        
-        .view-btn {
-            padding: 0.8rem 1.5rem;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .view-btn:hover {
-            background: rgba(139, 92, 246, 0.1);
-        }
-        
-        .view-btn.active {
-            background: #8B5CF6;
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-        
-        /* Table View */
-        .winners-table-container {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin: 2rem 0;
-        }
-        
-        .table-header {
-            background: linear-gradient(135deg, #8B5CF6, #667eea);
-            color: white;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .table-header h2 {
-            margin: 0;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .table-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-        
-        .table-count {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
-        .winners-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .winners-table thead {
-            background: #f8f9fa;
-        }
-        
-        .winners-table th {
-            padding: 1.5rem;
-            text-align: left;
-            font-weight: 600;
-            color: #555;
-            border-bottom: 2px solid #e9ecef;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .winners-table tbody tr {
-            border-bottom: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-        }
-        
-        .winners-table tbody tr:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
-        }
-        
-        .winners-table td {
-            padding: 1.5rem;
-            vertical-align: middle;
-        }
-        
-        .winner-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .winner-avatar {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #8B5CF6, #667eea);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        
-        .winner-details h4 {
-            margin: 0 0 0.3rem 0;
-            font-size: 1.1rem;
-        }
-        
-        .winner-details .location {
-            font-size: 0.85rem;
-            color: #666;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        
-        .prize-cell {
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .value-cell {
-            font-weight: 700;
-            color: #10B981;
-            font-size: 1.1rem;
-        }
-        
-        .date-cell {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        
-        .status-verified {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-        
-        .status-pending {
-            background: rgba(245, 158, 11, 0.1);
-            color: #F59E0B;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-        
-        .status-shipped {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3B82F6;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-        
-        /* Card View */
-        .winner-card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .winner-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            border: 1px solid #e9ecef;
-        }
-        
-        .winner-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            border-color: #8B5CF6;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #8B5CF6, #667eea);
-            color: white;
-            padding: 1.5rem;
-            position: relative;
-        }
-        
-        .card-avatar {
-            width: 80px;
-            height: 80px;
-            background: white;
-            color: #8B5CF6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.8rem;
-            margin: 0 auto 1rem;
-            border: 4px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .card-winner-name {
-            text-align: center;
-            margin: 0;
-            font-size: 1.3rem;
-        }
-        
-        .card-winner-location {
-            text-align: center;
-            opacity: 0.9;
-            font-size: 0.9rem;
-            margin-top: 0.3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.3rem;
-        }
-        
-        .card-content {
-            padding: 1.5rem;
-        }
-        
-        .prize-highlight {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .prize-highlight h3 {
-            color: #333;
-            margin: 0 0 0.5rem 0;
-            font-size: 1.2rem;
-        }
-        
-        .prize-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #10B981;
-            margin: 0.5rem 0;
-        }
-        
-        .card-details {
-            display: grid;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .detail-item i {
-            color: #8B5CF6;
-            width: 20px;
-        }
-        
-        .card-footer {
-            padding: 1rem 1.5rem 1.5rem;
-            border-top: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        /* Pagination */
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-        }
-        
-        .pagination-btn {
-            padding: 0.8rem 1.5rem;
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .pagination-btn:hover:not(:disabled) {
-            border-color: #8B5CF6;
-            color: #8B5CF6;
-        }
-        
-        .pagination-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .page-numbers {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .page-number {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .page-number:hover:not(.active) {
-            background: #f8f9fa;
-        }
-        
-        .page-number.active {
-            background: #8B5CF6;
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-        
-        .items-per-page {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .items-select {
-            padding: 0.5rem;
-            border: 1px solid #e9ecef;
-            border-radius: 5px;
-            background: white;
-        }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .empty-icon {
-            font-size: 4rem;
-            color: #e9ecef;
-            margin-bottom: 1.5rem;
-        }
-        
-        .empty-state h3 {
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-        
-        .empty-state p {
-            color: #999;
-            max-width: 400px;
-            margin: 0 auto 1.5rem;
-        }
-        
-        /* Winner Modal */
-        .winner-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .winner-modal-overlay.show {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .winner-modal {
-            background: white;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideUp 0.3s ease;
-            position: relative;
-        }
-        
-        .modal-close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #666;
-            cursor: pointer;
-            padding: 0.5rem;
-            z-index: 1;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        /* Trust Section */
-        .trust-section {
-            background: white;
-            border-radius: 15px;
-            padding: 3rem 2rem;
-            margin: 3rem 0;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .trust-section h3 {
-            color: #333;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .trust-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .trust-feature {
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .trust-feature:hover {
-            transform: translateY(-5px);
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .trust-feature i {
-            font-size: 2.5rem;
-            color: #8B5CF6;
-            margin-bottom: 1rem;
-        }
-        
-        .trust-feature h4 {
-            margin: 0 0 0.5rem 0;
-            color: #333;
-        }
-        
-        .trust-feature p {
-            color: #666;
-            font-size: 0.9rem;
-            margin: 0;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .controls-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .filter-group {
-                flex-wrap: wrap;
-            }
-            
-            .winner-card-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .winners-hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .hero-stat {
-                min-width: 140px;
-                padding: 1rem;
-            }
-            
-            .hero-stat h3 {
-                font-size: 2rem;
-            }
-            
-            .winners-table {
-                font-size: 0.9rem;
-            }
-            
-            .winners-table th,
-            .winners-table td {
-                padding: 1rem;
-            }
-            
-            .winner-info {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-            
-            .winner-avatar {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-            
-            .winner-card-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .pagination-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .page-numbers {
-                order: -1;
-            }
-            
-            .trust-features {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .winners-hero {
-                padding: 2rem 1rem;
-            }
-            
-            .winners-hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .hero-stats {
-                flex-direction: column;
-                align-items: center;
-                gap: 1rem;
-            }
-            
-            .hero-stat {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .view-toggle {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .view-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1><i class="fas fa-gift"></i> TrustCade</h1>
-            </div>
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="winners.html" class="active"><i class="fas fa-trophy"></i> Winners</a>
-                <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
-                <a href="index.html#spin" class="btn-spin">SPIN NOW</a>
-                <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
-            </nav>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
+// winners.js - TrustCade Winners Page JavaScript
+// Complete functionality for filtering, searching, and displaying winners
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html">Home</a>
-        <a href="winners.html">Winners</a>
-        <a href="profile.html">My Profile</a>
-        <a href="index.html#spin">Spin Now</a>
-        <a href="login.html">Login</a>
-        <a href="register.html">Register</a>
-    </div>
+// ========== CONFIGURATION ==========
+const CONFIG = {
+    ITEMS_PER_PAGE: 20,
+    API_DELAY: 300, // Simulated API delay in ms
+    MAX_WINNERS: 5247,
+    AUTO_REFRESH_INTERVAL: 60000 // 1 minute
+};
 
-    <div class="winners-page">
-        <!-- Hero Section -->
-        <div class="winners-hero">
-            <h1><i class="fas fa-trophy"></i> 5,247+ WINNERS CLUB</h1>
-            <p class="subtitle">Real people winning real prizes every day. Join our community of verified winners!</p>
-            
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <h3>5,247</h3>
-                    <p>Total Winners</p>
-                </div>
-                <div class="hero-stat">
-                    <h3>$892K</h3>
-                    <p>Total Value Won</p>
-                </div>
-                <div class="hero-stat">
-                    <h3>98%</h3>
-                    <p>Verified Winners</p>
-                </div>
-                <div class="hero-stat">
-                    <h3>24/7</h3>
-                    <p>Live Updates</p>
-                </div>
-            </div>
-        </div>
+// ========== DATA GENERATION ==========
+const winnersData = generateWinnersData(100); // Generate 100 sample winners
 
-        <!-- Controls Section -->
-        <div class="winners-controls">
-            <div class="controls-grid">
-                <div class="search-container">
-                    <input type="text" 
-                           id="searchInput" 
-                           class="search-input" 
-                           placeholder="Search winners by name, prize, or location...">
-                    <i class="fas fa-search search-icon"></i>
-                </div>
-                
-                <div class="filter-group">
-                    <select id="statusFilter" class="filter-select">
-                        <option value="">All Status</option>
-                        <option value="verified">Verified</option>
-                        <option value="pending">Pending</option>
-                        <option value="shipped">Shipped</option>
-                    </select>
-                    
-                    <select id="prizeFilter" class="filter-select">
-                        <option value="">All Prizes</option>
-                        <option value="iphone">iPhone</option>
-                        <option value="cash">Cash</option>
-                        <option value="gaming">Gaming</option>
-                        <option value="electronics">Electronics</option>
-                    </select>
-                    
-                    <select id="sortFilter" class="filter-select">
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="value_high">Highest Value</option>
-                        <option value="value_low">Lowest Value</option>
-                    </select>
-                </div>
-                
-                <div class="view-toggle">
-                    <button id="tableViewBtn" class="view-btn active">
-                        <i class="fas fa-table"></i> Table
-                    </button>
-                    <button id="cardViewBtn" class="view-btn">
-                        <i class="fas fa-th-large"></i> Cards
-                    </button>
-                </div>
-            </div>
-        </div>
+function generateWinnersData(count) {
+    const firstNames = [
+        "Alex", "Jamie", "Taylor", "Morgan", "Casey", "Jordan", "Riley", "Quinn",
+        "Avery", "Blake", "Charlie", "Dakota", "Emerson", "Finley", "Harley",
+        "Justice", "Kai", "London", "Marley", "Noah", "Ocean", "Phoenix", "River",
+        "Rowan", "Sage", "Skyler", "Storm", "Sunny", "Terry", "Winter"
+    ];
+    
+    const lastNames = [
+        "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller",
+        "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez",
+        "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"
+    ];
+    
+    const locations = [
+        { city: "New York", state: "NY", country: "US", flag: "🇺🇸" },
+        { city: "Los Angeles", state: "CA", country: "US", flag: "🇺🇸" },
+        { city: "Chicago", state: "IL", country: "US", flag: "🇺🇸" },
+        { city: "Miami", state: "FL", country: "US", flag: "🇺🇸" },
+        { city: "London", state: "", country: "UK", flag: "🇬🇧" },
+        { city: "Toronto", state: "ON", country: "CA", flag: "🇨🇦" },
+        { city: "Sydney", state: "NSW", country: "AU", flag: "🇦🇺" },
+        { city: "Berlin", state: "", country: "DE", flag: "🇩🇪" },
+        { city: "Paris", state: "", country: "FR", flag: "🇫🇷" },
+        { city: "Tokyo", state: "", country: "JP", flag: "🇯🇵" }
+    ];
+    
+    const prizes = [
+        { name: "iPhone 17 Pro", value: 1299, category: "iphone" },
+        { name: "MacBook Pro M3", value: 1599, category: "electronics" },
+        { name: "PlayStation 5 Pro", value: 499, category: "gaming" },
+        { name: "Nintendo Switch OLED", value: 349, category: "gaming" },
+        { name: "$1000 Cash", value: 1000, category: "cash" },
+        { name: "$500 Amazon Gift Card", value: 500, category: "cash" },
+        { name: "AirPods Pro 2", value: 249, category: "electronics" },
+        { name: "Apple Watch Ultra", value: 799, category: "electronics" },
+        { name: "Samsung Galaxy S24", value: 899, category: "electronics" },
+        { name: "Gaming PC RTX 4090", value: 2499, category: "gaming" },
+        { name: "Smart TV 65\"", value: 699, category: "electronics" },
+        { name: "Drone Pro", value: 899, category: "electronics" },
+        { name: "$250 Steam Gift Card", value: 250, category: "cash" },
+        { name: "iPad Pro 12.9\"", value: 1099, category: "electronics" },
+        { name: "VR Headset", value: 399, category: "gaming" }
+    ];
+    
+    const statuses = [
+        { type: "verified", label: "Verified", color: "success", icon: "fa-check-circle" },
+        { type: "pending", label: "Pending", color: "warning", icon: "fa-clock" },
+        { type: "shipped", label: "Shipped", color: "info", icon: "fa-truck" }
+    ];
+    
+    const winners = [];
+    const now = new Date();
+    
+    for (let i = 0; i < count; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const location = locations[Math.floor(Math.random() * locations.length)];
+        const prize = prizes[Math.floor(Math.random() * prizes.length)];
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        
+        // Generate a random date within the last 90 days
+        const daysAgo = Math.floor(Math.random() * 90);
+        const winDate = new Date(now);
+        winDate.setDate(winDate.getDate() - daysAgo);
+        
+        // Create winner ID
+        const winnerId = `WIN${String(1000 + i).padStart(4, '0')}`;
+        
+        winners.push({
+            id: winnerId,
+            index: i + 1,
+            firstName,
+            lastName,
+            fullName: `${firstName} ${lastName}`,
+            username: `${firstName.toLowerCase()}${Math.floor(Math.random() * 1000)}`,
+            initials: `${firstName[0]}${lastName[0]}`,
+            location: `${location.city}${location.state ? ', ' + location.state : ''}`,
+            country: location.country,
+            flag: location.flag,
+            prize: prize.name,
+            prizeCategory: prize.category,
+            value: prize.value,
+            formattedValue: `$${prize.value.toLocaleString()}`,
+            date: winDate,
+            formattedDate: winDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }),
+            timeAgo: getTimeAgo(winDate),
+            status: status.type,
+            statusLabel: status.label,
+            statusIcon: status.icon,
+            statusColor: status.color,
+            deliveryProof: Math.random() > 0.3 ? `delivery_${winnerId}.jpg` : null,
+            claimCode: `TC-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+            verified: status.type === 'verified',
+            avatarColor: getRandomColor()
+        });
+    }
+    
+    // Sort by date (newest first)
+    return winners.sort((a, b) => b.date - a.date);
+}
 
-        <!-- Table View -->
-        <div class="winners-table-container" id="tableView">
-            <div class="table-header">
-                <h2><i class="fas fa-list"></i> All Winners</h2>
-                <div class="table-actions">
-                    <span class="table-count" id="tableCount">Loading...</span>
-                    <select id="tableItemsPerPage" class="filter-select" style="padding: 0.5rem;">
-                        <option value="20">20 per page</option>
-                        <option value="50">50 per page</option>
-                        <option value="100">100 per page</option>
-                    </select>
-                </div>
-            </div>
-            
-            <table class="winners-table">
-                <thead>
-                    <tr>
-                        <th>Winner</th>
-                        <th>Prize</th>
-                        <th>Value</th>
-                        <th>Date Won</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="winnersTableBody">
-                    <!-- Winners loaded via JavaScript -->
-                </tbody>
-            </table>
-        </div>
+function getTimeAgo(date) {
+    const now = new Date();
+    const diffInMs = now - date;
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    
+    if (diffInDays === 0) return "Today";
+    if (diffInDays === 1) return "Yesterday";
+    if (diffInDays < 7) return `${diffInDays} days ago`;
+    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+    return `${Math.floor(diffInDays / 30)} months ago`;
+}
 
-        <!-- Card View -->
-        <div class="winner-card-grid" id="cardView" style="display: none;">
-            <!-- Cards loaded via JavaScript -->
-        </div>
+function getRandomColor() {
+    const colors = [
+        '#8B5CF6', '#10B981', '#3B82F6', '#EF4444', '#F59E0B',
+        '#6366F1', '#EC4899', '#14B8A6', '#F97316', '#8B5CF6'
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
 
-        <!-- Empty State -->
-        <div class="empty-state" id="emptyState" style="display: none;">
-            <div class="empty-icon">
-                <i class="fas fa-search"></i>
-            </div>
-            <h3>No Winners Found</h3>
-            <p>Try adjusting your search or filters to find what you're looking for.</p>
-            <button id="resetFilters" class="btn-view-all">
-                <i class="fas fa-redo"></i> Reset All Filters
-            </button>
-        </div>
+// ========== STATE MANAGEMENT ==========
+let state = {
+    currentView: 'table',
+    currentPage: 1,
+    itemsPerPage: CONFIG.ITEMS_PER_PAGE,
+    searchQuery: '',
+    statusFilter: '',
+    prizeFilter: '',
+    sortBy: 'newest',
+    filteredWinners: [...winnersData],
+    isLoading: false
+};
 
-        <!-- Pagination -->
-        <div class="pagination-container" id="pagination">
-            <button id="prevPage" class="pagination-btn" disabled>
-                <i class="fas fa-chevron-left"></i> Previous
-            </button>
-            
-            <div class="page-numbers" id="pageNumbers">
-                <!-- Page numbers generated by JavaScript -->
-            </div>
-            
-            <button id="nextPage" class="pagination-btn">
-                Next <i class="fas fa-chevron-right"></i>
-            </button>
-            
-            <div class="items-per-page">
-                <span>Showing</span>
-                <span id="currentRange">1-20</span>
-                <span>of</span>
-                <span id="totalWinners">5,247</span>
-                <span>winners</span>
-            </div>
-        </div>
+// ========== DOM ELEMENTS ==========
+const elements = {
+    // View toggles
+    tableViewBtn: document.getElementById('tableViewBtn'),
+    cardViewBtn: document.getElementById('cardViewBtn'),
+    tableView: document.getElementById('tableView'),
+    cardView: document.getElementById('cardView'),
+    
+    // Filters
+    searchInput: document.getElementById('searchInput'),
+    statusFilter: document.getElementById('statusFilter'),
+    prizeFilter: document.getElementById('prizeFilter'),
+    sortFilter: document.getElementById('sortFilter'),
+    
+    // Content containers
+    winnersTableBody: document.getElementById('winnersTableBody'),
+    cardViewContainer: document.getElementById('cardView'),
+    emptyState: document.getElementById('emptyState'),
+    
+    // Pagination
+    prevPageBtn: document.getElementById('prevPage'),
+    nextPageBtn: document.getElementById('nextPage'),
+    pageNumbers: document.getElementById('pageNumbers'),
+    currentRange: document.getElementById('currentRange'),
+    totalWinners: document.getElementById('totalWinners'),
+    tableCount: document.getElementById('tableCount'),
+    itemsPerPageSelect: document.getElementById('tableItemsPerPage'),
+    
+    // Reset button
+    resetFiltersBtn: document.getElementById('resetFilters'),
+    
+    // Modal
+    winnerModal: document.getElementById('winnerModal'),
+    closeModalBtn: document.getElementById('closeModal'),
+    winnerModalContent: document.getElementById('winnerModalContent')
+};
 
-        <!-- Trust Section -->
-        <div class="trust-section">
-            <h3><i class="fas fa-shield-alt"></i> 100% Verified & Trusted</h3>
-            <p>Every winner is thoroughly verified with proof of delivery. No fake prizes, no fake winners!</p>
-            
-            <div class="trust-features">
-                <div class="trust-feature">
-                    <i class="fas fa-user-check"></i>
-                    <h4>Verified Winners</h4>
-                    <p>Every winner is personally verified with ID and delivery proof</p>
-                </div>
-                <div class="trust-feature">
-                    <i class="fas fa-gift"></i>
-                    <h4>Real Prizes</h4>
-                    <p>Only genuine products from authorized retailers</p>
-                </div>
-                <div class="trust-feature">
-                    <i class="fas fa-truck"></i>
-                    <h4>Free Shipping</h4>
-                    <p>All prizes shipped worldwide at no extra cost</p>
-                </div>
-                <div class="trust-feature">
-                    <i class="fas fa-lock"></i>
-                    <h4>Secure System</h4>
-                    <p>Bank-level security for all transactions and data</p>
-                </div>
-            </div>
-            
-            <a href="index.html#spin" class="btn-view-all" style="margin-top: 2rem;">
-                <i class="fas fa-redo"></i> Join Winners Today!
-            </a>
-        </div>
+// ========== INITIALIZATION ==========
+document.addEventListener('DOMContentLoaded', function() {
+    initializeElements();
+    setupEventListeners();
+    applyFilters();
+    updateStats();
+    
+    // Auto-refresh data every minute
+    setInterval(() => {
+        if (!state.isLoading) {
+            updateStats();
+        }
+    }, CONFIG.AUTO_REFRESH_INTERVAL);
+});
 
-        <!-- Winner Detail Modal -->
-        <div class="winner-modal-overlay" id="winnerModal">
-            <div class="winner-modal">
-                <button class="modal-close-btn" id="closeModal">&times;</button>
-                <div id="winnerModalContent">
-                    <!-- Modal content loaded by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
+function initializeElements() {
+    // Set initial items per page
+    if (elements.itemsPerPageSelect) {
+        elements.itemsPerPageSelect.value = state.itemsPerPage;
+    }
+}
 
-    <script src="winners.js"></script>
-    <script>
-        // Mobile menu functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('show');
-                });
-                
-                // Close menu when clicking outside
-                document.addEventListener('click', (event) => {
-                    if (!mobileMenuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
-                        mobileMenu.classList.remove('show');
-                    }
-                });
+// ========== EVENT HANDLERS ==========
+function setupEventListeners() {
+    // View toggle
+    if (elements.tableViewBtn) {
+        elements.tableViewBtn.addEventListener('click', () => switchView('table'));
+    }
+    
+    if (elements.cardViewBtn) {
+        elements.cardViewBtn.addEventListener('click', () => switchView('card'));
+    }
+    
+    // Search
+    if (elements.searchInput) {
+        elements.searchInput.addEventListener('input', debounce(handleSearch, 300));
+    }
+    
+    // Filters
+    if (elements.statusFilter) {
+        elements.statusFilter.addEventListener('change', handleFilterChange);
+    }
+    
+    if (elements.prizeFilter) {
+        elements.prizeFilter.addEventListener('change', handleFilterChange);
+    }
+    
+    if (elements.sortFilter) {
+        elements.sortFilter.addEventListener('change', handleSortChange);
+    }
+    
+    // Pagination
+    if (elements.prevPageBtn) {
+        elements.prevPageBtn.addEventListener('click', goToPrevPage);
+    }
+    
+    if (elements.nextPageBtn) {
+        elements.nextPageBtn.addEventListener('click', goToNextPage);
+    }
+    
+    if (elements.itemsPerPageSelect) {
+        elements.itemsPerPageSelect.addEventListener('change', handleItemsPerPageChange);
+    }
+    
+    // Reset filters
+    if (elements.resetFiltersBtn) {
+        elements.resetFiltersBtn.addEventListener('click', resetAllFilters);
+    }
+    
+    // Modal
+    if (elements.closeModalBtn) {
+        elements.closeModalBtn.addEventListener('click', closeWinnerModal);
+    }
+    
+    // Close modal on outside click
+    if (elements.winnerModal) {
+        elements.winnerModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWinnerModal();
             }
-            
-            // Update login button based on auth status
-            updateAuthUI();
+        });
+    }
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && elements.winnerModal.classList.contains('show')) {
+            closeWinnerModal();
+        }
+    });
+}
+
+// ========== VIEW MANAGEMENT ==========
+function switchView(viewType) {
+    if (state.currentView === viewType) return;
+    
+    state.currentView = viewType;
+    
+    // Update active button
+    if (elements.tableViewBtn && elements.cardViewBtn) {
+        elements.tableViewBtn.classList.toggle('active', viewType === 'table');
+        elements.cardViewBtn.classList.toggle('active', viewType === 'card');
+    }
+    
+    // Show/hide views
+    if (elements.tableView) {
+        elements.tableView.style.display = viewType === 'table' ? 'block' : 'none';
+    }
+    
+    if (elements.cardViewContainer) {
+        elements.cardViewContainer.style.display = viewType === 'card' ? 'flex' : 'none';
+    }
+    
+    // Render the current view
+    renderCurrentView();
+}
+
+// ========== FILTERING & SORTING ==========
+function handleSearch() {
+    if (!elements.searchInput) return;
+    state.searchQuery = elements.searchInput.value.toLowerCase().trim();
+    state.currentPage = 1;
+    applyFilters();
+}
+
+function handleFilterChange() {
+    if (elements.statusFilter) {
+        state.statusFilter = elements.statusFilter.value;
+    }
+    
+    if (elements.prizeFilter) {
+        state.prizeFilter = elements.prizeFilter.value;
+    }
+    
+    state.currentPage = 1;
+    applyFilters();
+}
+
+function handleSortChange() {
+    if (!elements.sortFilter) return;
+    state.sortBy = elements.sortFilter.value;
+    applyFilters();
+}
+
+function handleItemsPerPageChange() {
+    if (!elements.itemsPerPageSelect) return;
+    state.itemsPerPage = parseInt(elements.itemsPerPageSelect.value);
+    state.currentPage = 1;
+    applyFilters();
+}
+
+function applyFilters() {
+    state.isLoading = true;
+    
+    // Simulate API delay
+    setTimeout(() => {
+        let filtered = [...winnersData];
+        
+        // Apply search filter
+        if (state.searchQuery) {
+            filtered = filtered.filter(winner =>
+                winner.fullName.toLowerCase().includes(state.searchQuery) ||
+                winner.username.toLowerCase().includes(state.searchQuery) ||
+                winner.location.toLowerCase().includes(state.searchQuery) ||
+                winner.prize.toLowerCase().includes(state.searchQuery)
+            );
+        }
+        
+        // Apply status filter
+        if (state.statusFilter) {
+            filtered = filtered.filter(winner => winner.status === state.statusFilter);
+        }
+        
+        // Apply prize category filter
+        if (state.prizeFilter) {
+            filtered = filtered.filter(winner => winner.prizeCategory === state.prizeFilter);
+        }
+        
+        // Apply sorting
+        filtered.sort((a, b) => {
+            switch (state.sortBy) {
+                case 'oldest':
+                    return a.date - b.date;
+                case 'value_high':
+                    return b.value - a.value;
+                case 'value_low':
+                    return a.value - b.value;
+                case 'newest':
+                default:
+                    return b.date - a.date;
+            }
         });
         
-        function updateAuthUI() {
-            const user = localStorage.getItem('trustcade_user');
-            const loginBtn = document.querySelector('a.btn-login');
-            const mobileLoginBtn = document.querySelector('.mobile-menu a[href="login.html"]');
-            
-            if (user) {
-                const userData = JSON.parse(user);
-                
-                if (loginBtn) {
-                    loginBtn.innerHTML = '<i class="fas fa-user"></i> Profile';
-                    loginBtn.href = 'profile.html';
-                    loginBtn.classList.remove('btn-login');
-                    loginBtn.classList.add('btn-profile');
-                }
-                
-                if (mobileLoginBtn) {
-                    mobileLoginBtn.textContent = 'Profile';
-                    mobileLoginBtn.href = 'profile.html';
-                }
+        state.filteredWinners = filtered;
+        state.isLoading = false;
+        
+        updateUI();
+    }, CONFIG.API_DELAY);
+}
+
+function resetAllFilters() {
+    if (elements.searchInput) elements.searchInput.value = '';
+    if (elements.statusFilter) elements.statusFilter.value = '';
+    if (elements.prizeFilter) elements.prizeFilter.value = '';
+    if (elements.sortFilter) elements.sortFilter.value = 'newest';
+    
+    state.searchQuery = '';
+    state.statusFilter = '';
+    state.prizeFilter = '';
+    state.sortBy = 'newest';
+    state.currentPage = 1;
+    state.itemsPerPage = CONFIG.ITEMS_PER_PAGE;
+    
+    if (elements.itemsPerPageSelect) {
+        elements.itemsPerPageSelect.value = state.itemsPerPage;
+    }
+    
+    applyFilters();
+}
+
+// ========== PAGINATION ==========
+function goToPrevPage() {
+    if (state.currentPage > 1) {
+        state.currentPage--;
+        updateUI();
+    }
+}
+
+function goToNextPage() {
+    const totalPages = Math.ceil(state.filteredWinners.length / state.itemsPerPage);
+    if (state.currentPage < totalPages) {
+        state.currentPage++;
+        updateUI();
+    }
+}
+
+function goToPage(pageNumber) {
+    const totalPages = Math.ceil(state.filteredWinners.length / state.itemsPerPage);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+        state.currentPage = pageNumber;
+        updateUI();
+    }
+}
+
+// ========== RENDERING ==========
+function renderCurrentView() {
+    switch (state.currentView) {
+        case 'table':
+            renderTableView();
+            break;
+        case 'card':
+            renderCardView();
+            break;
+    }
+}
+
+function renderTableView() {
+    if (!elements.winnersTableBody) return;
+    
+    const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+    const endIndex = startIndex + state.itemsPerPage;
+    const currentWinners = state.filteredWinners.slice(startIndex, endIndex);
+    
+    if (currentWinners.length === 0) {
+        elements.winnersTableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 3rem; color: #666;">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
+                    No winners found matching your criteria
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    elements.winnersTableBody.innerHTML = currentWinners.map(winner => `
+        <tr data-winner-id="${winner.id}">
+            <td>
+                <div class="winner-info">
+                    <div class="winner-avatar" style="background: ${winner.avatarColor}">
+                        ${winner.initials}
+                    </div>
+                    <div class="winner-details">
+                        <h4>${winner.fullName}</h4>
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${winner.location} ${winner.flag}
+                        </div>
+                        <small style="color: #999; font-size: 0.8rem;">@${winner.username}</small>
+                    </div>
+                </div>
+            </td>
+            <td class="prize-cell">
+                ${winner.prize}
+            </td>
+            <td class="value-cell">
+                ${winner.formattedValue}
+            </td>
+            <td class="date-cell">
+                <div>${winner.formattedDate}</div>
+                <small style="color: #999;">${winner.timeAgo}</small>
+            </td>
+            <td>
+                <span class="status-badge status-${winner.status}">
+                    <i class="fas ${winner.statusIcon}"></i> ${winner.statusLabel}
+                </span>
+            </td>
+            <td>
+                <button class="view-details-btn" onclick="viewWinnerDetails('${winner.id}')">
+                    <i class="fas fa-eye"></i> Details
+                </button>
+            </td>
+        </tr>
+    `).join('');
+    
+    // Add click handlers for table rows
+    document.querySelectorAll('#winnersTableBody tr[data-winner-id]').forEach(row => {
+        row.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('view-details-btn')) {
+                const winnerId = this.getAttribute('data-winner-id');
+                viewWinnerDetails(winnerId);
             }
+        });
+    });
+}
+
+function renderCardView() {
+    if (!elements.cardViewContainer) return;
+    
+    const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+    const endIndex = startIndex + state.itemsPerPage;
+    const currentWinners = state.filteredWinners.slice(startIndex, endIndex);
+    
+    if (currentWinners.length === 0) {
+        elements.cardViewContainer.innerHTML = '';
+        return;
+    }
+    
+    elements.cardViewContainer.innerHTML = currentWinners.map(winner => `
+        <div class="winner-card" data-winner-id="${winner.id}">
+            <div class="card-header">
+                <div class="card-avatar" style="background: ${winner.avatarColor}">
+                    ${winner.initials}
+                </div>
+                <h3 class="card-winner-name">${winner.fullName}</h3>
+                <div class="card-winner-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    ${winner.location} ${winner.flag}
+                </div>
+            </div>
+            
+            <div class="card-content">
+                <div class="prize-highlight">
+                    <h3>${winner.prize}</h3>
+                    <div class="prize-value">${winner.formattedValue}</div>
+                </div>
+                
+                <div class="card-details">
+                    <div class="detail-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>Won ${winner.timeAgo}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-user-tag"></i>
+                        <span>@${winner.username}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-hashtag"></i>
+                        <span>ID: ${winner.id}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <span class="status-badge status-${winner.status}">
+                    <i class="fas ${winner.statusIcon}"></i> ${winner.statusLabel}
+                </span>
+                <button class="view-details-btn" onclick="viewWinnerDetails('${winner.id}')">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Add click handlers for cards
+    document.querySelectorAll('.winner-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('view-details-btn')) {
+                const winnerId = this.getAttribute('data-winner-id');
+                viewWinnerDetails(winnerId);
+            }
+        });
+    });
+}
+
+// ========== WINNER DETAILS MODAL ==========
+function viewWinnerDetails(winnerId) {
+    const winner = state.filteredWinners.find(w => w.id === winnerId);
+    if (!winner) return;
+    
+    if (!elements.winnerModalContent) return;
+    
+    const statusColors = {
+        verified: '#10B981',
+        pending: '#F59E0B',
+        shipped: '#3B82F6'
+    };
+    
+    const statusIcons = {
+        verified: 'fa-check-circle',
+        pending: 'fa-clock',
+        shipped: 'fa-truck'
+    };
+    
+    elements.winnerModalContent.innerHTML = `
+        <div class="winner-modal-content" style="padding: 2rem;">
+            <!-- Header -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div style="
+                    width: 100px;
+                    height: 100px;
+                    background: ${winner.avatarColor};
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 2rem;
+                    margin: 0 auto 1rem;
+                    border: 4px solid white;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                ">
+                    ${winner.initials}
+                </div>
+                <h2 style="margin: 0 0 0.5rem 0; color: #333;">${winner.fullName}</h2>
+                <div style="color: #666; margin-bottom: 0.5rem;">
+                    <i class="fas fa-map-marker-alt"></i> ${winner.location} ${winner.flag}
+                </div>
+                <div style="color: #999; font-size: 0.9rem;">@${winner.username}</div>
+            </div>
+            
+            <!-- Status Banner -->
+            <div style="
+                background: ${statusColors[winner.status]}15;
+                border: 1px solid ${statusColors[winner.status]}30;
+                border-radius: 10px;
+                padding: 1rem;
+                margin-bottom: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.8rem;
+            ">
+                <i class="fas ${statusIcons[winner.status]}" style="color: ${statusColors[winner.status]}; font-size: 1.2rem;"></i>
+                <span style="font-weight: 600; color: ${statusColors[winner.status]};">${winner.statusLabel.toUpperCase()}</span>
+                <span style="color: #666;">• Winner ID: ${winner.id}</span>
+            </div>
+            
+            <!-- Prize Details -->
+            <div style="
+                background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+                border-radius: 15px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                text-align: center;
+            ">
+                <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">PRIZE WON</div>
+                <h3 style="margin: 0 0 0.5rem 0; color: #333; font-size: 1.5rem;">${winner.prize}</h3>
+                <div style="font-size: 2.5rem; font-weight: 700; color: #10B981; margin: 0.5rem 0;">${winner.formattedValue}</div>
+                <div style="color: #666; font-size: 0.9rem;">Value</div>
+            </div>
+            
+            <!-- Details Grid -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                <div style="
+                    background: white;
+                    border: 1px solid #e9ecef;
+                    border-radius: 10px;
+                    padding: 1rem;
+                    text-align: center;
+                ">
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">DATE WON</div>
+                    <div style="font-weight: 600; color: #333;">${winner.formattedDate}</div>
+                    <div style="font-size: 0.9rem; color: #999;">${winner.timeAgo}</div>
+                </div>
+                
+                <div style="
+                    background: white;
+                    border: 1px solid #e9ecef;
+                    border-radius: 10px;
+                    padding: 1rem;
+                    text-align: center;
+                ">
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">CLAIM CODE</div>
+                    <div style="font-weight: 600; color: #333; font-family: monospace;">${winner.claimCode}</div>
+                    <div style="font-size: 0.9rem; color: #999;">For verification</div>
+                </div>
+                
+                <div style="
+                    background: white;
+                    border: 1px solid #e9ecef;
+                    border-radius: 10px;
+                    padding: 1rem;
+                    text-align: center;
+                    grid-column: span 2;
+                ">
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">PRIZE CATEGORY</div>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <i class="fas fa-${winner.prizeCategory === 'cash' ? 'money-bill-wave' : winner.prizeCategory === 'gaming' ? 'gamepad' : 'mobile-alt'}"></i>
+                        <span style="font-weight: 600; color: #333; text-transform: capitalize;">${winner.prizeCategory}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Verification Info -->
+            <div style="
+                background: rgba(16, 185, 129, 0.05);
+                border: 1px solid rgba(16, 185, 129, 0.2);
+                border-radius: 10px;
+                padding: 1rem;
+                margin-bottom: 2rem;
+            ">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <i class="fas fa-shield-alt" style="color: #10B981;"></i>
+                    <span style="font-weight: 600; color: #333;">Verification Status</span>
+                </div>
+                <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                    ${winner.verified ? 
+                        'This winner has been verified with ID proof and delivery confirmation.' :
+                        'Verification is in progress. This winner will be verified within 48 hours.'
+                    }
+                </p>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="shareWinner('${winner.id}')" style="
+                    flex: 1;
+                    padding: 1rem;
+                    background: #f8f9fa;
+                    border: 1px solid #e9ecef;
+                    border-radius: 10px;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                ">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+                <button onclick="reportWinner('${winner.id}')" style="
+                    flex: 1;
+                    padding: 1rem;
+                    background: white;
+                    border: 1px solid #e9ecef;
+                    border-radius: 10px;
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                ">
+                    <i class="fas fa-flag"></i> Report
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Show modal
+    if (elements.winnerModal) {
+        elements.winnerModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeWinnerModal() {
+    if (elements.winnerModal) {
+        elements.winnerModal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+}
+
+// ========== SHARE & REPORT FUNCTIONS ==========
+function shareWinner(winnerId) {
+    const winner = state.filteredWinners.find(w => w.id === winnerId);
+    if (!winner) return;
+    
+    const shareText = `🎉 ${winner.fullName} just won ${winner.prize} (${winner.formattedValue}) on TrustCade! #TrustCadeWinners`;
+    const shareUrl = `https://trustcade.com/winners/${winnerId}`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'TrustCade Winner',
+            text: shareText,
+            url: shareUrl
+        }).catch(console.error);
+    } else {
+        // Fallback: Copy to clipboard
+        navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+            alert('Link copied to clipboard!');
+        });
+    }
+}
+
+function reportWinner(winnerId) {
+    if (confirm('Are you sure you want to report this winner? This action is for suspicious or fake winners only.')) {
+        // In a real app, this would be an API call
+        console.log(`Reported winner: ${winnerId}`);
+        alert('Thank you for your report. Our team will review it within 24 hours.');
+        closeWinnerModal();
+    }
+}
+
+// ========== UI UPDATES ==========
+function updateUI() {
+    const totalWinners = state.filteredWinners.length;
+    const totalPages = Math.ceil(totalWinners / state.itemsPerPage);
+    
+    // Update pagination buttons
+    if (elements.prevPageBtn) {
+        elements.prevPageBtn.disabled = state.currentPage <= 1;
+    }
+    
+    if (elements.nextPageBtn) {
+        elements.nextPageBtn.disabled = state.currentPage >= totalPages;
+    }
+    
+    // Update page numbers
+    if (elements.pageNumbers) {
+        renderPageNumbers(totalPages);
+    }
+    
+    // Update range display
+    if (elements.currentRange) {
+        const start = (state.currentPage - 1) * state.itemsPerPage + 1;
+        const end = Math.min(state.currentPage * state.itemsPerPage, totalWinners);
+        elements.currentRange.textContent = `${start}-${end}`;
+    }
+    
+    // Update total winners count
+    if (elements.totalWinners) {
+        elements.totalWinners.textContent = totalWinners.toLocaleString();
+    }
+    
+    // Update table count
+    if (elements.tableCount) {
+        elements.tableCount.textContent = `Showing ${totalWinners.toLocaleString()} winners`;
+    }
+    
+    // Show/hide empty state
+    if (elements.emptyState) {
+        if (totalWinners === 0) {
+            elements.emptyState.style.display = 'block';
+            if (elements.tableView) elements.tableView.style.display = 'none';
+            if (elements.cardViewContainer) elements.cardViewContainer.style.display = 'none';
+        } else {
+            elements.emptyState.style.display = 'none';
+            renderCurrentView();
         }
-    </script>
-</body>
-    </html>
+    }
+}
+
+function renderPageNumbers(totalPages) {
+    if (!elements.pageNumbers) return;
+    
+    let pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+        // Show all pages
+        for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(i);
+        }
+    } else {
+        // Show limited pages with ellipsis
+        if (state.currentPage <= 3) {
+            pageNumbers = [1, 2, 3, 4, '...', totalPages];
+        } else if (state.currentPage >= totalPages - 2) {
+            pageNumbers = [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+        } else {
+            pageNumbers = [1, '...', state.currentPage - 1, state.currentPage, state.currentPage + 1, '...', totalPages];
+        }
+    }
+    
+    elements.pageNumbers.innerHTML = pageNumbers.map(page => {
+        if (page === '...') {
+            return `<span class="page-number" style="pointer-events: none;">...</span>`;
+        }
+        return `
+            <span class="page-number ${page === state.currentPage ? 'active' : ''}" 
+                  onclick="goToPage(${page})">
+                ${page}
+            </span>
+        `;
+    }).join('');
+}
+
+// ========== STATISTICS ==========
+function updateStats() {
+    // Update hero stats with some randomness to make it look live
+    const baseTotal = 5247;
+    const baseValue = 892450;
+    
+    // Add some randomness (±10 winners, ±$5000 value)
+    const currentTotal = baseTotal + Math.floor(Math.random() * 20) - 10;
+    const currentValue = baseValue + Math.floor(Math.random() * 10000) - 5000;
+    
+    // Update hero stats if elements exist
+    const heroStats = document.querySelectorAll('.hero-stat h3');
+    if (heroStats.length >= 2) {
+        heroStats[0].textContent = currentTotal.toLocaleString();
+        heroStats[1].textContent = `$${(currentValue / 1000).toFixed(0)}K`;
+    }
+}
+
+// ========== UTILITY FUNCTIONS ==========
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// ========== GLOBAL EXPORTS ==========
+// Make functions available globally
+window.switchView = switchView;
+window.viewWinnerDetails = viewWinnerDetails;
+window.closeWinnerModal = closeWinnerModal;
+window.goToPage = goToPage;
+window.shareWinner = shareWinner;
+window.reportWinner = reportWinner;
+window.resetAllFilters = resetAllFilters;
