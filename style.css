@@ -34,11 +34,20 @@ body {
     overflow-x: hidden;
 }
 
+./* Container - REPLACE your current one with this */
 .container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 15px;
+    box-sizing: border-box; /* NEW: This is important! */
+}
+
+/* Optional: Better mobile spacing */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
 }
 
 /* Header & Navigation */
