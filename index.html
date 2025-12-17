@@ -366,7 +366,24 @@
             <p>Loading TrustCade...</p>
         </div>
     </div>
-    
+  <!-- Secret Admin Button - Shows when you press Ctrl+Shift+A -->
+<div id="secretAdminBtn" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <button onclick="window.location.href='admin-login.html'" 
+            style="background: #8B5CF6; color: white; border: none; padding: 15px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">
+        👑
+    </button>
+</div>
+
+<script>
+// Press Ctrl+Shift+A to show admin button
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        const btn = document.getElementById('secretAdminBtn');
+        btn.style.display = 'block';
+        setTimeout(() => btn.style.display = 'none', 5000); // Hide after 5 seconds
+    }
+});
+</script>  
     <!-- Header -->
     <header>
         <div class="container">
