@@ -1,1 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Winners - TrustCade</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    
+    <style>
+        /* Winners page specific styles */
+        .winners-hero {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(102, 126, 234, 0.9)),
+                        url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: var(--radius-lg);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .winners-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+        }
+        
+        .winners-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .hero-stat {
+            text-align: center;
+        }
+        
+        .hero-stat h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .hero-stat p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        /* Filter Controls */
+        .filter-controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 1px solid #e9ecef;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+        
+        .filter-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            background: var(--light-color);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-color);
+        }
+        
+        .filter-tag:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .filter-tag.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .sort-select {
+            padding: 0.8rem 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            min-width: 150px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        /* Winners Grid */
+        .winners-grid-detailed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .winner-card-detailed {
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .winner-card-detailed:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .winner-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: var(--radius-xl);
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .winner-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .winner-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .winner-card-detailed:hover .winner-image img {
+            transform: scale(1.05);
+        }
+        
+        .winner-avatar-large {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            border: 4px solid white;
+            z-index: 2;
+        }
+        
+        .winner-info {
+            padding: 3rem 1.5rem 1.5rem;
+            text-align: center;
+        }
+        
+        .winner-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+        
+        .winner-location {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .winner-prize-info {
+            background: var(--light-color);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin: 1rem 0;
+        }
+        
+        .prize-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+        
+        .prize-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .win-time {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .winner-social {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+        
+        .social-twitter { background: #1DA1F2; }
+        .social-instagram { background: #E4405F; }
+        .social-facebook { background: #1877F2; }
+        
+        /* Winner of the Month */
+        .winner-of-month {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .winner-of-month::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+        
+        .winner-of-month-content {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .month-winner-avatar {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FFD700;
+            box-shadow: var(--shadow-lg);
+            border: 5px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .month-winner-crown {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            font-size: 2rem;
+            color: #FFD700;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 3rem 0;
+        }
+        
+        .page-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            background: var(--light-color);
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .page-number:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .page-number.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .page-arrow {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            background: white;
+            border: 1px solid #e9ecef;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .page-arrow:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Stats Section */
+        .winners-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .stat-item h3 {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-item p {
+            color: var(--text-light);
+        }
+        
+        /* Timeline View */
+        .timeline-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .view-toggle-btn {
+            padding: 0.8rem 2rem;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .view-toggle-btn:first-child {
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+            border-right: none;
+        }
+        
+        .view-toggle-btn:last-child {
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+        
+        .view-toggle-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Timeline View */
+        .timeline-view {
+            display: none;
+        }
+        
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 40px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--light-color);
+        }
+        
+        .timeline-date {
+            text-align: right;
+            padding-right: 2rem;
+        }
+        
+        .timeline-date .date {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .timeline-date .time {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--primary-color);
+        }
+        
+        /* Loading Animation */
+        .loading-winners {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--light-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .winners-grid-detailed {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .hero-stats {
+                gap: 1.5rem;
+            }
+            
+            .hero-stat h3 {
+                font-size: 2rem;
+            }
+            
+            .winner-of-month-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-item::before {
+                display: none;
+            }
+            
+            .timeline-date {
+                text-align: left;
+                padding-right: 0;
+            }
+            
+            .timeline-content::before {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .winners-grid-detailed {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" style="display: none;">
+        <div class="spinner">
+            <i class="fas fa-trophy"></i>
+            <p>Loading Winners...</p>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+                <p class="tagline">Spin & Win Real Prizes</p>
+            </div>
+            <nav>
+                <a href="index.html" class="btn-spin">SPIN NOW</a>
+                <a href="winners.html" class="active"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                <a href="index.html#prizes">Prizes</a>
+                <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button id="mobileMenuClose" class="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html">Home</a>
+        <a href="index.html#spin">Spin Wheel</a>
+        <a href="winners.html" class="active">Winners</a>
+        <a href="profile.html">My Profile</a>
+        <a href="index.html#prizes">Prizes</a>
+        <a href="login.html">Login</a>
+        <div class="mobile-menu-footer">
+            <p>Need help? <a href="mailto:support@trustcade.com">Contact Support</a></p>
+        </div>
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+        <div class="container">
+            <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
+            <span><i class="fas fa-trophy"></i> <span id="totalWinnersCount">5,247</span>+ Winners</span>
+            <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            <span><i class="fas fa-clock"></i> Free Daily Spin</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="winners-hero">
+            <div class="winners-hero-content">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">🎉 Real Winners, Real Prizes</h1>
+                <p style="font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+                    Meet our lucky winners who turned spins into amazing prizes. Their success stories prove that anyone can win!
+                </p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <h3>5,247+</h3>
+                        <p>Verified Winners</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3>$892K+</h3>
+                        <p>Prizes Distributed</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3>324</h3>
+                        <p>Wins This Month</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3>1:8</h3>
+                        <p>Win Rate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Winner of the Month -->
+        <section class="winner-of-month">
+            <div class="winner-of-month-content">
+                <div style="position: relative;">
+                    <div class="month-winner-crown">👑</div>
+                    <div class="month-winner-avatar">LS</div>
+                </div>
+                <div>
+                    <h2 style="margin-bottom: 0.5rem;">Winner of the Month</h2>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;">LuckyStar23</h3>
+                    <p style="opacity: 0.9; margin-bottom: 1rem;">
+                        Won <strong style="color: white;">$5,000 Cash Prize</strong> - The biggest win of the year!
+                    </p>
+                    <p style="opacity: 0.8; font-size: 0.95rem;">
+                        "I couldn't believe it when I won! TrustCade is legit and the prize arrived within 3 days. 
+                        This has changed my life - I'm paying off my student loans!"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Controls -->
+        <section class="filter-controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchWinners" placeholder="Search winners or prizes...">
+            </div>
+            
+            <div class="filter-tags">
+                <button class="filter-tag active" data-filter="all">All Winners</button>
+                <button class="filter-tag" data-filter="today">Today</button>
+                <button class="filter-tag" data-filter="week">This Week</button>
+                <button class="filter-tag" data-filter="month">This Month</button>
+                <button class="filter-tag" data-filter="bigwins">Big Wins ($500+)</button>
+            </div>
+            
+            <select class="sort-select" id="sortWinners">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="value-high">Highest Value</option>
+                <option value="value-low">Lowest Value</option>
+            </select>
+        </section>
+
+        <!-- View Toggle -->
+        <div class="timeline-toggle">
+            <button class="view-toggle-btn active" data-view="grid">
+                <i class="fas fa-th-large"></i> Grid View
+            </button>
+            <button class="view-toggle-btn" data-view="timeline">
+                <i class="fas fa-stream"></i> Timeline View
+            </button>
+        </div>
+
+        <!-- Winners Grid View -->
+        <div id="winnersGridView" class="winners-grid-detailed">
+            <!-- Winners loaded via JavaScript -->
+        </div>
+
+        <!-- Winners Timeline View -->
+        <div id="winnersTimelineView" class="timeline-view">
+            <!-- Timeline loaded via JavaScript -->
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingWinners" class="loading-winners" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Loading more winners...</p>
+        </div>
+
+        <!-- Winners Stats -->
+        <section class="winners-stats">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>1,847</h3>
+                <p>Electronics Won</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h3>892</h3>
+                <p>Gaming Prizes</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3>2,154</h3>
+                <p>Cash Prizes</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h3>354</h3>
+                <p>Gift Cards</p>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="updates-section">
+            <div class="section-header">
+                <h2><i class="fas fa-comment-dots"></i> Winner Testimonials</h2>
+                <p class="section-subtitle">Real stories from our happy winners</p>
+            </div>
+            
+            <div class="updates-grid">
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Winner">
+                    </div>
+                    <div class="update-content">
+                        <h3>Sarah M.</h3>
+                        <p>"Won an iPhone 17 Pro on my third spin! Couldn't believe it was real until it arrived at my doorstep."</p>
+                        <span class="update-date">Won: iPhone 17 Pro | 2 days ago</span>
+                    </div>
+                </div>
+                
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Winner">
+                    </div>
+                    <div class="update-content">
+                        <h3>Mike R.</h3>
+                        <p>"As a college student, the $500 cash prize helped me pay for textbooks. Thank you TrustCade!"</p>
+                        <span class="update-date">Won: $500 Cash | 1 week ago</span>
+                    </div>
+                </div>
+                
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Winner">
+                    </div>
+                    <div class="update-content">
+                        <h3>James K.</h3>
+                        <p>"PS5 Pro on my first spin! The verification process was smooth and delivery was super fast."</p>
+                        <span class="update-date">Won: PlayStation 5 Pro | 2 weeks ago</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="#" class="page-arrow"><i class="fas fa-chevron-left"></i></a>
+            <a href="#" class="page-number active">1</a>
+            <a href="#" class="page-number">2</a>
+            <a href="#" class="page-number">3</a>
+            <a href="#" class="page-number">4</a>
+            <a href="#" class="page-number">5</a>
+            <span style="display: flex; align-items: center; padding: 0 1rem;">...</span>
+            <a href="#" class="page-number">24</a>
+            <a href="#" class="page-arrow"><i class="fas fa-chevron-right"></i></a>
+        </div>
+
+        <!-- CTA Section -->
+        <section class="registration-prompt" style="margin-top: 3rem;">
+            <div class="reg-card">
+                <div class="reg-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="reg-content">
+                    <h3><i class="fas fa-bolt"></i> Ready to Join Our Winners?</h3>
+                    <p>Spin the wheel for your chance to win amazing prizes. Your name could be featured here next!</p>
+                    <div class="reg-actions">
+                        <a href="index.html" class="btn-register">
+                            <i class="fas fa-redo"></i> Spin Now
+                        </a>
+                        <a href="register.html" class="btn-login-small">
+                            <i class="fas fa-user-plus"></i> Register Free
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-gift"></i> TrustCade</h3>
+                    <p>Your trusted platform for winning real prizes through daily spins. Verified winners, transparent system.</p>
+                    <div class="footer-trust">
+                        <span><i class="fas fa-check-circle"></i> 100% Legit</span>
+                        <span><i class="fas fa-shield-alt"></i> Secure</span>
+                        <span><i class="fas fa-truck"></i> Free Shipping</span>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="winners.html">Winners</a>
+                    <a href="profile.html">My Profile</a>
+                    <a href="index.html#prizes">Prizes</a>
+                    <a href="login.html">Login</a>
+                    <a href="register.html">Register</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="contact.html">Contact Us</a>
+                    <a href="faq.html">FAQ</a>
+                    <a href="rules.html">Contest Rules</a>
+                    <a href="disclaimer.html">Disclaimer</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> support@trustcade.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Prize Street, NY</p>
+                    <div class="newsletter">
+                        <h5>Get Updates</h5>
+                        <div class="newsletter-input">
+                            <input type="email" placeholder="Your email" id="winnersNewsletterEmail">
+                            <button id="winnersNewsletterBtn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners, Real Fun!</p>
+                <p>Odds displayed: 1:8 win rate | Verified business | Transparent system | Must be 18+ to play</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa" title="Visa"></i>
+                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fab fa-cc-amex" title="American Express"></i>
+                    <i class="fab fa-cc-paypal" title="PayPal"></i>
+                    <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
+                    <i class="fab fa-cc-google-pay" title="Google Pay"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+    
+    <!-- Winners page JavaScript -->
+    <script>
+        // Winners data
+        const winnersData = [
+            {
+                id: 1,
+                name: "LuckyStar23",
+                avatar: "LS",
+                location: "New York, USA",
+                prize: "iPhone 17 Pro Max",
+                value: "$1,299",
+                date: "2024-03-15",
+                time: "14:30",
+                timestamp: Date.now() - 2 * 24 * 60 * 60 * 1000, // 2 days ago
+                image: "https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "electronics",
+                bigWin: true,
+                verified: true,
+                testimonial: "Unbelievable! The phone arrived in perfect condition."
+            },
+            {
+                id: 2,
+                name: "MikeWins",
+                avatar: "MW",
+                location: "London, UK",
+                prize: "$500 Cash",
+                value: "$500",
+                date: "2024-03-14",
+                time: "09:15",
+                timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "cash",
+                bigWin: true,
+                verified: true,
+                testimonial: "Paid off my credit card bill with this win!"
+            },
+            {
+                id: 3,
+                name: "SarahG",
+                avatar: "SG",
+                location: "Toronto, Canada",
+                prize: "PlayStation 5 Pro",
+                value: "$499",
+                date: "2024-03-13",
+                time: "16:45",
+                timestamp: Date.now() - 4 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "gaming",
+                bigWin: true,
+                verified: true,
+                testimonial: "My kids are over the moon! Best surprise ever."
+            },
+            {
+                id: 4,
+                name: "PrizeHunter",
+                avatar: "PH",
+                location: "Sydney, Australia",
+                prize: "MacBook Pro M3",
+                value: "$1,599",
+                date: "2024-03-12",
+                time: "11:20",
+                timestamp: Date.now() - 5 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "electronics",
+                bigWin: true,
+                verified: true,
+                testimonial: "Perfect for my freelance work. Life-changing!"
+            },
+            {
+                id: 5,
+                name: "SpinKing",
+                avatar: "SK",
+                location: "Berlin, Germany",
+                prize: "Nintendo Switch OLED",
+                value: "$349",
+                date: "2024-03-11",
+                time: "20:10",
+                timestamp: Date.now() - 6 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "gaming",
+                bigWin: false,
+                verified: true,
+                testimonial: "Weekend gaming just got upgraded!"
+            },
+            {
+                id: 6,
+                name: "WinMaster",
+                avatar: "WM",
+                location: "Tokyo, Japan",
+                prize: "$100 Amazon Gift Card",
+                value: "$100",
+                date: "2024-03-10",
+                time: "13:55",
+                timestamp: Date.now() - 7 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "giftcards",
+                bigWin: false,
+                verified: true,
+                testimonial: "Perfect timing for my birthday shopping!"
+            },
+            {
+                id: 7,
+                name: "GamerGirl",
+                avatar: "GG",
+                location: "Paris, France",
+                prize: "AirPods Pro 2",
+                value: "$249",
+                date: "2024-03-09",
+                time: "10:05",
+                timestamp: Date.now() - 8 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1589003077984-894e133dabab?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "electronics",
+                bigWin: false,
+                verified: true,
+                testimonial: "Best sounding earbuds I've ever owned!"
+            },
+            {
+                id: 8,
+                name: "JackpotJill",
+                avatar: "JJ",
+                location: "Dubai, UAE",
+                prize: "Smart Watch",
+                value: "$399",
+                date: "2024-03-08",
+                time: "18:30",
+                timestamp: Date.now() - 9 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "electronics",
+                bigWin: false,
+                verified: true,
+                testimonial: "Helping me stay fit and connected!"
+            },
+            {
+                id: 9,
+                name: "LuckyCharm",
+                avatar: "LC",
+                location: "Singapore",
+                prize: "Xbox Series X",
+                value: "$499",
+                date: "2024-03-07",
+                time: "15:20",
+                timestamp: Date.now() - 10 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "gaming",
+                bigWin: true,
+                verified: true,
+                testimonial: "Next-gen gaming at its finest!"
+            },
+            {
+                id: 10,
+                name: "FortuneFinder",
+                avatar: "FF",
+                location: "Mumbai, India",
+                prize: "$250 Apple Gift Card",
+                value: "$250",
+                date: "2024-03-06",
+                time: "12:45",
+                timestamp: Date.now() - 11 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "giftcards",
+                bigWin: false,
+                verified: true,
+                testimonial: "Time to upgrade my iPad!"
+            },
+            {
+                id: 11,
+                name: "PrizeQueen",
+                avatar: "PQ",
+                location: "São Paulo, Brazil",
+                prize: "Gaming PC RTX 4090",
+                value: "$2,499",
+                date: "2024-03-05",
+                time: "19:15",
+                timestamp: Date.now() - 12 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "gaming",
+                bigWin: true,
+                verified: true,
+                testimonial: "Ultimate gaming setup complete!"
+            },
+            {
+                id: 12,
+                name: "SpinWizard",
+                avatar: "SW",
+                location: "Mexico City, Mexico",
+                prize: "Smart TV 65\"",
+                value: "$799",
+                date: "2024-03-04",
+                time: "14:00",
+                timestamp: Date.now() - 13 * 24 * 60 * 60 * 1000,
+                image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+                category: "electronics",
+                bigWin: true,
+                verified: true,
+                testimonial: "Movie nights just got epic!"
+            }
+        ];
+        
+        // Initialize winners page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load and display winners
+            displayWinners();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Update winner count
+            updateWinnerCount();
+            
+            // Setup mobile menu
+            setupMobileMenu();
+            
+            // Setup back to top button
+            setupBackToTop();
+        });
+        
+        function displayWinners(filteredData = winnersData) {
+            const gridView = document.getElementById('winnersGridView');
+            const timelineView = document.getElementById('winnersTimelineView');
+            
+            // Clear existing content
+            gridView.innerHTML = '';
+            timelineView.innerHTML = '';
+            
+            if (filteredData.length === 0) {
+                gridView.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-search" style="font-size: 3rem; color: var(--light-color); margin-bottom: 1rem;"></i>
+                        <h3>No winners found</h3>
+                        <p>Try adjusting your search or filter criteria</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Display grid view
+            filteredData.forEach(winner => {
+                const timeAgo = getTimeAgo(winner.timestamp);
+                const isToday = isSameDay(new Date(winner.timestamp), new Date());
+                
+                gridView.innerHTML += `
+                    <div class="winner-card-detailed" data-winner-id="${winner.id}">
+                        ${winner.bigWin ? '<div class="winner-badge">BIG WIN</div>' : ''}
+                        ${isToday ? '<div class="winner-badge" style="background: var(--secondary-color);">TODAY</div>' : ''}
+                        
+                        <div class="winner-image">
+                            <img src="${winner.image}" alt="${winner.prize}">
+                            <div class="winner-avatar-large">${winner.avatar}</div>
+                        </div>
+                        
+                        <div class="winner-info">
+                            <h3 class="winner-name">${winner.name}</h3>
+                            <div class="winner-location">
+                                <i class="fas fa-map-marker-alt"></i> ${winner.location}
+                            </div>
+                            
+                            <div class="winner-prize-info">
+                                <div class="prize-name">${winner.prize}</div>
+                                <div class="prize-value">${winner.value}</div>
+                                <div class="win-time">
+                                    <i class="far fa-clock"></i> ${timeAgo}
+                                </div>
+                            </div>
+                            
+                            <p style="color: var(--text-light); font-size: 0.9rem; margin: 1rem 0;">
+                                <i class="fas fa-quote-left"></i> ${winner.testimonial}
+                            </p>
+                            
+                            <div class="winner-social">
+                                <a href="#" class="social-icon social-twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-icon social-instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-icon social-facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Display timeline view
+                const formattedDate = new Date(winner.timestamp).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                const formattedTime = new Date(winner.timestamp).toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                timelineView.innerHTML += `
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            <div class="date">${formattedDate}</div>
+                            <div class="time">${formattedTime}</div>
+                        </div>
+                        <div class="timeline-content">
+                            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                                <div style="width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-weight: bold;">
+                                    ${winner.avatar}
+                                </div>
+                                <div>
+                                    <h4 style="margin: 0;">${winner.name}</h4>
+                                    <small style="color: var(--text-light);">${winner.location}</small>
+                                </div>
+                            </div>
+                            <div style="background: var(--light-color); padding: 0.8rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem;">
+                                <strong>${winner.prize}</strong> 
+                                <span style="color: var(--secondary-color); font-weight: bold; float: right;">
+                                    ${winner.value}
+                                </span>
+                            </div>
+                            <p style="color: var(--text-light); font-size: 0.9rem; margin: 0;">
+                                <i class="fas fa-quote-left"></i> ${winner.testimonial}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function setupEventListeners() {
+            // Filter tags
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    // Update active tag
+                    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter winners
+                    const filter = this.dataset.filter;
+                    filterWinners(filter);
+                });
+            });
+            
+            // Search input
+            document.getElementById('searchWinners').addEventListener('input', function() {
+                searchWinners(this.value);
+            });
+            
+            // Sort select
+            document.getElementById('sortWinners').addEventListener('change', function() {
+                sortWinners(this.value);
+            });
+            
+            // View toggle
+            document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show/hide views
+                    const view = this.dataset.view;
+                    if (view === 'grid') {
+                        document.getElementById('winnersGridView').style.display = 'grid';
+                        document.getElementById('winnersTimelineView').style.display = 'none';
+                    } else {
+                        document.getElementById('winnersGridView').style.display = 'none';
+                        document.getElementById('winnersTimelineView').style.display = 'block';
+                    }
+                });
+            });
+            
+            // Pagination
+            document.querySelectorAll('.page-number').forEach(page => {
+                page.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.page-number').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    // In a real app, this would load a new page of results
+                });
+            });
+            
+            // Newsletter button
+            document.getElementById('winnersNewsletterBtn')?.addEventListener('click', function() {
+                const email = document.getElementById('winnersNewsletterEmail').value;
+                if (email && email.includes('@')) {
+                    alert('Thank you for subscribing to winner updates!');
+                    document.getElementById('winnersNewsletterEmail').value = '';
+                }
+            });
+        }
+        
+        function filterWinners(filter) {
+            let filtered = [...winnersData];
+            
+            switch(filter) {
+                case 'today':
+                    filtered = filtered.filter(winner => 
+                        isSameDay(new Date(winner.timestamp), new Date())
+                    );
+                    break;
+                case 'week':
+                    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+                    filtered = filtered.filter(winner => winner.timestamp >= oneWeekAgo);
+                    break;
+                case 'month':
+                    const oneMonthAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+                    filtered = filtered.filter(winner => winner.timestamp >= oneMonthAgo);
+                    break;
+                case 'bigwins':
+                    filtered = filtered.filter(winner => winner.bigWin);
+                    break;
+                // 'all' shows all winners
+            }
+            
+            displayWinners(filtered);
+        }
+        
+        function searchWinners(query) {
+            if (!query.trim()) {
+                displayWinners(winnersData);
+                return;
+            }
+            
+            const searchTerm = query.toLowerCase();
+            const filtered = winnersData.filter(winner => 
+                winner.name.toLowerCase().includes(searchTerm) ||
+                winner.prize.toLowerCase().includes(searchTerm) ||
+                winner.location.toLowerCase().includes(searchTerm) ||
+                winner.testimonial.toLowerCase().includes(searchTerm)
+            );
+            
+            displayWinners(filtered);
+        }
+        
+        function sortWinners(sortBy) {
+            const sorted = [...winnersData];
+            
+            switch(sortBy) {
+                case 'newest':
+                    sorted.sort((a, b) => b.timestamp - a.timestamp);
+                    break;
+                case 'oldest':
+                    sorted.sort((a, b) => a.timestamp - b.timestamp);
+                    break;
+                case 'value-high':
+                    sorted.sort((a, b) => {
+                        const valA = parseInt(a.value.replace(/[^0-9]/g, ''));
+                        const valB = parseInt(b.value.replace(/[^0-9]/g, ''));
+                        return valB - valA;
+                    });
+                    break;
+                case 'value-low':
+                    sorted.sort((a, b) => {
+                        const valA = parseInt(a.value.replace(/[^0-9]/g, ''));
+                        const valB = parseInt(b.value.replace(/[^0-9]/g, ''));
+                        return valA - valB;
+                    });
+                    break;
+            }
+            
+            displayWinners(sorted);
+        }
+        
+        function updateWinnerCount() {
+            const totalWins = winnersData.length;
+            document.getElementById('totalWinnersCount').textContent = (5247 + totalWins).toLocaleString();
+        }
+        
+        function getTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (minutes < 60) {
+                return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+            } else if (hours < 24) {
+                return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+            } else {
+                return `${days} day${days !== 1 ? 's' : ''} ago`;
+            }
+        }
+        
+        function isSameDay(date1, date2) {
+            return date1.getDate() === date2.getDate() &&
+                   date1.getMonth() === date2.getMonth() &&
+                   date1.getFullYear() === date2.getFullYear();
+        }
+        
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            const closeBtn = document.getElementById('mobileMenuClose');
+            
+            if (menuBtn && menu && closeBtn) {
+                menuBtn.addEventListener('click', () => menu.classList.add('active'));
+                closeBtn.addEventListener('click', () => menu.classList.remove('active'));
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                        menu.classList.remove('active');
+                    }
+                });
+            }
+        }
+        
+        function setupBackToTop() {
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.style.display = 'flex';
+                    setTimeout(() => backToTopBtn.style.opacity = '1', 10);
+                } else {
+                    backToTopBtn.style.opacity = '0';
+                    setTimeout(() => {
+                        if (window.scrollY <= 300) {
+                            backToTopBtn.style.display = 'none';
+                        }
+                    }, 300);
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    </script>
+</body>
+      </html>
