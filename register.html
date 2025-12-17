@@ -5,363 +5,1726 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - TrustCade</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    
     <style>
+        /* Registration page specific styles */
+        .register-hero {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9)),
+                        url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: var(--radius-lg);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+        }
+        
+        .register-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
         .register-container {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .register-container {
+                grid-template-columns: 1fr;
+            }
         }
         
         .register-card {
             background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2.5rem;
+            height: fit-content;
         }
         
+        .register-card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .register-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .register-title {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .register-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        /* Registration Steps */
         .register-steps {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             position: relative;
         }
         
         .register-steps::before {
             content: '';
             position: absolute;
-            top: 25px;
-            left: 10%;
-            right: 10%;
+            top: 20px;
+            left: 0;
+            right: 0;
             height: 2px;
-            background: #e9ecef;
+            background: var(--light-color);
             z-index: 1;
         }
         
-        .step {
-            text-align: center;
+        .register-step {
             position: relative;
             z-index: 2;
+            text-align: center;
+            flex: 1;
         }
         
         .step-number {
-            width: 50px;
-            height: 50px;
-            background: #e9ecef;
-            color: #666;
+            width: 40px;
+            height: 40px;
+            background: var(--light-color);
+            color: var(--text-light);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 600;
             margin: 0 auto 0.5rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
         
-        .step.active .step-number {
-            background: #8B5CF6;
-            color: white;
-            transform: scale(1.1);
-        }
-        
-        .step.completed .step-number {
-            background: #10B981;
+        .register-step.active .step-number {
+            background: var(--primary-color);
             color: white;
         }
         
-        .gift-card-section {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-            text-align: center;
+        .register-step.completed .step-number {
+            background: var(--secondary-color);
+            color: white;
         }
         
-        .gift-card-section h3 {
-            color: #333;
-            margin-bottom: 1rem;
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
         }
         
-        .verification-note {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 2rem 0;
-            border-left: 4px solid #10B981;
+        .register-step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
         }
         
-        .form-row {
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Enhanced Form Styles */
+        .form-group-enhanced {
+            margin-bottom: 1.8rem;
+        }
+        
+        .form-label-enhanced {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-label-enhanced i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .form-control-enhanced {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .form-control-enhanced:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-control-enhanced.has-error {
+            border-color: var(--accent-color);
+        }
+        
+        .form-control-enhanced.has-success {
+            border-color: var(--secondary-color);
+        }
+        
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.3rem;
+        }
+        
+        /* Password Requirements */
+        .password-requirements {
+            background: var(--light-color);
+            padding: 1.2rem;
+            border-radius: var(--radius-sm);
+            margin-top: 1rem;
+        }
+        
+        .requirements-title {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .requirement-item.valid {
+            color: var(--secondary-color);
+        }
+        
+        .requirement-item.valid i {
+            color: var(--secondary-color);
+        }
+        
+        .requirement-item.invalid i {
+            color: var(--text-light);
+        }
+        
+        /* Verification Options */
+        .verification-options {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .verification-option {
+            border: 2px solid #e9ecef;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .verification-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .verification-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(139, 92, 246, 0.05);
+        }
+        
+        .verification-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .verification-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
             margin-bottom: 1rem;
         }
         
+        .verification-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+        
+        .verification-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .verification-price {
+            font-weight: 700;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        
+        /* Progress Bar */
+        .registration-progress {
+            margin: 2rem 0;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: var(--light-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        /* Benefits Sidebar */
+        .benefits-sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .benefits-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .benefits-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+        
+        .benefits-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .benefits-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .benefits-list {
+            margin: 2rem 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .benefit-icon {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .benefit-content h4 {
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+        }
+        
+        .benefit-content p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* Navigation Buttons */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .nav-button {
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-prev {
+            background: var(--light-color);
+            color: var(--text-color);
+        }
+        
+        .btn-prev:hover {
+            background: #e9ecef;
+        }
+        
+        .btn-next {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit {
+            background: var(--secondary-color);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        /* Trust Badges */
+        .register-trust {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .trust-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .trust-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .trust-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        /* Success Screen */
+        .success-screen {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: none;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .success-title {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+        
+        .success-message {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Loading States */
+        .register-loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .form-row {
+            .register-container {
+                gap: 2rem;
+            }
+            
+            .register-card {
+                padding: 1.5rem;
+            }
+            
+            .benefits-sidebar {
+                padding: 1.5rem;
+            }
+            
+            .form-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .verification-options {
                 grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .register-hero {
+                padding: 3rem 1rem;
+            }
+            
+            .register-steps {
+                flex-direction: column;
+                gap: 1rem;
             }
             
             .register-steps::before {
-                left: 15%;
-                right: 15%;
+                display: none;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div id="loadingScreen" style="display: none;">
+        <div class="spinner">
+            <i class="fas fa-user-plus"></i>
+            <p>Creating your account...</p>
+        </div>
+    </div>
+    
+    <!-- Header -->
     <header>
         <div class="container">
             <div class="logo">
                 <h1><i class="fas fa-gift"></i> TrustCade</h1>
+                <p class="tagline">Spin & Win Real Prizes</p>
             </div>
             <nav>
-                <a href="index.html">Home</a>
-                <a href="winners.html">Winners</a>
-                <a href="login.html">Login</a>
-                <a href="register.html" class="active">Register</a>
+                <a href="index.html" class="btn-spin">SPIN NOW</a>
+                <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                <a href="index.html#prizes">Prizes</a>
+                <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
             </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
 
-    <div class="register-container">
-        <div class="register-card">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fas fa-user-plus"></i>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button id="mobileMenuClose" class="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html">Home</a>
+        <a href="index.html#spin">Spin Wheel</a>
+        <a href="winners.html">Winners</a>
+        <a href="profile.html">My Profile</a>
+        <a href="index.html#prizes">Prizes</a>
+        <a href="login.html">Login</a>
+        <a href="register.html" class="active">Register</a>
+        <div class="mobile-menu-footer">
+            <p>Need help? <a href="mailto:support@trustcade.com">Contact Support</a></p>
+        </div>
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+        <div class="container">
+            <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
+            <span><i class="fas fa-trophy"></i> 5,247+ Winners</span>
+            <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            <span><i class="fas fa-clock"></i> Free Daily Spin</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="register-hero">
+            <div class="register-hero-content">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">🎁 Start Winning Today!</h1>
+                <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto;">
+                    Join thousands of winners who turned free spins into amazing prizes. 
+                    Your first spin is just a registration away!
+                </p>
+            </div>
+        </section>
+
+        <!-- Registration Container -->
+        <div class="register-container">
+            <!-- Registration Form -->
+            <div class="register-card">
+                <!-- Registration Steps -->
+                <div class="register-steps">
+                    <div class="register-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Account Info</div>
+                    </div>
+                    <div class="register-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Verification</div>
+                    </div>
+                    <div class="register-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Complete</div>
+                    </div>
                 </div>
-                <h2>Join TrustCade</h2>
-                <p>Register and verify with gift card to claim prizes</p>
+                
+                <!-- Progress Bar -->
+                <div class="registration-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 33%"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>Step <span id="currentStep">1</span> of 3</span>
+                        <span id="progressPercent">33%</span>
+                    </div>
+                </div>
+                
+                <!-- Step 1: Account Information -->
+                <div class="form-step active" id="step1">
+                    <div class="register-card-header">
+                        <div class="register-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h2 class="register-title">Create Your Account</h2>
+                        <p class="register-subtitle">Enter your basic information to get started</p>
+                    </div>
+                    
+                    <!-- Message Display -->
+                    <div id="registerMessage" class="auth-message" style="display: none; margin-bottom: 1.5rem;"></div>
+                    
+                    <form id="accountForm">
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-user"></i> Full Name
+                            </label>
+                            <input type="text" class="form-control-enhanced" id="fullName" placeholder="Enter your full name" required>
+                            <div class="error-message" id="nameError"></div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
+                            <input type="email" class="form-control-enhanced" id="email" placeholder="Enter your email" required>
+                            <div class="error-message" id="emailError"></div>
+                            <div class="input-hint">We'll send a verification code to this email</div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-mobile-alt"></i> Phone Number (Optional)
+                            </label>
+                            <input type="tel" class="form-control-enhanced" id="phone" placeholder="For prize notifications">
+                            <div class="error-message" id="phoneError"></div>
+                            <div class="input-hint">Used for prize delivery notifications</div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-lock"></i> Create Password
+                            </label>
+                            <div class="password-container">
+                                <input type="password" class="form-control-enhanced" id="password" placeholder="Create a strong password" required>
+                                <button type="button" class="password-toggle" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                            
+                            <!-- Password Requirements -->
+                            <div class="password-requirements">
+                                <div class="requirements-title">Password Requirements:</div>
+                                <div class="requirement-item" id="reqLength">
+                                    <i class="fas fa-circle"></i>
+                                    <span>At least 8 characters</span>
+                                </div>
+                                <div class="requirement-item" id="reqUppercase">
+                                    <i class="fas fa-circle"></i>
+                                    <span>One uppercase letter</span>
+                                </div>
+                                <div class="requirement-item" id="reqLowercase">
+                                    <i class="fas fa-circle"></i>
+                                    <span>One lowercase letter</span>
+                                </div>
+                                <div class="requirement-item" id="reqNumber">
+                                    <i class="fas fa-circle"></i>
+                                    <span>One number</span>
+                                </div>
+                                <div class="requirement-item" id="reqSpecial">
+                                    <i class="fas fa-circle"></i>
+                                    <span>One special character</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-lock"></i> Confirm Password
+                            </label>
+                            <div class="password-container">
+                                <input type="password" class="form-control-enhanced" id="confirmPassword" placeholder="Confirm your password" required>
+                                <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="confirmPasswordError"></div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-user-friends"></i> Referral Code (Optional)
+                            </label>
+                            <input type="text" class="form-control-enhanced" id="referralCode" placeholder="Enter friend's code for bonus spins">
+                            <div class="input-hint">Get 2 extra spins on successful registration</div>
+                        </div>
+                        
+                        <div class="form-navigation">
+                            <div></div> <!-- Empty spacer -->
+                            <button type="button" class="nav-button btn-next" id="nextToStep2">
+                                Continue <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Step 2: Verification -->
+                <div class="form-step" id="step2">
+                    <div class="register-card-header">
+                        <div class="register-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h2 class="register-title">Choose Verification Method</h2>
+                        <p class="register-subtitle">Verify your account to unlock all features</p>
+                    </div>
+                    
+                    <div class="verification-options">
+                        <div class="verification-option" data-verification="email">
+                            <div class="verification-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3 class="verification-title">Email Verification</h3>
+                            <p class="verification-desc">Basic account access</p>
+                            <div class="verification-price">FREE</div>
+                            <div class="input-hint">Limited to prizes under $100</div>
+                        </div>
+                        
+                        <div class="verification-option selected" data-verification="giftcard">
+                            <div class="verification-badge">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="verification-icon">
+                                <i class="fas fa-gift-card"></i>
+                            </div>
+                            <h3 class="verification-title">Gift Card Verification</h3>
+                            <p class="verification-desc">Full access to all prizes</p>
+                            <div class="verification-price">$100</div>
+                            <div class="input-hint">Value remains in your account</div>
+                        </div>
+                        
+                        <div class="verification-option" data-verification="id">
+                            <div class="verification-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <h3 class="verification-title">ID Verification</h3>
+                            <p class="verification-desc">Government ID upload</p>
+                            <div class="verification-price">FREE</div>
+                            <div class="input-hint">24-48 hour processing</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gift Card Form -->
+                    <div id="giftCardForm" style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--text-color);">
+                            <i class="fas fa-gift-card"></i> Enter Gift Card Details
+                        </h3>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-shopping-bag"></i> Gift Card Type
+                            </label>
+                            <select class="form-control-enhanced" id="giftCardType">
+                                <option value="">Select card type</option>
+                                <option value="steam">Steam Gift Card</option>
+                                <option value="apple">Apple Gift Card</option>
+                                <option value="amazon">Amazon Gift Card</option>
+                                <option value="google">Google Play Card</option>
+                                <option value="visa">Visa Prepaid Card</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-barcode"></i> Gift Card Code
+                            </label>
+                            <input type="text" class="form-control-enhanced" id="giftCardCode" 
+                                   placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19">
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label class="form-label-enhanced">
+                                <i class="fas fa-lock"></i> PIN (If Required)
+                            </label>
+                            <input type="text" class="form-control-enhanced" id="giftCardPin" 
+                                   placeholder="Enter PIN if applicable">
+                        </div>
+                        
+                        <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: var(--radius-sm); margin: 1.5rem 0;">
+                            <p style="margin: 0; color: var(--secondary-color); font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> 
+                                <strong>Important:</strong> The $100 gift card value will be added to your TrustCade balance. 
+                                You can use it for extra spins or withdraw after winning 3 prizes.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Terms Agreement -->
+                    <div style="margin: 2rem 0;">
+                        <div class="terms-agreement" style="align-items: flex-start;">
+                            <input type="checkbox" id="termsAgreement" required style="margin-top: 0.3rem;">
+                            <label for="termsAgreement" style="line-height: 1.5;">
+                                I confirm that I am 18+ years old and agree to the 
+                                <a href="terms.html" target="_blank">Terms of Service</a>, 
+                                <a href="privacy.html" target="_blank">Privacy Policy</a>, and 
+                                <a href="rules.html" target="_blank">Contest Rules</a>.
+                            </label>
+                        </div>
+                        <div class="error-message" id="termsError"></div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="nav-button btn-prev" id="backToStep1">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="nav-button btn-submit" id="completeRegistration">
+                            <span class="register-loading" id="registerLoading">
+                                <span class="loading-spinner"></span> Creating Account...
+                            </span>
+                            <span id="registerText">
+                                <i class="fas fa-check-circle"></i> Complete Registration
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Success Screen -->
+                <div class="form-step" id="step3">
+                    <div class="success-screen">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2 class="success-title">Registration Complete! 🎉</h2>
+                        <p class="success-message">
+                            Welcome to TrustCade! Your account has been successfully created. 
+                            You now have access to daily free spins and amazing prizes.
+                        </p>
+                        
+                        <div style="background: var(--light-color); padding: 1.5rem; border-radius: var(--radius-md); margin: 2rem 0;">
+                            <h3 style="margin-bottom: 1rem; color: var(--text-color);">
+                                <i class="fas fa-rocket"></i> Next Steps
+                            </h3>
+                            <ul style="text-align: left; padding-left: 1.5rem; color: var(--text-color);">
+                                <li style="margin-bottom: 0.5rem;">Check your email for verification</li>
+                                <li style="margin-bottom: 0.5rem;">Claim your free daily spin</li>
+                                <li style="margin-bottom: 0.5rem;">Explore available prizes</li>
+                                <li>Set up your profile for prize delivery</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                            <a href="index.html" class="nav-button btn-next" style="text-decoration: none;">
+                                <i class="fas fa-redo"></i> Spin Now
+                            </a>
+                            <a href="profile.html" class="nav-button" style="background: var(--light-color); color: var(--text-color); text-decoration: none;">
+                                <i class="fas fa-user"></i> My Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trust Cards -->
+                <div class="register-trust">
+                    <div class="trust-card">
+                        <div class="trust-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Secure Registration</h4>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">
+                            Your data is encrypted and protected
+                        </p>
+                    </div>
+                    <div class="trust-card">
+                        <div class="trust-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4>Instant Access</h4>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">
+                            Start spinning immediately after registration
+                        </p>
+                    </div>
+                </div>
             </div>
             
-            <!-- Registration Steps -->
-            <div class="register-steps">
-                <div class="step active" id="step1">
-                    <div class="step-number">1</div>
-                    <div class="step-label">Account</div>
+            <!-- Benefits Sidebar -->
+            <div class="benefits-sidebar">
+                <div class="benefits-header">
+                    <div class="benefits-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h2 class="benefits-title">Why Join TrustCade?</h2>
+                    <p class="benefits-subtitle">Here's what you get as a member</p>
                 </div>
-                <div class="step" id="step2">
-                    <div class="step-number">2</div>
-                    <div class="step-label">Gift Card</div>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Daily Free Spin</h4>
+                            <p>One free spin every 24 hours to win real prizes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Real Prizes</h4>
+                            <p>iPhone, PS5, cash, gift cards, and more</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Free Worldwide Shipping</h4>
+                            <p>All prizes shipped for free, no hidden costs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Referral Program</h4>
+                            <p>Earn $10 for every friend who verifies</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Win Statistics</h4>
+                            <p>Track your wins and improve your chances</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>24/7 Support</h4>
+                            <p>Dedicated support team for all your questions</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="step" id="step3">
-                    <div class="step-number">3</div>
-                    <div class="step-label">Complete</div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Already a Winner Today</h3>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700;">5,247+</div>
+                            <div style="opacity: 0.9; font-size: 0.9rem;">Total Winners</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700;">$892K+</div>
+                            <div style="opacity: 0.9; font-size: 0.9rem;">Prizes Distributed</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700;">324</div>
+                            <div style="opacity: 0.9; font-size: 0.9rem;">Wins Today</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Step 1: Account Details -->
-            <div id="step1Content">
-                <form class="auth-form" id="accountForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <input type="text" id="firstName" placeholder="First Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="lastName" placeholder="Last Name" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="email" id="regEmail" placeholder="Email Address" required>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <input type="password" id="regPassword" placeholder="Password" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="tel" id="phone" placeholder="Phone Number">
-                    </div>
-                    
-                    <div class="verification-note">
-                        <p><i class="fas fa-info-circle"></i> <strong>Important:</strong> You need a $100 Steam/Apple gift card to verify your account and claim prizes worth over $100.</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label style="display: flex; align-items: start; gap: 0.5rem; font-size: 0.9rem;">
-                            <input type="checkbox" required>
-                            <span>I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>. I confirm that I am 18+ years old.</span>
-                        </label>
-                    </div>
-                    
-                    <button type="submit" class="auth-btn">
-                        Continue to Gift Card Verification <i class="fas fa-arrow-right"></i>
-                    </button>
-                </form>
-            </div>
-            
-            <!-- Step 2: Gift Card Verification -->
-            <div id="step2Content" style="display: none;">
-                <div class="gift-card-section">
-                    <h3><i class="fas fa-gift"></i> $100 Gift Card Required</h3>
-                    <p>Enter your Steam or Apple gift card code to verify your account.</p>
-                    
-                    <div style="margin: 1.5rem 0;">
-                        <input type="text" 
-                               id="giftCardCode" 
-                               placeholder="Enter gift card code" 
-                               style="width: 100%; padding: 1rem; border: 2px solid white; border-radius: 10px; font-size: 1.1rem; text-align: center;">
-                    </div>
-                    
-                    <p style="font-size: 0.9rem; opacity: 0.9;">
-                        <i class="fas fa-shield-alt"></i> Your gift card balance will remain intact. This is only for verification.
+                
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                    <p style="text-align: center; opacity: 0.9; font-size: 0.9rem;">
+                        <i class="fas fa-lock"></i> Secure & Encrypted Registration
                     </p>
                 </div>
-                
-                <div class="verification-note">
-                    <h4><i class="fas fa-check-circle"></i> Why Gift Card Verification?</h4>
-                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
-                        <li>Prevents fraud and fake accounts</li>
-                        <li>Unlocks prize claiming for high-value items</li>
-                        <li>Gives you verified status</li>
-                        <li>Required for prizes over $100</li>
-                    </ul>
+            </div>
+        </div>
+        
+        <!-- Already Registered -->
+        <div style="text-align: center; margin: 3rem 0;">
+            <p style="color: var(--text-light);">
+                Already have an account? 
+                <a href="login.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none;">
+                    <i class="fas fa-sign-in-alt"></i> Sign In Here
+                </a>
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-gift"></i> TrustCade</h3>
+                    <p>Your trusted platform for winning real prizes through daily spins. Verified winners, transparent system.</p>
+                    <div class="footer-trust">
+                        <span><i class="fas fa-check-circle"></i> 100% Legit</span>
+                        <span><i class="fas fa-shield-alt"></i> Secure</span>
+                        <span><i class="fas fa-truck"></i> Free Shipping</span>
+                    </div>
                 </div>
-                
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="button" class="auth-btn" style="background: #666;" onclick="goToStep(1)">
-                        <i class="fas fa-arrow-left"></i> Back
-                    </button>
-                    <button type="button" class="auth-btn" onclick="verifyGiftCard()">
-                        Verify & Complete <i class="fas fa-check"></i>
-                    </button>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="winners.html">Winners</a>
+                    <a href="profile.html">My Profile</a>
+                    <a href="index.html#prizes">Prizes</a>
+                    <a href="login.html">Login</a>
+                    <a href="register.html">Register</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="contact.html">Contact Us</a>
+                    <a href="faq.html">FAQ</a>
+                    <a href="rules.html">Contest Rules</a>
+                    <a href="disclaimer.html">Disclaimer</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> support@trustcade.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Prize Street, NY</p>
+                    <div class="newsletter">
+                        <h5>Get Updates</h5>
+                        <div class="newsletter-input">
+                            <input type="email" placeholder="Your email" id="registerNewsletterEmail">
+                            <button id="registerNewsletterBtn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <!-- Step 3: Completion -->
-            <div id="step3Content" style="display: none; text-align: center;">
-                <div style="font-size: 4rem; color: #10B981; margin: 2rem 0;">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                
-                <h2>Registration Complete!</h2>
-                <p>Your account has been verified and is now ready to use.</p>
-                
-                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin: 2rem 0; text-align: left;">
-                    <h4><i class="fas fa-star"></i> Account Benefits:</h4>
-                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
-                        <li>✅ Claim unlimited prizes</li>
-                        <li>✅ Daily free spins</li>
-                        <li>✅ Verified badge on profile</li>
-                        <li>✅ Priority shipping</li>
-                        <li>✅ Join grand prize draws</li>
-                    </ul>
-                </div>
-                
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <a href="index.html#spin" class="auth-btn">
-                        <i class="fas fa-redo"></i> Spin Now
-                    </a>
-                    <a href="profile.html" class="auth-btn" style="background: #10B981;">
-                        <i class="fas fa-user"></i> View Profile
-                    </a>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners, Real Fun!</p>
+                <p>Odds displayed: 1:8 win rate | Verified business | Transparent system | Must be 18+ to play</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa" title="Visa"></i>
+                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fab fa-cc-amex" title="American Express"></i>
+                    <i class="fab fa-cc-paypal" title="PayPal"></i>
+                    <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
+                    <i class="fab fa-cc-google-pay" title="Google Pay"></i>
                 </div>
             </div>
-            
-            <div class="auth-links">
-                <p>Already have an account? <a href="login.html">Login here</a></p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('verificationModal')">&times;</span>
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; color: var(--secondary-color); margin-bottom: 1rem;">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h2>Verify Your Email</h2>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    We've sent a verification code to your email address. Please check your inbox and enter the code below.
+                </p>
+                
+                <div class="twofa-code" style="margin: 1.5rem auto; max-width: 300px;">
+                    <input type="text" class="twofa-input" maxlength="1" data-index="0">
+                    <input type="text" class="twofa-input" maxlength="1" data-index="1">
+                    <input type="text" class="twofa-input" maxlength="1" data-index="2">
+                    <input type="text" class="twofa-input" maxlength="1" data-index="3">
+                    <input type="text" class="twofa-input" maxlength="1" data-index="4">
+                    <input type="text" class="twofa-input" maxlength="1" data-index="5">
+                </div>
+                
+                <div class="error-message" id="verificationError" style="text-align: center;"></div>
+                
+                <button class="spin-btn" onclick="verifyEmail()" style="margin-top: 1rem;">
+                    <i class="fas fa-check-circle"></i> Verify Email
+                </button>
+                
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
+                    Didn't receive code? 
+                    <a href="#" onclick="resendVerification()" style="color: var(--primary-color);">
+                        Resend
+                    </a>
+                </p>
             </div>
         </div>
     </div>
 
+    <script src="script.js"></script>
+    
+    <!-- Registration page JavaScript -->
     <script>
-        let currentStep = 1;
+        // Registration data
+        let registrationData = {
+            step: 1,
+            verificationMethod: 'giftcard',
+            giftCard: null
+        };
         
-        function goToStep(step) {
-            // Hide all steps
-            document.getElementById('step1Content').style.display = 'none';
-            document.getElementById('step2Content').style.display = 'none';
-            document.getElementById('step3Content').style.display = 'none';
+        // Initialize registration page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup step navigation
+            setupStepNavigation();
             
-            // Remove active class from all steps
-            document.getElementById('step1').classList.remove('active', 'completed');
-            document.getElementById('step2').classList.remove('active', 'completed');
-            document.getElementById('step3').classList.remove('active', 'completed');
+            // Setup password toggles
+            setupPasswordToggles();
             
-            // Show current step
-            document.getElementById(`step${step}Content`).style.display = 'block';
-            document.getElementById(`step${step}`).classList.add('active');
+            // Setup password validation
+            setupPasswordValidation();
             
-            // Mark previous steps as completed
-            for (let i = 1; i < step; i++) {
-                document.getElementById(`step${i}`).classList.add('completed');
-            }
+            // Setup verification options
+            setupVerificationOptions();
             
-            currentStep = step;
-        }
-        
-        // Handle account form submission
-        document.getElementById('accountForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Setup form submission
+            setupFormSubmission();
             
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            // Setup mobile menu
+            setupMobileMenu();
             
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
-            }
+            // Setup back to top button
+            setupBackToTop();
             
-            // Save account data to localStorage
-            const accountData = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('regEmail').value,
-                phone: document.getElementById('phone').value
-            };
+            // Check if already logged in
+            checkAlreadyRegistered();
             
-            localStorage.setItem('trustcade_registration', JSON.stringify(accountData));
-            
-            // Go to step 2
-            goToStep(2);
+            // Setup newsletter
+            setupNewsletter();
         });
         
-        function verifyGiftCard() {
-            const giftCardCode = document.getElementById('giftCardCode').value;
+        function setupStepNavigation() {
+            // Next button from step 1 to step 2
+            document.getElementById('nextToStep2').addEventListener('click', function() {
+                if (validateStep1()) {
+                    goToStep(2);
+                }
+            });
             
-            if (!giftCardCode || giftCardCode.length < 10) {
-                alert('Please enter a valid gift card code');
+            // Back button from step 2 to step 1
+            document.getElementById('backToStep1').addEventListener('click', function() {
+                goToStep(1);
+            });
+            
+            // Complete registration button
+            document.getElementById('completeRegistration').addEventListener('click', completeRegistration);
+        }
+        
+        function goToStep(stepNumber) {
+            // Update step in data
+            registrationData.step = stepNumber;
+            
+            // Update step indicators
+            document.querySelectorAll('.register-step').forEach(step => {
+                const stepNum = parseInt(step.dataset.step);
+                step.classList.remove('active', 'completed');
+                
+                if (stepNum < stepNumber) {
+                    step.classList.add('completed');
+                } else if (stepNum === stepNumber) {
+                    step.classList.add('active');
+                }
+            });
+            
+            // Show/hide form steps
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            
+            // Update progress bar
+            const progressPercent = (stepNumber / 3) * 100;
+            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+            document.getElementById('currentStep').textContent = stepNumber;
+            document.getElementById('progressPercent').textContent = `${Math.round(progressPercent)}%`;
+            
+            // Scroll to top of form
+            document.querySelector('.register-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function validateStep1() {
+            const name = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const phone = document.getElementById('phone').value.trim();
+            
+            let isValid = true;
+            clearErrors();
+            
+            // Validate name
+            if (!name) {
+                showError('nameError', 'Please enter your full name');
+                isValid = false;
+            }
+            
+            // Validate email
+            if (!email) {
+                showError('emailError', 'Please enter your email address');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showError('emailError', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password) {
+                showError('passwordError', 'Please create a password');
+                isValid = false;
+            } else if (password.length < 8) {
+                showError('passwordError', 'Password must be at least 8 characters');
+                isValid = false;
+            } else if (!isStrongPassword(password)) {
+                showError('passwordError', 'Password does not meet requirements');
+                isValid = false;
+            }
+            
+            // Validate confirm password
+            if (!confirmPassword) {
+                showError('confirmPasswordError', 'Please confirm your password');
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                showError('confirmPasswordError', 'Passwords do not match');
+                isValid = false;
+            }
+            
+            // Validate phone (optional)
+            if (phone && !isValidPhone(phone)) {
+                showError('phoneError', 'Please enter a valid phone number');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function isStrongPassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(testPassword),
+                special: /[^A-Za-z0-9]/.test(password)
+            };
+            
+            return Object.values(requirements).every(req => req);
+        }
+        
+        function setupPasswordToggles() {
+            // Password toggle
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            
+            togglePassword?.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Confirm password toggle
+            const toggleConfirm = document.getElementById('toggleConfirmPassword');
+            const confirmInput = document.getElementById('confirmPassword');
+            
+            toggleConfirm?.addEventListener('click', function() {
+                const type = confirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+        
+        function setupPasswordValidation() {
+            const passwordInput = document.getElementById('password');
+            
+            passwordInput?.addEventListener('input', function() {
+                const password = this.value;
+                
+                // Update requirement indicators
+                updateRequirement('reqLength', password.length >= 8);
+                updateRequirement('reqUppercase', /[A-Z]/.test(password));
+                updateRequirement('reqLowercase', /[a-z]/.test(password));
+                updateRequirement('reqNumber', /\d/.test(password));
+                updateRequirement('reqSpecial', /[^A-Za-z0-9]/.test(password));
+                
+                // Update input border
+                if (password.length === 0) {
+                    this.classList.remove('has-error', 'has-success');
+                } else if (isStrongPassword(password)) {
+                    this.classList.remove('has-error');
+                    this.classList.add('has-success');
+                } else {
+                    this.classList.remove('has-success');
+                    this.classList.add('has-error');
+                }
+            });
+            
+            // Confirm password validation
+            document.getElementById('confirmPassword')?.addEventListener('input', function() {
+                const password = document.getElementById('password').value;
+                const confirm = this.value;
+                
+                if (confirm.length === 0) {
+                    this.classList.remove('has-error', 'has-success');
+                } else if (password === confirm) {
+                    this.classList.remove('has-error');
+                    this.classList.add('has-success');
+                } else {
+                    this.classList.remove('has-success');
+                    this.classList.add('has-error');
+                }
+            });
+        }
+        
+        function updateRequirement(elementId, isValid) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.classList.toggle('valid', isValid);
+                element.classList.toggle('invalid', !isValid);
+                element.querySelector('i').className = isValid ? 'fas fa-check-circle' : 'fas fa-circle';
+            }
+        }
+        
+        function setupVerificationOptions() {
+            const options = document.querySelectorAll('.verification-option');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Update verification method
+                    registrationData.verificationMethod = this.dataset.verification;
+                    
+                    // Show/hide gift card form
+                    const giftCardForm = document.getElementById('giftCardForm');
+                    if (registrationData.verificationMethod === 'giftcard') {
+                        giftCardForm.style.display = 'block';
+                    } else {
+                        giftCardForm.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        function setupFormSubmission() {
+            // Prevent form submission on enter
+            document.getElementById('accountForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                document.getElementById('nextToStep2').click();
+            });
+        }
+        
+        function completeRegistration() {
+            // Validate step 2
+            const termsAgreed = document.getElementById('termsAgreement').checked;
+            
+            if (!termsAgreed) {
+                showError('termsError', 'You must agree to the terms and conditions');
                 return;
             }
             
-            // Simulate verification (in real app, this would be API call)
-            setTimeout(() => {
-                // Complete registration
-                const accountData = JSON.parse(localStorage.getItem('trustcade_registration'));
+            // Validate gift card if selected
+            if (registrationData.verificationMethod === 'giftcard') {
+                const cardType = document.getElementById('giftCardType').value;
+                const cardCode = document.getElementById('giftCardCode').value.trim();
                 
+                if (!cardType) {
+                    showMessage('Please select a gift card type', 'error');
+                    return;
+                }
+                
+                if (!cardCode) {
+                    showMessage('Please enter your gift card code', 'error');
+                    return;
+                }
+                
+                if (cardCode.length < 16) {
+                    showMessage('Please enter a valid gift card code', 'error');
+                    return;
+                }
+                
+                registrationData.giftCard = {
+                    type: cardType,
+                    code: cardCode,
+                    pin: document.getElementById('giftCardPin').value.trim()
+                };
+            }
+            
+            // Show loading state
+            setLoading('completeRegistration', 'registerLoading', 'registerText', true);
+            
+            // Simulate registration process
+            setTimeout(() => {
+                // Get form data
+                const name = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const password = document.getElementById('password').value;
+                const referral = document.getElementById('referralCode').value.trim();
+                
+                // Create user data
                 const userData = {
-                    name: `${accountData.firstName} ${accountData.lastName}`,
-                    email: accountData.email,
-                    phone: accountData.phone,
+                    email: email,
+                    name: name,
+                    phone: phone || null,
                     joined: new Date().toISOString(),
-                    verified: true,
-                    giftCardVerified: true,
-                    verificationDate: new Date().toISOString()
+                    verified: registrationData.verificationMethod === 'giftcard',
+                    referralCode: referral || null,
+                    verificationMethod: registrationData.verificationMethod,
+                    giftCard: registrationData.giftCard,
+                    settings: {
+                        notifications: true,
+                        spinReminders: true,
+                        address: ''
+                    },
+                    id: 'user_' + Date.now() + Math.random().toString(36).substr(2, 9),
+                    balance: registrationData.verificationMethod === 'giftcard' ? 100 : 0
                 };
                 
                 // Save user data
                 localStorage.setItem('trustcade_user', JSON.stringify(userData));
-                localStorage.setItem('trustcade_verified', 'true');
                 
-                // Clear registration data
-                localStorage.removeItem('trustcade_registration');
+                // Save registration completion
+                localStorage.setItem('trustcade_registered', 'true');
                 
-                // Go to completion step
+                // Hide loading
+                setLoading('completeRegistration', 'registerLoading', 'registerText', false);
+                
+                // Go to success screen
                 goToStep(3);
-            }, 1500);
+                
+                // If email verification needed, show modal
+                if (registrationData.verificationMethod === 'email') {
+                    setTimeout(() => {
+                        showVerificationModal(email);
+                    }, 1000);
+                }
+            }, 2000);
         }
         
-        // Initialize first step
-        goToStep(1);
+        function showVerificationModal(email) {
+            const modal = document.getElementById('verificationModal');
+            modal.classList.add('show');
+            
+            // Generate verification code
+            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            localStorage.setItem('trustcade_verification_code', verificationCode);
+            localStorage.setItem('trustcade_verification_email', email);
+            
+            // In a real app, this would send an email
+            console.log(`Verification code for ${email}: ${verificationCode}`);
+            
+            // Setup verification inputs
+            setupVerificationInputs();
+        }
+        
+        function setupVerificationInputs() {
+            const inputs = document.querySelectorAll('#verificationModal .twofa-input');
+            
+            inputs.forEach(input => {
+                input.value = '';
+                input.addEventListener('input', function() {
+                    const index = parseInt(this.dataset.index);
+                    const value = this.value;
+                    
+                    // Only allow numbers
+                    this.value = value.replace(/\D/g, '');
+                    
+                    // Move to next input if value entered
+                    if (this.value.length === 1 && index < 5) {
+                        inputs[index + 1].focus();
+                    }
+                });
+            });
+            
+            // Focus first input
+            inputs[0].focus();
+        }
+        
+        function verifyEmail() {
+            const inputs = document.querySelectorAll('#verificationModal .twofa-input');
+            let enteredCode = '';
+            
+            inputs.forEach(input => {
+                enteredCode += input.value;
+            });
+            
+            const storedCode = localStorage.getItem('trustcade_verification_code');
+            
+            if (enteredCode.length !== 6) {
+                document.getElementById('verificationError').textContent = 'Please enter the complete 6-digit code';
+                return;
+            }
+            
+            if (enteredCode === storedCode) {
+                // Update user verification status
+                const userData = JSON.parse(localStorage.getItem('trustcade_user'));
+                userData.emailVerified = true;
+                localStorage.setItem('trustcade_user', JSON.stringify(userData));
+                
+                closeModal('verificationModal');
+                showMessage('Email verified successfully!', 'success');
+            } else {
+                document.getElementById('verificationError').textContent = 'Incorrect verification code';
+            }
+        }
+        
+        function resendVerification() {
+            const email = localStorage.getItem('trustcade_verification_email');
+            if (email) {
+                const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+                localStorage.setItem('trustcade_verification_code', newCode);
+                
+                // In a real app, this would send an email
+                console.log(`New verification code for ${email}: ${newCode}`);
+                
+                // Clear inputs
+                document.querySelectorAll('#verificationModal .twofa-input').forEach(input => {
+                    input.value = '';
+                });
+                document.querySelector('#verificationModal .twofa-input[data-index="0"]').focus();
+                
+                showMessage('New verification code sent!', 'success');
+            }
+        }
+        
+        function checkAlreadyRegistered() {
+            const user = JSON.parse(localStorage.getItem('trustcade_user'));
+            if (user && !user.guest) {
+                showMessage('You already have an account. Redirecting...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        }
+        
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            const closeBtn = document.getElementById('mobileMenuClose');
+            
+            if (menuBtn && menu && closeBtn) {
+                menuBtn.addEventListener('click', () => menu.classList.add('active'));
+                closeBtn.addEventListener('click', () => menu.classList.remove('active'));
+                
+                document.addEventListener('click', (e) => {
+                    if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                        menu.classList.remove('active');
+                    }
+                });
+            }
+        }
+        
+        function setupBackToTop() {
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.style.display = 'flex';
+                    setTimeout(() => backToTopBtn.style.opacity = '1', 10);
+                } else {
+                    backToTopBtn.style.opacity = '0';
+                    setTimeout(() => {
+                        if (window.scrollY <= 300) {
+                            backToTopBtn.style.display = 'none';
+                        }
+                    }, 300);
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        
+        function setupNewsletter() {
+            document.getElementById('registerNewsletterBtn')?.addEventListener('click', function() {
+                const email = document.getElementById('registerNewsletterEmail').value;
+                if (email && email.includes('@')) {
+                    alert('Thank you for subscribing to our newsletter!');
+                    document.getElementById('registerNewsletterEmail').value = '';
+                }
+            });
+        }
+        
+        // Utility functions
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function isValidPhone(phone) {
+            return /^[\+]?[1-9][\d]{0,15}$/.test(phone.replace(/[\s\-\(\)]/g, ''));
+        }
+        
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.style.display = 'block';
+            }
+        }
+        
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+        }
+        
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('registerMessage');
+            messageEl.textContent = message;
+            messageEl.className = `auth-message message-${type}`;
+            messageEl.style.display = 'flex';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        function setLoading(buttonId, loadingId, textId, isLoading) {
+            const button = document.getElementById(buttonId);
+            const loading = document.getElementById(loadingId);
+            const text = document.getElementById(textId);
+            
+            if (isLoading) {
+                button.disabled = true;
+                loading.style.display = 'inline';
+                text.style.display = 'none';
+            } else {
+                button.disabled = false;
+                loading.style.display = 'none';
+                text.style.display = 'inline';
+            }
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
     </script>
 </body>
-  </html>
+    </html>
