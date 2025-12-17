@@ -1,40 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrustCade - Spin & Win Real Prizes</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-    
-    <!-- Additional CSS for JavaScript elements -->
-    <style>
-        /* Loading Screen */
-        #loadingScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            z-index: 99999;
-            transition: opacity 0.5s ease;
-        }
-        
-        .spinner {
-            text-align: center;
-            color: white;
-        }
-        
-        .spinner i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spin Wheel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    #spinBtn {
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    #prizeList {
+      list-style-type: none;
+      padding: 0;
+    }
+    #prizeList li {
+      background: #fff;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    #result {
+      font-size: 22px;
+      margin: 15px 0;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎡 Spin the Wheel!</h1>
+  <button id="spinBtn">Spin</button>
+  <div id="result"></div>
+
+  <h2>Your Prizes</h2>
+  <ul id="prizeList">
+    <li>Loading...</li>
+  </ul>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // ========= FIREBASE CONFIG =========
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ========= PRIZES =========
+    const prizes = [
+      "Free Spin",
+      "$5 Gift Card",
+      "$10 Gift Card",
+      "Try Again",
+      "Lucky Bonus"
+    ];
+
+    // ========= SPIN WHEEL =========
+    async function spinWheel() {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Please login first");
+        return;
+      }
+
+      const spinBtn = document.getElementById("spinBtn");
+      spinBtn.disabled = true;
+
+      const prize = prizes[Math.floor(Math.random() * prizes.length)];
+      document.getElementById("result").innerText = "🎉 You won: " + prize;
+
+      try {
+        const userRef = db.collection("users").doc(user.uid);
+        await userRef.update({
+          prizes: firebase.firestore.FieldValue.arrayUnion(prize),
+          lastSpin: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        loadPrizes();
+      } catch (error) {
+        console.error("Error updating prizes:", error);
+      } finally {
+        setTimeout(() => spinBtn.disabled = false, 3000);
+      }
+    }
+
+    // ========= LOAD USER PRIZES =========
+    async function loadPrizes() {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const docSnap = await db.collection("users").doc(user.uid).get();
+      const list = document.getElementById("prizeList");
+      list.innerHTML = "";
+
+      if (!docSnap.exists || !docSnap.data().prizes) {
+        list.innerHTML = "<li>No prizes yet</li>";
+        return;
+      }
+
+      docSnap.data().prizes.forEach((p) => {
+        const li = document.createElement("li");
+        li.textContent = p;
+        list.appendChild(li);
+      });
+    }
+
+    // ========= AUTO LOAD =========
+    auth.onAuthStateChanged((user) => {
+      if (user) loadPrizes();
+    });
+
+    // ========= BUTTON EVENT =========
+    document.getElementById("spinBtn").addEventListener("click", spinWheel);
+  </script>
+
+</body>
+</html>            margin-bottom: 1rem;
             animation: spin 2s linear infinite;
         }
         
