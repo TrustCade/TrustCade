@@ -5,19 +5,1087 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - TrustCade</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    
     <style>
-        .profile-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 20px;
-        }
-        
+        /* Profile-specific styles */
         .profile-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 20px;
-            padding: 2rem;
+            padding: 3rem 0;
             margin-bottom: 2rem;
+            border-radius: var(--radius-lg);
         }
         
-        .user-info {
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+            box-shadow: var(--shadow-lg);
+            border: 4px solid white;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card-profile {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .stat-card-profile:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-card-profile h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--light-color);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            color: var(--primary-color);
+        }
+        
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .prize-card-profile {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .prize-card-profile:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .prize-status {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+        
+        .status-shipped {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+        
+        .status-delivered {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        
+        .status-verified {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8B5CF6;
+        }
+        
+        .claim-code {
+            background: var(--light-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-xl);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+        
+        .settings-form {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .btn-save {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--light-color);
+            margin-bottom: 1rem;
+        }
+        
+        .referral-code {
+            background: linear-gradient(135deg, #8B5CF6, #667eea);
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .referral-code h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .code-display {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .prize-card-profile {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .profile-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" style="display: none;">
+        <div class="spinner">
+            <i class="fas fa-gift"></i>
+            <p>Loading Profile...</p>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+                <p class="tagline">Spin & Win Real Prizes</p>
+            </div>
+            <nav>
+                <a href="index.html" class="btn-spin">SPIN NOW</a>
+                <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="profile.html" class="active"><i class="fas fa-user"></i> My Profile</a>
+                <a href="index.html#prizes">Prizes</a>
+                <a href="#" class="btn-login" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button id="mobileMenuClose" class="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html">Home</a>
+        <a href="index.html#spin">Spin Wheel</a>
+        <a href="winners.html">Winners</a>
+        <a href="profile.html" class="active">My Profile</a>
+        <a href="index.html#prizes">Prizes</a>
+        <a href="#" id="mobileLogoutBtn">Logout</a>
+        <div class="mobile-menu-footer">
+            <p>Need help? <a href="mailto:support@trustcade.com">Contact Support</a></p>
+        </div>
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+        <div class="container">
+            <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
+            <span><i class="fas fa-trophy"></i> <span id="totalWinnersCount">5,247</span>+ Winners</span>
+            <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            <span><i class="fas fa-clock"></i> Free Daily Spin</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Profile Header -->
+        <section class="profile-header">
+            <div class="container" style="text-align: center;">
+                <div class="profile-avatar" id="userAvatar">U</div>
+                <h2 id="userName">User Profile</h2>
+                <p id="userEmail">Loading...</p>
+                <div style="margin-top: 1rem;">
+                    <span class="verification-badge" id="verificationStatus">
+                        <i class="fas fa-shield-alt"></i> Not Verified
+                    </span>
+                    <span style="color: rgba(255,255,255,0.9); margin-left: 1rem;">
+                        <i class="fas fa-calendar"></i> Joined: <span id="joinDate">Just now</span>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Stats -->
+        <section class="profile-stats">
+            <div class="stat-card-profile">
+                <h3 id="totalWins">0</h3>
+                <p>Total Wins</p>
+                <small>All time</small>
+            </div>
+            <div class="stat-card-profile">
+                <h3 id="totalValue">$0</h3>
+                <p>Total Value</p>
+                <small>Won prizes</small>
+            </div>
+            <div class="stat-card-profile">
+                <h3 id="pendingPrizes">0</h3>
+                <p>Pending Prizes</p>
+                <small>Awaiting shipment</small>
+            </div>
+            <div class="stat-card-profile">
+                <h3 id="rank">#--</h3>
+                <p>Your Rank</p>
+                <small>Among all players</small>
+            </div>
+        </section>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab active" data-tab="prizes">
+                <i class="fas fa-gift"></i> My Prizes
+            </button>
+            <button class="tab" data-tab="referral">
+                <i class="fas fa-user-friends"></i> Refer Friends
+            </button>
+            <button class="tab" data-tab="settings">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+            <button class="tab" data-tab="verification">
+                <i class="fas fa-shield-alt"></i> Verification
+            </button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="tab-content active" id="prizes-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-gift"></i> My Prizes</h2>
+                <button class="refresh-btn" id="refreshPrizes">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+            
+            <div id="prizesList">
+                <!-- Prizes will be loaded here -->
+                <div class="empty-state">
+                    <i class="fas fa-gift"></i>
+                    <h3>No prizes yet</h3>
+                    <p>Start spinning to win amazing prizes!</p>
+                    <a href="index.html" class="btn-spin-action" style="margin-top: 1rem;">
+                        <i class="fas fa-redo"></i> Spin Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="referral-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-user-friends"></i> Refer Friends</h2>
+                <p class="section-subtitle">Earn $10 for every friend who verifies!</p>
+            </div>
+            
+            <div class="referral-code">
+                <h3>Your Referral Code</h3>
+                <div class="code-display" id="referralCodeDisplay">TRUST-XXXX-XXXX</div>
+                <p>Share this code with friends. They get 2 extra spins on registration!</p>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn-save" onclick="copyReferralCode()">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+                    <button class="btn-save" style="background: var(--gradient-secondary); margin-left: 1rem;">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stats-grid" style="margin-top: 2rem;">
+                <div class="stat-card stat-primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="referralCount">0</h3>
+                        <p>Friends Referred</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-success">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="referralEarnings">$0</h3>
+                        <p>Total Earnings</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-header" style="margin-top: 3rem;">
+                <h3><i class="fas fa-chart-line"></i> Referral History</h3>
+            </div>
+            
+            <div class="leaderboard-container">
+                <div class="leaderboard-header">
+                    <span class="rank-header">Date</span>
+                    <span class="player-header">Friend</span>
+                    <span class="wins-header">Status</span>
+                    <span class="value-header">Bonus</span>
+                </div>
+                <div class="leaderboard-list" id="referralHistory">
+                    <div class="leaderboard-item">
+                        <span class="date">No referrals yet</span>
+                        <span class="player">Invite friends to start earning</span>
+                        <span class="status pending">--</span>
+                        <span class="value">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="settings-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-cog"></i> Account Settings</h2>
+            </div>
+            
+            <div class="settings-form">
+                <div class="form-group">
+                    <label for="userNameInput"><i class="fas fa-user"></i> Display Name</label>
+                    <input type="text" id="userNameInput" class="form-control" placeholder="Enter your display name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="userEmailInput"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="userEmailInput" class="form-control" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="userPhoneInput"><i class="fas fa-phone"></i> Phone Number (Optional)</label>
+                    <input type="tel" id="userPhoneInput" class="form-control" placeholder="For prize notifications">
+                </div>
+                
+                <div class="form-group">
+                    <label for="userAddressInput"><i class="fas fa-map-marker-alt"></i> Shipping Address</label>
+                    <textarea id="userAddressInput" class="form-control" rows="3" placeholder="Enter your shipping address for prize delivery"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-bell"></i> Notifications</label>
+                    <div style="margin-top: 0.5rem;">
+                        <label style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <input type="checkbox" id="emailNotifications" checked style="margin-right: 0.5rem;">
+                            Email notifications for wins
+                        </label>
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" id="spinReminders" checked style="margin-right: 0.5rem;">
+                            Daily spin reminders
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn-save" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+            
+            <div class="section-header" style="margin-top: 3rem;">
+                <h3><i class="fas fa-shield-alt"></i> Security</h3>
+            </div>
+            
+            <div class="settings-form">
+                <div class="form-group">
+                    <label for="currentPassword"><i class="fas fa-lock"></i> Current Password</label>
+                    <input type="password" id="currentPassword" class="form-control" placeholder="Enter current password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword"><i class="fas fa-key"></i> New Password</label>
+                    <input type="password" id="newPassword" class="form-control" placeholder="Enter new password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword"><i class="fas fa-key"></i> Confirm New Password</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+                </div>
+                
+                <button class="btn-save" onclick="changePassword()" style="background: var(--gradient-secondary);">
+                    <i class="fas fa-key"></i> Change Password
+                </button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="verification-tab">
+            <div class="section-header">
+                <h2><i class="fas fa-shield-alt"></i> Account Verification</h2>
+                <p class="section-subtitle">Verify to unlock all features</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Purchase Gift Card</h3>
+                    <p>Buy a $100 Steam, Apple, or Amazon gift card from any authorized retailer</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3>Submit Code</h3>
+                    <p>Enter your gift card code below. The $100 will remain in your account balance</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Get Verified</h3>
+                    <p>Instant verification unlocks prize claiming, grand prize draws, and priority shipping</p>
+                </div>
+            </div>
+            
+            <div class="settings-form" style="margin-top: 3rem;">
+                <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-gift-card"></i> Submit Gift Card</h3>
+                
+                <div class="form-group">
+                    <label for="giftCardType"><i class="fas fa-shopping-bag"></i> Gift Card Type</label>
+                    <select id="giftCardType" class="form-control">
+                        <option value="">Select card type</option>
+                        <option value="steam">Steam Gift Card</option>
+                        <option value="apple">Apple Gift Card</option>
+                        <option value="amazon">Amazon Gift Card</option>
+                        <option value="google">Google Play Card</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftCardCode"><i class="fas fa-barcode"></i> Gift Card Code</label>
+                    <input type="text" id="giftCardCode" class="form-control" placeholder="Enter 16-digit code (XXXX-XXXX-XXXX-XXXX)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="giftCardPin"><i class="fas fa-lock"></i> PIN (If Required)</label>
+                    <input type="text" id="giftCardPin" class="form-control" placeholder="Enter PIN if applicable">
+                </div>
+                
+                <div class="form-group" style="background: var(--light-color); padding: 1rem; border-radius: var(--radius-sm);">
+                    <p style="margin: 0; color: var(--text-light); font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Important:</strong> The $100 gift card value will be added to your TrustCade balance. 
+                        You can use it to purchase extra spins or withdraw it after winning 3 prizes.
+                    </p>
+                </div>
+                
+                <button class="btn-save" onclick="submitVerification()" style="width: 100%; padding: 1rem;">
+                    <i class="fas fa-shield-alt"></i> Submit & Verify Account
+                </button>
+            </div>
+            
+            <div class="section-footer" style="text-align: center; margin-top: 2rem; color: var(--text-light);">
+                <p><i class="fas fa-question-circle"></i> Need help? Contact support@trustcade.com</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <section class="registration-prompt" style="margin-top: 3rem;">
+            <div class="reg-card">
+                <div class="reg-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="reg-content">
+                    <h3><i class="fas fa-rocket"></i> Ready to Win More?</h3>
+                    <p>Use your daily free spin or purchase additional spins for more chances to win!</p>
+                    <div class="reg-actions">
+                        <a href="index.html" class="btn-register">
+                            <i class="fas fa-redo"></i> Spin Now
+                        </a>
+                        <a href="winners.html" class="btn-login-small">
+                            <i class="fas fa-trophy"></i> View Winners
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-gift"></i> TrustCade</h3>
+                    <p>Your trusted platform for winning real prizes through daily spins. Verified winners, transparent system.</p>
+                    <div class="footer-trust">
+                        <span><i class="fas fa-check-circle"></i> 100% Legit</span>
+                        <span><i class="fas fa-shield-alt"></i> Secure</span>
+                        <span><i class="fas fa-truck"></i> Free Shipping</span>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="winners.html">Winners</a>
+                    <a href="profile.html">My Profile</a>
+                    <a href="index.html#prizes">Prizes</a>
+                    <a href="#" id="footerLogoutBtn">Logout</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="contact.html">Contact Us</a>
+                    <a href="faq.html">FAQ</a>
+                    <a href="rules.html">Contest Rules</a>
+                    <a href="disclaimer.html">Disclaimer</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> support@trustcade.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Prize Street, NY</p>
+                    <div class="newsletter">
+                        <h5>Get Updates</h5>
+                        <div class="newsletter-input">
+                            <input type="email" placeholder="Your email" id="profileNewsletterEmail">
+                            <button id="profileNewsletterBtn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners, Real Fun!</p>
+                <p>Odds displayed: 1:8 win rate | Verified business | Transparent system | Must be 18+ to play</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa" title="Visa"></i>
+                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fab fa-cc-amex" title="American Express"></i>
+                    <i class="fab fa-cc-paypal" title="PayPal"></i>
+                    <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
+                    <i class="fab fa-cc-google-pay" title="Google Pay"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('successModal')">&times;</span>
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; color: var(--secondary-color); margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 id="successTitle">Success!</h2>
+                <p id="successMessage">Your changes have been saved successfully.</p>
+                <button class="spin-btn" onclick="closeModal('successModal')" style="margin-top: 1rem;">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('verificationModal')">&times;</span>
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2>Verification Required</h2>
+                <p>You need to verify your account to claim prizes and participate in grand prize draws.</p>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 1rem;">
+                    Verification requires a $100 gift card. The value remains in your account.
+                </p>
+                <div style="margin-top: 2rem;">
+                    <button class="spin-btn" onclick="showVerificationTab()">
+                        <i class="fas fa-shield-alt"></i> Verify Now
+                    </button>
+                    <button class="spin-btn" style="background: #6B7280; margin-left: 1rem;" onclick="closeModal('verificationModal')">
+                        Later
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- Profile-specific JavaScript -->
+    <script>
+        // Profile data
+        let profileData = {
+            name: "User",
+            email: "user@example.com",
+            joined: new Date().toISOString(),
+            verified: false,
+            totalWins: 0,
+            totalValue: 0,
+            referralCount: 0,
+            referralEarnings: 0,
+            referralCode: "TRUST-" + Math.random().toString(36).substr(2, 8).toUpperCase(),
+            settings: {
+                notifications: true,
+                spinReminders: true,
+                address: ""
+            },
+            prizes: []
+        };
+        
+        // Initialize profile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved data
+            const savedUser = JSON.parse(localStorage.getItem('trustcade_user')) || {};
+            const savedWins = JSON.parse(localStorage.getItem('trustcade_wins')) || [];
+            
+            // Update profile data
+            if (savedUser.email) {
+                profileData.name = savedUser.name || profileData.name;
+                profileData.email = savedUser.email;
+                profileData.joined = savedUser.joined || profileData.joined;
+                profileData.verified = savedUser.verified || false;
+            }
+            
+            profileData.prizes = savedWins;
+            profileData.totalWins = savedWins.length;
+            profileData.totalValue = savedWins.reduce((total, win) => {
+                const value = parseInt(win.value.replace(/\$|,/g, '')) || 0;
+                return total + value;
+            }, 0);
+            
+            // Update UI
+            updateProfileUI();
+            
+            // Setup tabs
+            setupTabs();
+            
+            // Setup logout buttons
+            setupLogoutButtons();
+            
+            // Setup refresh button
+            document.getElementById('refreshPrizes').addEventListener('click', updatePrizesList);
+            
+            // Check if user is logged in
+            if (!savedUser.email) {
+                // Not logged in, redirect to login
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            }
+        });
+        
+        function updateProfileUI() {
+            // Update header
+            document.getElementById('userAvatar').textContent = profileData.name.charAt(0).toUpperCase();
+            document.getElementById('userName').textContent = profileData.name;
+            document.getElementById('userEmail').textContent = profileData.email;
+            document.getElementById('joinDate').textContent = new Date(profileData.joined).toLocaleDateString();
+            
+            // Update verification status
+            const verificationBadge = document.getElementById('verificationStatus');
+            if (profileData.verified) {
+                verificationBadge.innerHTML = '<i class="fas fa-shield-alt"></i> Verified Account';
+                verificationBadge.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+            } else {
+                verificationBadge.innerHTML = '<i class="fas fa-shield-alt"></i> Not Verified';
+                verificationBadge.style.background = 'linear-gradient(135deg, #6B7280, #4B5563)';
+            }
+            
+            // Update stats
+            document.getElementById('totalWins').textContent = profileData.totalWins;
+            document.getElementById('totalValue').textContent = '$' + profileData.totalValue.toLocaleString();
+            document.getElementById('pendingPrizes').textContent = profileData.prizes.filter(p => p.status === 'pending').length;
+            document.getElementById('rank').textContent = profileData.totalWins > 0 ? '#247' : '#--';
+            
+            // Update referral info
+            document.getElementById('referralCodeDisplay').textContent = profileData.referralCode;
+            document.getElementById('referralCount').textContent = profileData.referralCount;
+            document.getElementById('referralEarnings').textContent = '$' + profileData.referralEarnings;
+            
+            // Update settings form
+            document.getElementById('userNameInput').value = profileData.name;
+            document.getElementById('userEmailInput').value = profileData.email;
+            document.getElementById('emailNotifications').checked = profileData.settings.notifications;
+            document.getElementById('spinReminders').checked = profileData.settings.spinReminders;
+            document.getElementById('userAddressInput').value = profileData.settings.address || '';
+            
+            // Update prizes list
+            updatePrizesList();
+        }
+        
+        function updatePrizesList() {
+            const prizesList = document.getElementById('prizesList');
+            
+            if (profileData.prizes.length === 0) {
+                prizesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-gift"></i>
+                        <h3>No prizes yet</h3>
+                        <p>Start spinning to win amazing prizes!</p>
+                        <a href="index.html" class="btn-spin-action" style="margin-top: 1rem;">
+                            <i class="fas fa-redo"></i> Spin Now
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort prizes by date (newest first)
+            const sortedPrizes = [...profileData.prizes].sort((a, b) => b.timestamp - a.timestamp);
+            
+            prizesList.innerHTML = sortedPrizes.map(prize => `
+                <div class="prize-card-profile">
+                    <div class="prize-icon" style="font-size: 2rem; color: var(--primary-color);">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="prize-details">
+                        <h4 style="margin-bottom: 0.5rem;">${prize.prize}</h4>
+                        <p style="color: var(--text-light); margin-bottom: 0.5rem;">
+                            <i class="far fa-clock"></i> Won on ${prize.date} at ${prize.time}
+                        </p>
+                        <div class="claim-code">
+                            <strong>Claim Code:</strong> ${prize.claimCode}
+                        </div>
+                    </div>
+                    <div class="prize-actions">
+                        <span class="prize-status status-${prize.status}">
+                            ${prize.status.charAt(0).toUpperCase() + prize.status.slice(1)}
+                        </span>
+                        <div style="margin-top: 0.5rem;">
+                            <button class="btn-save" style="padding: 0.5rem 1rem; font-size: 0.9rem;" 
+                                    onclick="copyClaimCode('${prize.claimCode}')">
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+                            ${prize.requiresVerification && !profileData.verified ? `
+                                <button class="btn-save" style="background: var(--gradient-secondary); padding: 0.5rem 1rem; font-size: 0.9rem; margin-left: 0.5rem;"
+                                        onclick="showVerificationModal()">
+                                    <i class="fas fa-shield-alt"></i> Verify to Claim
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+        }
+        
+        function setupLogoutButtons() {
+            const logoutButtons = ['logoutBtn', 'mobileLogoutBtn', 'footerLogoutBtn'];
+            
+            logoutButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (confirm('Are you sure you want to logout?')) {
+                            localStorage.removeItem('trustcade_user');
+                            window.location.href = 'login.html';
+                        }
+                    });
+                }
+            });
+        }
+        
+        function saveSettings() {
+            // Update profile data
+            profileData.name = document.getElementById('userNameInput').value || profileData.name;
+            profileData.settings.notifications = document.getElementById('emailNotifications').checked;
+            profileData.settings.spinReminders = document.getElementById('spinReminders').checked;
+            profileData.settings.address = document.getElementById('userAddressInput').value;
+            
+            // Save to localStorage
+            const savedUser = JSON.parse(localStorage.getItem('trustcade_user')) || {};
+            savedUser.name = profileData.name;
+            savedUser.settings = profileData.settings;
+            localStorage.setItem('trustcade_user', JSON.stringify(savedUser));
+            
+            // Update UI
+            updateProfileUI();
+            
+            // Show success message
+            showSuccess('Settings Saved', 'Your account settings have been updated successfully.');
+        }
+        
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showSuccess('Error', 'Please fill in all password fields.');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showSuccess('Error', 'New passwords do not match.');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showSuccess('Error', 'Password must be at least 6 characters.');
+                return;
+            }
+            
+            // In a real app, this would be an API call
+            showSuccess('Password Changed', 'Your password has been updated successfully.');
+            
+            // Clear password fields
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+        
+        function submitVerification() {
+            const cardType = document.getElementById('giftCardType').value;
+            const cardCode = document.getElementById('giftCardCode').value;
+            
+            if (!cardType || !cardCode) {
+                showSuccess('Error', 'Please fill in all verification fields.');
+                return;
+            }
+            
+            if (cardCode.length < 16) {
+                showSuccess('Error', 'Please enter a valid gift card code.');
+                return;
+            }
+            
+            // Simulate verification process
+            showSuccess('Verification Started', 'Processing your gift card...');
+            
+            setTimeout(() => {
+                // Mark as verified
+                profileData.verified = true;
+                
+                // Save to localStorage
+                const savedUser = JSON.parse(localStorage.getItem('trustcade_user')) || {};
+                savedUser.verified = true;
+                localStorage.setItem('trustcade_user', JSON.stringify(savedUser));
+                
+                // Update UI
+                updateProfileUI();
+                
+                // Show success
+                showSuccess('Account Verified!', 'Your account is now verified! You can now claim all prizes and participate in grand prize draws.');
+            }, 2000);
+        }
+        
+        function copyReferralCode() {
+            navigator.clipboard.writeText(profileData.referralCode)
+                .then(() => showSuccess('Copied!', 'Referral code copied to clipboard.'))
+                .catch(() => showSuccess('Error', 'Failed to copy code.'));
+        }
+        
+        function copyClaimCode(code) {
+            navigator.clipboard.writeText(code)
+                .then(() => showSuccess('Copied!', 'Claim code copied to clipboard.'))
+                .catch(() => showSuccess('Error', 'Failed to copy code.'));
+        }
+        
+        function showVerificationTab() {
+            closeModal('verificationModal');
+            document.querySelector('.tab[data-tab="verification"]').click();
+        }
+        
+        function showVerificationModal() {
+            document.getElementById('verificationModal').classList.add('show');
+        }
+        
+        function showSuccess(title, message) {
+            document.getElementById('successTitle').textContent = title;
+            document.getElementById('successMessage').textContent = message;
+            document.getElementById('successModal').classList.add('show');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+        
+        // Mobile menu functionality
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.add('active');
+        });
+        
+        document.getElementById('mobileMenuClose')?.addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.remove('active');
+        });
+        
+        // Back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+    </html>
