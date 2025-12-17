@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - TrustCade</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 2rem;
+        }
+        
+        .admin-login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        
+        .admin-login-header {
+            background: linear-gradient(135deg, #8B5CF6 0%, #667eea 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .admin-login-header i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-login-body {
+            padding: 3rem 2rem;
+        }
+        
+        .admin-input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .admin-input-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-input-group input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        
+        .admin-login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #8B5CF6 0%, #667eea 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .admin-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .admin-error {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        
+        .admin-secret-key {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .admin-secret-key code {
+            background: #e9ecef;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-card">
+            <div class="admin-login-header">
+                <i class="fas fa-user-shield"></i>
+                <h1>TrustCade Admin</h1>
+                <p>Restricted Access Area</p>
+            </div>
+            
+            <div class="admin-login-body">
+                <form id="adminLoginForm">
+                    <div class="admin-input-group">
+                        <label for="adminUsername">
+                            <i class="fas fa-user"></i> Admin Username
+                        </label>
+                        <input type="text" id="adminUsername" placeholder="Enter admin username" required>
+                    </div>
+                    
+                    <div class="admin-input-group">
+                        <label for="adminPassword">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input type="password" id="adminPassword" placeholder="Enter password" required>
+                    </div>
+                    
+                    <div class="admin-input-group">
+                        <label for="adminSecretKey">
+                            <i class="fas fa-key"></i> Secret Key
+                        </label>
+                        <input type="password" id="adminSecretKey" placeholder="Enter secret key" required>
+                    </div>
+                    
+                    <div id="adminError" class="admin-error"></div>
+                    
+                    <button type="submit" class="admin-login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login as Admin
+                    </button>
+                    
+                    <div class="admin-secret-key">
+                        <p><strong>Note:</strong> This area is restricted to authorized personnel only.</p>
+                        <p>Default credentials (change after first login):</p>
+                        <p>Username: <code>admin</code><br>
+                           Password: <code>trustcade2024</code><br>
+                           Secret Key: <code>TC-ADMIN-123</code></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin credentials (in a real app, this would be on a backend)
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'trustcade2024',
+            secretKey: 'TC-ADMIN-123'
+        };
+        
+        // Handle admin login
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            const secretKey = document.getElementById('adminSecretKey').value;
+            
+            // Clear previous error
+            document.getElementById('adminError').textContent = '';
+            
+            // Validate credentials
+            if (username === ADMIN_CREDENTIALS.username && 
+                password === ADMIN_CREDENTIALS.password && 
+                secretKey === ADMIN_CREDENTIALS.secretKey) {
+                
+                // Save admin session
+                localStorage.setItem('trustcade_admin', 'true');
+                localStorage.setItem('trustcade_admin_time', Date.now().toString());
+                localStorage.setItem('trustcade_admin_user', username);
+                
+                // Redirect to admin dashboard
+                window.location.href = 'admin-dashboard.html';
+                
+            } else {
+                document.getElementById('adminError').textContent = 'Invalid credentials. Please try again.';
+                
+                // Clear password fields
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminSecretKey').value = '';
+            }
+        });
+        
+        // Check if already logged in
+        if (localStorage.getItem('trustcade_admin') === 'true') {
+            window.location.href = 'admin-dashboard.html';
+        }
+        
+        // Auto-focus username field
+        document.getElementById('adminUsername').focus();
+    </script>
+</body>
+</html>
