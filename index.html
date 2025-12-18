@@ -29,6 +29,126 @@
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://trustcade.com">
+    <style>
+        /* Additional inline styles for spin wheel */
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+        
+        #wheelCanvas {
+            width: 100%;
+            height: 100%;
+            transition: transform 5s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+        
+        .spin-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0000;
+            font-size: 40px;
+            z-index: 10;
+        }
+        
+        .wheel-prizes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .prize-indicator {
+            background: var(--prize-color, #4ECDC4);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* Enhanced notification */
+        .win-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+            max-width: 350px;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .notification-icon {
+            font-size: 40px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Timer enhancements */
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+        
+        .time-unit {
+            background: #2d3748;
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 70px;
+            text-align: center;
+            color: white;
+        }
+        
+        .time-unit small {
+            display: block;
+            font-size: 12px;
+            font-weight: 400;
+            margin-top: 5px;
+            color: #a0aec0;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80, #3b82f6);
+            width: 0%;
+            transition: width 1s linear;
+        }
+    </style>
 </head>
 <body>
     <!-- Loading Screen -->
@@ -108,7 +228,7 @@
             <div class="section-header">
                 <h2 id="grandPrizeTitle"><i class="fas fa-crown"></i> TODAY'S GRAND PRIZE</h2>
                 <div class="prize-timer">
-                    <i class="fas fa-clock"></i> Draws in: <span id="grandPrizeTimer" role="timer">12:34:56</span>
+                    <i class="fas fa-clock"></i> Draws in: <span id="grandPrizeTimer">12:34:56</span>
                 </div>
             </div>
             <div class="prize-card">
@@ -140,7 +260,7 @@
                         </div>
                     </div>
                     <div class="prize-action">
-                        <button class="btn-spin-action" onclick="scrollToSpin()" aria-label="Spin to win the grand prize">
+                        <button class="btn-spin-action" onclick="scrollToSpin()">
                             <i class="fas fa-redo"></i> Spin to Win!
                         </button>
                         <button class="btn-secondary" onclick="viewPrizeDetails()">
@@ -161,24 +281,10 @@
             <div class="spin-container">
                 <div class="wheel-container">
                     <div class="wheel-wrapper">
-                        <canvas id="wheelCanvas" width="100" height="250" 
-                                aria-label="Spin wheel with 8 prize sections"
-                                role="img"></canvas>
-                        <div class="wheel-center">
-                            <div class="spin-pointer" aria-hidden="true">
-                                <i class="fas fa-caret-down"></i>
-                            </div>
+                        <canvas id="wheelCanvas" width="400" height="400"></canvas>
+                        <div class="spin-pointer">
+                            <i class="fas fa-caret-down"></i>
                         </div>
-                    </div>
-                    <div class="wheel-prizes" aria-label="Available prizes on the wheel">
-                        <div class="prize-indicator" style="--i:1">iPhone 17</div>
-                        <div class="prize-indicator" style="--i:2">$500 Cash</div>
-                        <div class="prize-indicator" style="--i:3">Headphones</div>
-                        <div class="prize-indicator" style="--i:4">Try Again</div>
-                        <div class="prize-indicator" style="--i:5">PS5</div>
-                        <div class="prize-indicator" style="--i:6">$900 Card</div>
-                        <div class="prize-indicator" style="--i:7">Watch</div>
-                        <div class="prize-indicator" style="--i:8">MacBook</div>
                     </div>
                 </div>
                 
@@ -186,9 +292,9 @@
                 <div class="spin-controls">
                     <div class="timer-container">
                         <h3><i class="fas fa-clock"></i> NEXT FREE SPIN IN:</h3>
-                        <div class="timer" id="countdown" role="timer">
+                        <div class="timer" id="countdown">
                             <div class="time-unit">
-                                <span id="hours">00</span>
+                                <span id="hours">24</span>
                                 <small>Hours</small>
                             </div>
                             <div class="time-separator">:</div>
@@ -210,19 +316,19 @@
                         </div>
                     </div>
                     
-                    <button class="spin-btn" id="spinButton" disabled aria-label="Spin the wheel">
+                    <button class="spin-btn" id="spinButton">
                         <i class="fas fa-redo"></i> SPIN NOW
-                        <span class="btn-subtext">Free spin available in <span id="timeLeft">00:00:00</span></span>
+                        <span class="btn-subtext">Free spin available!</span>
                     </button>
                     
                     <div class="spin-stats">
                         <div class="stat-item">
                             <i class="fas fa-fire"></i>
-                            <span>Spins today: <strong>24,832</strong></span>
+                            <span>Spins today: <strong id="spinsToday">24,832</strong></span>
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-gift"></i>
-                            <span>Wins today: <strong>3,104</strong></span>
+                            <span>Wins today: <strong id="winsToday">3,104</strong></span>
                         </div>
                     </div>
                     
@@ -274,148 +380,13 @@
                 <h2 id="winnersTitle"><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
                 <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="winners-grid" id="recentWinnersGrid" role="list" aria-label="List of recent winners">
+            <div class="winners-grid" id="recentWinnersGrid">
                 <!-- Winners loaded via JavaScript -->
-                <div class="winner-card" role="listitem">
-                    <div class="winner-avatar">L</div>
-                    <div class="winner-info">
-                        <h4>LuckyStar23</h4>
-                        <p class="winner-prize">iPhone 17 Pro</p>
-                        <span class="winner-time">2 minutes ago</span>
-                    </div>
-                </div>
-                <div class="winner-card" role="listitem">
-                    <div class="winner-avatar">M</div>
-                    <div class="winner-info">
-                        <h4>MikeWins</h4>
-                        <p class="winner-prize">$500 Cash</p>
-                        <span class="winner-time">15 minutes ago</span>
-                    </div>
-                </div>
-                <div class="winner-card" role="listitem">
-                    <div class="winner-avatar">S</div>
-                    <div class="winner-info">
-                        <h4>SarahG</h4>
-                        <p class="winner-prize">PS5 Pro</p>
-                        <span class="winner-time">1 hour ago</span>
-                    </div>
-                </div>
-                <div class="winner-card" role="listitem">
-                    <div class="winner-avatar">J</div>
-                    <div class="winner-info">
-                        <h4>JohnDoe</h4>
-                        <p class="winner-prize">MacBook Pro</p>
-                        <span class="winner-time">3 hours ago</span>
-                    </div>
-                </div>
             </div>
             <div class="section-footer">
                 <a href="winners.html" class="btn-view-all">
                     <i class="fas fa-users"></i> View All 5,247+ Winners
                 </a>
-            </div>
-        </section>
-
-        <!-- Leaderboard -->
-        <section class="leaderboard-section" aria-labelledby="leaderboardTitle">
-            <div class="section-header">
-                <h2 id="leaderboardTitle"><i class="fas fa-medal"></i> TOP WINNERS LEADERBOARD</h2>
-                <p class="section-subtitle">Our most successful players this month</p>
-            </div>
-            <div class="leaderboard-container">
-                <div class="leaderboard-header">
-                    <span class="rank-header">Rank</span>
-                    <span class="player-header">Player</span>
-                    <span class="wins-header">Total Wins</span>
-                    <span class="value-header">Total Value</span>
-                    <span class="status-header">Status</span>
-                </div>
-                <div class="leaderboard-list" id="leaderboard" role="list" aria-label="Top winners leaderboard">
-                    <!-- Leaderboard loaded via JavaScript -->
-                    <div class="leaderboard-item" role="listitem">
-                        <span class="rank gold">1</span>
-                        <span class="player"><i class="fas fa-crown"></i> LuckyStar23</span>
-                        <span class="wins">47 wins</span>
-                        <span class="value">$12,450</span>
-                        <span class="status verified">Verified</span>
-                    </div>
-                    <div class="leaderboard-item" role="listitem">
-                        <span class="rank silver">2</span>
-                        <span class="player">PrizeHunter</span>
-                        <span class="wins">32 wins</span>
-                        <span class="value">$8,760</span>
-                        <span class="status verified">Verified</span>
-                    </div>
-                    <div class="leaderboard-item" role="listitem">
-                        <span class="rank bronze">3</span>
-                        <span class="player">WinMaster</span>
-                        <span class="wins">28 wins</span>
-                        <span class="value">$7,230</span>
-                        <span class="status verified">Verified</span>
-                    </div>
-                </div>
-                <div class="leaderboard-footer">
-                    <p><i class="fas fa-sync-alt"></i> Updated every hour • Last updated: <span id="leaderboardUpdate">Just now</span></p>
-                    <button class="btn-refresh" id="refreshLeaderboard" aria-label="Refresh leaderboard">
-                        <i class="fas fa-redo"></i> Refresh
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Live Stats -->
-        <section class="stats-section" aria-labelledby="statsTitle">
-            <div class="section-header">
-                <h2 id="statsTitle"><i class="fas fa-chart-line"></i> LIVE STATISTICS</h2>
-                <p class="section-subtitle">Real-time data from TrustCade</p>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card stat-primary">
-                    <div class="stat-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="totalWinners">5,247</h3>
-                        <p>Total Winners</p>
-                        <span class="stat-trend"><i class="fas fa-arrow-up"></i> +24 today</span>
-                    </div>
-                </div>
-                <div class="stat-card stat-success">
-                    <div class="stat-icon">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="totalValue">$892,450</h3>
-                        <p>Prizes Distributed</p>
-                        <span class="stat-trend"><i class="fas fa-arrow-up"></i> +$12,450 today</span>
-                    </div>
-                </div>
-                <div class="stat-card stat-warning">
-                    <div class="stat-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="winsToday">324</h3>
-                        <p>Wins Today</p>
-                        <span class="stat-trend"><i class="fas fa-chart-line"></i> 1 win every 4.5 minutes</span>
-                    </div>
-                </div>
-                <div class="stat-card stat-info">
-                    <div class="stat-icon">
-                        <i class="fas fa-percentage"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 id="winRate">1:8</h3>
-                        <p>Win Rate</p>
-                        <span class="stat-trend"><i class="fas fa-user-friends"></i> 12.5% of spins win</span>
-                    </div>
-                </div>
-            </div>
-            <div class="stats-note">
-                <p><i class="fas fa-info-circle"></i> Statistics update in real-time. Last updated: <span id="lastUpdated">Just now</span></p>
-                <button class="btn-refresh-stats" id="refreshStats" aria-label="Refresh statistics">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
             </div>
         </section>
 
@@ -459,143 +430,6 @@
                         <span class="prize-item">$900 Netflix</span>
                     </div>
                 </div>
-                <div class="prize-category">
-                    <h3><i class="fas fa-tshirt"></i> Lifestyle</h3>
-                    <div class="category-prizes">
-                        <span class="prize-item">Smart TV 65"</span>
-                        <span class="prize-item">Drone Pro</span>
-                        <span class="prize-item">Camera Kit</span>
-                        <span class="prize-item">Studio Equipment</span>
-                        <span class="prize-item">Designer Watch</span>
-                        <span class="prize-item">Electric Scooter</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works -->
-        <section class="how-it-works" aria-labelledby="howItWorksTitle">
-            <div class="section-header">
-                <h2 id="howItWorksTitle"><i class="fas fa-play-circle"></i> HOW IT WORKS</h2>
-                <p class="section-subtitle">Win prizes in 3 easy steps</p>
-            </div>
-            <div class="steps-container">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <h3>Register & Verify</h3>
-                    <p>Create your account and verify with a $100 gift card to unlock all features</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-icon">
-                        <i class="fas fa-redo"></i>
-                    </div>
-                    <h3>Spin Daily</h3>
-                    <p>Use your free daily spin or purchase additional spins for more chances</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-icon">
-                        <i class="fas fa-gift"></i>
-                    </div>
-                    <h3>Claim Prize</h3>
-                    <p>If you win, claim your prize instantly. We ship worldwide for free!</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Updates Section -->
-        <section class="updates-section" aria-labelledby="updatesTitle">
-            <div class="section-header">
-                <h2 id="updatesTitle"><i class="fas fa-bullhorn"></i> LATEST UPDATES</h2>
-                <a href="#" class="view-all-link">All Updates <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="updates-grid">
-                <div class="update-card">
-                    <div class="update-image">
-                        <img src="https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
-                             alt="iPhone 17" 
-                             loading="lazy">
-                        <div class="update-badge">NEW</div>
-                    </div>
-                    <div class="update-content">
-                        <span class="update-date"><i class="far fa-clock"></i> 2 hours ago</span>
-                        <h3>iPhone 17 Added to Prize Pool!</h3>
-                        <p>The latest iPhone model is now available to win. Be the first to get it!</p>
-                        <a href="#" class="update-link">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="update-card">
-                    <div class="update-image">
-                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
-                             alt="Big Win Celebration" 
-                             loading="lazy">
-                        <div class="update-badge">HOT</div>
-                    </div>
-                    <div class="update-content">
-                        <span class="update-date"><i class="far fa-clock"></i> 1 day ago</span>
-                        <h3>Record $5,000 Win!</h3>
-                        <p>User "LuckyStar" just won our biggest cash prize ever. You could be next!</p>
-                        <a href="#" class="update-link">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="update-card">
-                    <div class="update-image">
-                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
-                             alt="Mobile App" 
-                             loading="lazy">
-                        <div class="update-badge">UPDATE</div>
-                    </div>
-                    <div class="update-content">
-                        <span class="update-date"><i class="far fa-clock"></i> 3 days ago</span>
-                        <h3>New Mobile App Launched!</h3>
-                        <p>Spin on the go with our new iOS and Android apps. Download now!</p>
-                        <a href="#" class="update-link">Download <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Social Links -->
-        <section class="social-section" aria-labelledby="socialTitle">
-            <div class="section-header">
-                <h2 id="socialTitle"><i class="fas fa-comments"></i> STAY CONNECTED</h2>
-                <p class="section-subtitle">Follow us for updates and winner announcements</p>
-            </div>
-            <div class="social-links">
-                <a href="#" class="social-btn social-instagram" aria-label="Follow on Instagram">
-                    <i class="fab fa-instagram"></i>
-                    <span>Instagram</span>
-                    <small>@TrustCadeWins</small>
-                </a>
-                <a href="#" class="social-btn social-twitter" aria-label="Follow on Twitter">
-                    <i class="fab fa-twitter"></i>
-                    <span>Twitter</span>
-                    <small>@TrustCade</small>
-                </a>
-                <a href="#" class="social-btn social-facebook" aria-label="Follow on Facebook">
-                    <i class="fab fa-facebook"></i>
-                    <span>Facebook</span>
-                    <small>/TrustCade</small>
-                </a>
-                <a href="#" class="social-btn social-youtube" aria-label="Subscribe on YouTube">
-                    <i class="fab fa-youtube"></i>
-                    <span>YouTube</span>
-                    <small>Unboxing videos</small>
-                </a>
-                <a href="mailto:contact@trustcade.com" class="social-btn social-email" aria-label="Send email">
-                    <i class="fas fa-envelope"></i>
-                    <span>Email</span>
-                    <small>24/7 Support</small>
-                </a>
-                <a href="#" class="social-btn social-whatsapp" aria-label="Chat on WhatsApp">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>WhatsApp</span>
-                    <small>Quick Help</small>
-                </a>
             </div>
         </section>
     </main>
@@ -623,50 +457,20 @@
                     <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
                 </div>
                 <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a>
-                    <a href="privacy.html"><i class="fas fa-lock"></i> Privacy Policy</a>
-                    <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
-                    <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
-                    <a href="rules.html"><i class="fas fa-book"></i> Contest Rules</a>
-                    <a href="disclaimer.html"><i class="fas fa-exclamation-circle"></i> Disclaimer</a>
-                </div>
-                <div class="footer-section">
                     <h4>Contact Info</h4>
                     <p><i class="fas fa-envelope"></i> support@trustcade.com</p>
                     <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
                     <p><i class="fas fa-map-marker-alt"></i> 123 Prize Street, NY</p>
-                    <div class="newsletter">
-                        <h5>Get Updates</h5>
-                        <div class="newsletter-input">
-                            <input type="email" placeholder="Your email" aria-label="Email for newsletter">
-                            <button aria-label="Subscribe to newsletter"><i class="fas fa-paper-plane"></i></button>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners, Real Fun!</p>
-                <p>Odds displayed: 1:8 win rate | Verified business | Transparent system | Must be 18+ to play</p>
-                <div class="payment-methods" aria-label="Accepted payment methods">
-                    <i class="fab fa-cc-visa" title="Visa"></i>
-                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
-                    <i class="fab fa-cc-amex" title="American Express"></i>
-                    <i class="fab fa-cc-paypal" title="PayPal"></i>
-                    <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
-                    <i class="fab fa-google-pay" title="Google Pay"></i>
-                </div>
-                <div class="footer-legal">
-                    <span><i class="fas fa-globe"></i> Worldwide shipping</span>
-                    <span><i class="fas fa-user-check"></i> Age verification required</span>
-                    <span><i class="fas fa-balance-scale"></i> Gambling license: GL-2024-98765</span>
-                </div>
+                <p>&copy; 2024 TrustCade. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Win Notification (Hidden by default) -->
-    <div id="winNotification" class="win-notification" role="alert" aria-live="polite" hidden>
+    <!-- Win Notification -->
+    <div id="winNotification" class="win-notification" hidden>
         <div class="notification-content">
             <div class="notification-icon">🎉</div>
             <div class="notification-text">
@@ -675,105 +479,366 @@
                 <small>Value: <span id="wonValue">$1,299</span></small>
             </div>
             <a href="profile.html" class="notification-btn">Claim Now</a>
-            <button class="notification-close" aria-label="Close notification">&times;</button>
+            <button class="notification-close" onclick="document.getElementById('winNotification').hidden = true">&times;</button>
         </div>
     </div>
 
-    <!-- Login Modal (Hidden by default) -->
-    <div id="loginModal" class="modal" role="dialog" aria-labelledby="modalTitle" hidden>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" hidden>
         <div class="modal-content">
-            <button class="modal-close" aria-label="Close modal">&times;</button>
-            <h2 id="modalTitle"><i class="fas fa-sign-in-alt"></i> Login to TrustCade</h2>
-            <form id="quickLoginForm">
-                <input type="email" placeholder="Email Address" required aria-label="admin@gmail.com">
-                <input type="password" placeholder="Password" required aria-label="admin123">
+            <button class="modal-close" onclick="document.getElementById('loginModal').hidden = true">&times;</button>
+            <h2><i class="fas fa-sign-in-alt"></i> Login to TrustCade</h2>
+            <form id="quickLoginForm" onsubmit="event.preventDefault(); handleLogin()">
+                <input type="email" placeholder="Email Address" id="loginEmail" required>
+                <input type="password" placeholder="Password" id="loginPassword" required>
                 <button type="submit" class="spin-btn">Login</button>
             </form>
-            <div class="login-options">
-                <button class="login-option-btn">
-                    <i class="fab fa-google"></i> Continue with Google
-                </button>
-                <button class="login-option-btn">
-                    <i class="fab fa-apple"></i> Continue with Apple
-                </button>
-            </div>
             <p class="modal-footer">
-                New user? <a href="register.html">Register here</a> |
-                <a href="forgot-password.html">Forgot password?</a>
+                New user? <a href="register.html">Register here</a>
             </p>
         </div>
     </div>
 
     <!-- Back to Top Button -->
-    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+    <button id="backToTop" class="back-to-top">
         <i class="fas fa-chevron-up"></i>
     </button>
 
-    <!-- Offline Notification -->
-    <div id="offlineNotification" class="offline-notification" hidden>
-        <i class="fas fa-wifi-slash"></i>
-        <span>You're offline. Some features may not work.</span>
-    </div>
-
-    <script src="script.js"></script>
-    <!-- Initialize scripts -->
+    <!-- JavaScript -->
     <script>
-        // Simple initialization for mobile
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hide loading screen
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen) {
-                setTimeout(() => {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                    }, 300);
-                }, 500);
+        // ========================
+        // SPIN WHEEL CLASS
+        // ========================
+        class SpinWheel {
+            constructor() {
+                this.canvas = document.getElementById('wheelCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.prizes = [
+                    { name: 'iPhone 17', value: '$1,299', color: '#FF6B6B' },
+                    { name: '$500 Cash', value: '$500', color: '#4ECDC4' },
+                    { name: 'Headphones', value: '$299', color: '#FFD166' },
+                    { name: 'Try Again', value: 'Try Again', color: '#06D6A0' },
+                    { name: 'PS5', value: '$499', color: '#118AB2' },
+                    { name: '$900 Card', value: '$900', color: '#EF476F' },
+                    { name: 'Watch', value: '$399', color: '#073B4C' },
+                    { name: 'MacBook', value: '$1,299', color: '#7209B7' }
+                ];
+                this.isSpinning = false;
+                this.lastSpinTime = localStorage.getItem('lastSpinTime') || null;
+                
+                this.init();
             }
             
-            // Mobile menu toggle
+            init() {
+                this.drawWheel();
+                this.updateSpinButton();
+                
+                // Check if user can spin
+                const canSpin = this.canUserSpin();
+                document.getElementById('spinButton').disabled = !canSpin;
+            }
+            
+            drawWheel() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const radius = Math.min(centerX, centerY) - 10;
+                const sliceAngle = (2 * Math.PI) / this.prizes.length;
+                
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw each slice
+                for (let i = 0; i < this.prizes.length; i++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(centerX, centerY);
+                    this.ctx.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
+                    this.ctx.closePath();
+                    
+                    // Fill with color
+                    this.ctx.fillStyle = this.prizes[i].color;
+                    this.ctx.fill();
+                    this.ctx.strokeStyle = '#FFFFFF';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.stroke();
+                    
+                    // Draw text
+                    this.ctx.save();
+                    this.ctx.translate(centerX, centerY);
+                    this.ctx.rotate(i * sliceAngle + sliceAngle / 2);
+                    this.ctx.textAlign = 'right';
+                    this.ctx.fillStyle = '#FFFFFF';
+                    this.ctx.font = 'bold 16px Arial';
+                    this.ctx.fillText(this.prizes[i].name, radius - 20, 5);
+                    this.ctx.restore();
+                }
+                
+                // Draw center circle
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+                this.ctx.fillStyle = '#2D3748';
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#FFFFFF';
+                this.ctx.lineWidth = 3;
+                this.ctx.stroke();
+            }
+            
+            canUserSpin() {
+                if (!this.lastSpinTime) return true;
+                
+                const lastSpin = new Date(this.lastSpinTime);
+                const now = new Date();
+                const hoursDiff = (now - lastSpin) / (1000 * 60 * 60);
+                
+                return hoursDiff >= 24;
+            }
+            
+            getTimeUntilNextSpin() {
+                if (!this.lastSpinTime) return { hours: 0, minutes: 0, seconds: 0 };
+                
+                const lastSpin = new Date(this.lastSpinTime);
+                const nextSpin = new Date(lastSpin.getTime() + (24 * 60 * 60 * 1000));
+                const now = new Date();
+                
+                if (now >= nextSpin) return { hours: 0, minutes: 0, seconds: 0 };
+                
+                const diff = nextSpin - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                return { hours, minutes, seconds };
+            }
+            
+            updateSpinButton() {
+                const spinBtn = document.getElementById('spinButton');
+                const { hours, minutes, seconds } = this.getTimeUntilNextSpin();
+                
+                if (hours === 0 && minutes === 0 && seconds === 0) {
+                    spinBtn.disabled = false;
+                    spinBtn.querySelector('.btn-subtext').textContent = 'Free spin available!';
+                } else {
+                    spinBtn.disabled = true;
+                    spinBtn.querySelector('.btn-subtext').textContent = 
+                        `Available in ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+            
+            spin() {
+                if (this.isSpinning || !this.canUserSpin()) return;
+                
+                this.isSpinning = true;
+                const spinBtn = document.getElementById('spinButton');
+                spinBtn.disabled = true;
+                spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SPINNING...';
+                
+                // Random winner selection
+                const winnerIndex = Math.floor(Math.random() * this.prizes.length);
+                const spins = 5 + Math.random() * 3; // 5-8 rotations
+                const totalRotation = spins * 360 + (winnerIndex * (360 / this.prizes.length));
+                
+                // Animation
+                let currentRotation = 0;
+                const animate = () => {
+                    currentRotation += 15;
+                    this.canvas.style.transform = `rotate(${currentRotation}deg)`;
+                    
+                    if (currentRotation < totalRotation) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Spin complete
+                        this.isSpinning = false;
+                        this.lastSpinTime = new Date().toISOString();
+                        localStorage.setItem('lastSpinTime', this.lastSpinTime);
+                        
+                        // Update UI
+                        spinBtn.innerHTML = '<i class="fas fa-redo"></i> SPIN NOW';
+                        this.updateSpinButton();
+                        this.showResult(this.prizes[winnerIndex]);
+                        
+                        // Update stats
+                        this.updateStats();
+                    }
+                };
+                
+                animate();
+            }
+            
+            showResult(prize) {
+                const notification = document.getElementById('winNotification');
+                const prizeElement = document.getElementById('wonPrize');
+                const valueElement = document.getElementById('wonValue');
+                
+                prizeElement.textContent = prize.name;
+                valueElement.textContent = prize.value;
+                
+                // Show notification
+                notification.hidden = false;
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    notification.hidden = true;
+                }, 10000);
+            }
+            
+            updateStats() {
+                // Increment spins counter
+                let spinsToday = parseInt(localStorage.getItem('spinsToday') || '24832');
+                spinsToday++;
+                localStorage.setItem('spinsToday', spinsToday.toString());
+                document.getElementById('spinsToday').textContent = spinsToday.toLocaleString();
+                
+                // Randomly increment wins (12.5% chance)
+                if (Math.random() < 0.125) {
+                    let winsToday = parseInt(localStorage.getItem('winsToday') || '3104');
+                    winsToday++;
+                    localStorage.setItem('winsToday', winsToday.toString());
+                    document.getElementById('winsToday').textContent = winsToday.toLocaleString();
+                }
+            }
+        }
+
+        // ========================
+        // COUNTDOWN TIMER
+        // ========================
+        function updateCountdown() {
+            const now = new Date();
+            const nextMidnight = new Date(now);
+            nextMidnight.setHours(24, 0, 0, 0);
+            
+            const diff = nextMidnight - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            // Update display
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            
+            // Update progress bar
+            const progress = ((24 * 60 * 60 * 1000 - diff) / (24 * 60 * 60 * 1000)) * 100;
+            document.getElementById('spinProgress').style.width = `${progress}%`;
+            
+            // Update next spin time
+            const nextSpinTime = nextMidnight.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('nextSpinTime').textContent = nextSpinTime;
+        }
+
+        // ========================
+        // WINNERS DISPLAY
+        // ========================
+        function loadWinners() {
+            const winners = [
+                { name: 'LuckyStar23', prize: 'iPhone 17 Pro', time: '2 minutes ago' },
+                { name: 'MikeWins', prize: '$500 Cash', time: '15 minutes ago' },
+                { name: 'SarahG', prize: 'PS5 Pro', time: '1 hour ago' },
+                { name: 'JohnDoe', prize: 'MacBook Pro', time: '3 hours ago' },
+                { name: 'PrizeHunter', prize: '$1,000 Amazon', time: '5 hours ago' },
+                { name: 'WinMaster', prize: 'Apple Watch', time: '8 hours ago' }
+            ];
+            
+            const grid = document.getElementById('recentWinnersGrid');
+            grid.innerHTML = '';
+            
+            winners.forEach(winner => {
+                const initial = winner.name.charAt(0);
+                const card = document.createElement('div');
+                card.className = 'winner-card';
+                card.innerHTML = `
+                    <div class="winner-avatar">${initial}</div>
+                    <div class="winner-info">
+                        <h4>${winner.name}</h4>
+                        <p class="winner-prize">${winner.prize}</p>
+                        <span class="winner-time">${winner.time}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ========================
+        // LOGIN HANDLER
+        // ========================
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation (in real app, this would call a backend)
+            if (email && password) {
+                alert('Login successful! In a real app, this would redirect to your profile.');
+                document.getElementById('loginModal').hidden = true;
+            } else {
+                alert('Please enter email and password');
+            }
+        }
+
+        // ========================
+        // INITIALIZATION
+        // ========================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize spin wheel
+            const wheel = new SpinWheel();
+            
+            // Set up spin button
+            document.getElementById('spinButton').addEventListener('click', () => wheel.spin());
+            
+            // Load winners
+            loadWinners();
+            
+            // Start countdown timer
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 300);
+            }, 1000);
+            
+            // Mobile menu
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('active');
-                });
-                
-                if (mobileMenuClose) {
-                    mobileMenuClose.addEventListener('click', () => {
-                        mobileMenu.classList.remove('active');
-                    });
-                }
-            }
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+            
+            mobileMenuClose.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+            
+            // Login modal
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                document.getElementById('loginModal').hidden = false;
+            });
             
             // Back to top button
             const backToTop = document.getElementById('backToTop');
-            if (backToTop) {
-                window.addEventListener('scroll', () => {
-                    if (window.scrollY > 300) {
-                        backToTop.classList.add('visible');
-                    } else {
-                        backToTop.classList.remove('visible');
-                    }
-                });
-                
-                backToTop.addEventListener('click', () => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-            }
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+            
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
         });
-        
-        // Helper functions
+
+        // ========================
+        // HELPER FUNCTIONS
+        // ========================
         function scrollToSpin() {
             document.getElementById('spin').scrollIntoView({ behavior: 'smooth' });
         }
         
         function viewPrizeDetails() {
-            // This would normally open a modal or navigate to details page
-            alert('Prize details would be shown here. In a real app, this would open a detailed view.');
+            alert('Grand Prize Details:\n\n• Nintendo Switch OLED (Limited Edition)\n• Includes 5 Popular Games\n• Value: $500\n• Worldwide Shipping\n• Winner Announced Daily');
         }
     </script>
 </body>
-    </html>
+        </html>
