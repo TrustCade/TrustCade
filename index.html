@@ -3,38 +3,242 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mobile-Optimized Spin Wheel</title>
+<title>Fancy Spin Wheel</title>
 <style>
-  body { font-family: Arial, sans-serif; text-align: center; background: #f0f0f0; padding: 20px; overflow-x: hidden; }
-  canvas { margin: 20px auto; display: block; border-radius: 50%; background: #fff; }
-  #spinBtn { padding: 15px 30px; font-size: 18px; cursor: pointer; margin: 20px 0; }
-  #prizeList, #leaderboardList { list-style-type: none; padding: 0; }
-  #prizeList li, #leaderboardList li { background: #fff; margin: 5px 0; padding: 10px; border-radius: 8px; }
-  #loginForm, #logoutBtn { margin: 15px 0; }
-  input, button { padding: 10px; margin: 5px; font-size: 16px; }
-  #pointer { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 40px solid #ff0000; margin: 0 auto; position: relative; z-index: 10; box-shadow: 0 0 10px #ff0; }
-  .confetti { position: fixed; width: 10px; height: 10px; pointer-events: none; animation: fall 2s linear forwards; z-index: 1000; }
-  #streakContainer { width: 80%; background: #ddd; border-radius: 20px; margin: 10px auto; height: 20px; }
-  #streakBar { width: 0%; height: 100%; background: #2ecc71; border-radius: 20px; transition: width 0.3s ease; }
-  #streakText { margin: 5px; font-weight: bold; }
-  @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+/* Basic Reset */
+* {margin:0; padding:0; box-sizing:border-box;}
+body {
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+h1 {color:white; margin-bottom:1rem;}
+
+/* Wheel Container */
+#wheelContainer{
+    position:relative;
+    width:350px;
+    height:350px;
+}
+#wheelCanvas{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+.wheel-center{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:#FF6B6B;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-weight:bold;
+    font-size:1.2rem;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+.spin-pointer{
+    position:absolute;
+    top:-45px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:3rem;
+    color:#FF6B6B;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#spinBtn{
+    margin-top:20px;
+    padding:1rem 2rem;
+    font-size:1.2rem;
+    background:linear-gradient(45deg,#FF6B6B,#FF8E53);
+    color:white;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    transition:0.3s ease;
+}
+#spinBtn:disabled{
+    background:#ccc;
+    cursor:not-allowed;
+}
+#result{
+    margin-top:15px;
+    font-size:1.2rem;
+    color:white;
+    font-weight:bold;
+}
+/* Confetti canvas */
+#confettiCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:10000;
+}
 </style>
 </head>
 <body>
 
-<h1>🎡 Mobile Spin Wheel</h1>
-
-<div id="loginForm">
-  <input type="email" id="email" placeholder="Email"><br>
-  <input type="password" id="password" placeholder="Password"><br>
-  <button id="loginBtn">Login</button>
-  <button id="signupBtn">Sign Up</button>
-  <div id="loginMessage"></div>
+<h1>Fancy Spin Wheel!</h1>
+<div id="wheelContainer">
+    <canvas id="wheelCanvas"></canvas>
+    <div class="wheel-center">GO</div>
+    <div class="spin-pointer">⬆</div>
 </div>
+<button id="spinBtn">Spin</button>
+<div id="result"></div>
+<canvas id="confettiCanvas"></canvas>
 
-<div id="logoutBtn" style="display:none;">
-  <button id="signOutBtn">Logout</button>
-</div>
+<script>
+// ======= Prize Data =======
+const prizes = [
+    {name:"Free Spin", img:"https://i.imgur.com/5bX0iVw.png"},
+    {name:"$5 Gift Card", img:"https://i.imgur.com/7n5cY7A.png"},
+    {name:"$10 Gift Card", img:"https://i.imgur.com/1YxGgFw.png"},
+    {name:"Try Again", img:"https://i.imgur.com/3yX5N5E.png"},
+    {name:"Lucky Bonus", img:"https://i.imgur.com/Cl5MPoD.png"},
+    {name:"$20 Gift Card", img:"https://i.imgur.com/9uJ3k7V.png"},
+    {name:"Jackpot", img:"https://i.imgur.com/o1X1Ocz.png"},
+    {name:"Gift Pack", img:"https://i.imgur.com/xA0WlD5.png"}
+];
+
+// Load images
+prizes.forEach(p=>{p.imgObj=new Image(); p.imgObj.src=p.img;});
+
+// Canvas Setup
+const canvas = document.getElementById("wheelCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = 350;
+canvas.height = 350;
+const cx = canvas.width/2;
+const cy = canvas.height/2;
+const radius = canvas.width/2 - 10;
+const segmentAngle = (2*Math.PI)/prizes.length;
+let rotation = 0;
+
+// Draw Wheel
+function drawWheel(rot=0){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let i=0;i<prizes.length;i++){
+        // Segment background
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.arc(cx,cy,radius,segmentAngle*i,segmentAngle*(i+1));
+        ctx.fillStyle=i%2===0?"#FFCE00":"#FF5733";
+        ctx.fill();
+        ctx.save();
+        ctx.translate(cx,cy);
+        ctx.rotate(segmentAngle*i + segmentAngle/2 + rot);
+        // Draw text
+        ctx.rotate(-segmentAngle/2);
+        ctx.textAlign="right";
+        ctx.fillStyle="#fff";
+        ctx.font="14px sans-serif";
+        ctx.fillText(prizes[i].name,radius-10,5);
+        // Draw image
+        if(prizes[i].imgObj.complete){
+            ctx.drawImage(prizes[i].imgObj,radius-50,-20,30,30);
+        }
+        ctx.restore();
+    }
+}
+drawWheel();
+
+// Spin Logic
+function spinWheel(){
+    const spinBtn=document.getElementById("spinBtn");
+    spinBtn.disabled=true;
+    const spins = 3 + Math.random()*3;
+    const prizeIndex=Math.floor(Math.random()*prizes.length);
+    const finalAngle=(2*Math.PI*spins) + (prizeIndex*segmentAngle) + segmentAngle/2;
+    const duration=3000;
+    const start=performance.now();
+
+    function animate(now){
+        let elapsed=now-start;
+        if(elapsed<duration){
+            rotation = easeOut(elapsed,duration,0,finalAngle);
+            drawWheel(rotation);
+            requestAnimationFrame(animate);
+        }else{
+            rotation=finalAngle;
+            drawWheel(rotation);
+            spinBtn.disabled=false;
+            const result=prizes[prizeIndex].name;
+            document.getElementById("result").innerText="🎉 You won: "+result;
+            launchConfetti();
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+// Easing
+function easeOut(t,d,b,c){
+    t/=d;
+    t--;
+    return c*(t*t*t +1)+b;
+}
+
+document.getElementById("spinBtn").addEventListener("click",spinWheel);
+
+// ===== Confetti =====
+const confettiCanvas = document.getElementById('confettiCanvas');
+const confettiCtx = confettiCanvas.getContext('2d');
+confettiCanvas.width = window.innerWidth;
+confettiCanvas.height = window.innerHeight;
+const confettiPieces = [];
+for(let i=0;i<150;i++){
+    confettiPieces.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height- confettiCanvas.height,r:Math.random()*6+4,d:Math.random()*150+50,color:`hsl(${Math.random()*360},100%,50%)`,tilt:Math.random()*10-10,tiltAngleIncrement:Math.random()*0.07+0.05,tiltAngle:0});
+}
+
+function drawConfetti(){
+    confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    for(let p of confettiPieces){
+        confettiCtx.beginPath();
+        confettiCtx.lineWidth=p.r/2;
+        confettiCtx.strokeStyle=p.color;
+        confettiCtx.moveTo(p.x+p.tilt+p.r/4,p.y);
+        confettiCtx.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/4);
+        confettiCtx.stroke();
+    }
+    updateConfetti();
+}
+
+function updateConfetti(){
+    for(let p of confettiPieces){
+        p.tiltAngle+=p.tiltAngleIncrement;
+        p.y += (Math.cos(p.d)+3+p.r/2)/2;
+        p.x += Math.sin(p.d);
+        p.tilt = Math.sin(p.tiltAngle)*15;
+        if(p.y>confettiCanvas.height){p.x=Math.random()*confettiCanvas.width;p.y=-10;p.tilt=Math.random()*10-10;}
+    }
+}
+
+let confettiInterval;
+function launchConfetti(){
+    confettiCanvas.style.display='block';
+    confettiInterval=setInterval(drawConfetti,16);
+    setTimeout(()=>{clearInterval(confettiInterval); confettiCanvas.style.display='none';},3000);
+}
+
+// Resize Confetti
+window.addEventListener('resize',()=>{confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight;});
+</script>
+</body>
+</html></div>
 
 <canvas id="wheelCanvas" width="250" height="250" style="display:none;"></canvas>
 <div id="pointer"></div>
