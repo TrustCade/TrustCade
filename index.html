@@ -1,173 +1,779 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TrustCade - Win Prizes</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial;
-            background: #2A5B8C;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .logo {
-            font-size: 60px;
-            margin: 40px 0;
-        }
-        h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        .prize {
-            background: rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 20px;
-            margin: 30px 0;
-        }
-        .prize-name {
-            font-size: 32px;
-            color: #FFB347;
-            margin: 10px 0;
-        }
-        .timer {
-            font-family: monospace;
-            font-size: 40px;
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 30px 0;
-        }
-        .spin-btn {
-            background: #FFB347;
-            color: #333;
-            border: none;
-            padding: 25px;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 50px;
-            width: 100%;
-            margin: 30px 0;
-            cursor: pointer;
-        }
-        .result {
-            min-height: 100px;
-            padding: 20px;
-            margin: 20px 0;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-        }
-        .footer {
-            margin-top: 50px;
-            opacity: 0.8;
-            font-size: 14px;
-        }
-    </style>
+    <title>TrustCade - Spin & Win Real Prizes</title>
+    <meta name="description" content="Spin daily and win real prizes! iPhone 17, PS5, cash prizes, and more. Free daily spin, verified winners, secure platform.">
+    <meta name="keywords" content="spin wheel, win prizes, daily spin, free prizes, iPhone, PS5, cash prizes">
+    
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="TrustCade - Spin & Win Real Prizes">
+    <meta property="og:description" content="Win iPhone 17, PS5, cash prizes and more with daily free spins!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:url" content="https://trustcade.com">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="manifest" href="assets/site.webmanifest">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical images -->
+    <link rel="preload" href="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" as="image">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://trustcade.com">
 </head>
 <body>
-    <div class="container">
-        <div class="logo">🎮</div>
-        <h1>TrustCade</h1>
-        <p>Win amazing prizes every day</p>
-        
-        <div class="prize">
-            <div>🎁 TODAY'S PRIZE</div>
-            <div class="prize-name" id="prizeName">Nintendo Switch</div>
-            <div>Value: <span id="prizeValue">$349.99</span></div>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner">
+            <i class="fas fa-gift fa-spin"></i>
         </div>
-        
-        <div class="timer" id="timer">24:00:00</div>
-        
-        <button class="spin-btn" onclick="spin()">🎡 SPIN NOW</button>
-        
-        <div class="result" id="result">
-            Tap SPIN NOW to play!
+        <p>Loading TrustCade...</p>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <h1><i class="fas fa-gift"></i> TrustCade</h1>
+                    <p class="tagline">Spin & Win Real Prizes</p>
+                </a>
+            </div>
+            <nav class="desktop-nav">
+                <a href="#spin" class="btn-spin"><i class="fas fa-redo"></i> SPIN NOW</a>
+                <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+                <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+                <button class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-        
-        <div class="footer">
-            © 2024 TrustCade<br>
-            <small>100% Verified • No purchase necessary</small>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <h3><i class="fas fa-gift"></i> TrustCade</h3>
+            <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="#spin"><i class="fas fa-redo"></i> Spin Wheel</a>
+            <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+            <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+            <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+            <a href="login.html" id="mobileLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+        <div class="mobile-menu-footer">
+            <div class="mobile-trust-badges">
+                <span><i class="fas fa-shield-alt"></i> Verified</span>
+                <span><i class="fas fa-trophy"></i> 5,247+ Wins</span>
+                <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            </div>
         </div>
     </div>
-    
-    <script>
-        // Timer
-        function updateTimer() {
-            const now = new Date();
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            tomorrow.setHours(0,0,0,0);
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+        <div class="container">
+            <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
+            <span><i class="fas fa-trophy"></i> 5,247+ Winners</span>
+            <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            <span><i class="fas fa-clock"></i> Free Daily Spin</span>
+            <span><i class="fas fa-shipping-fast"></i> Free Shipping</span>
+            <span><i class="fas fa-headset"></i> 24/7 Support</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Grand Prize Display -->
+        <section class="grand-prize" aria-labelledby="grandPrizeTitle">
+            <div class="section-header">
+                <h2 id="grandPrizeTitle"><i class="fas fa-crown"></i> TODAY'S GRAND PRIZE</h2>
+                <div class="prize-timer">
+                    <i class="fas fa-clock"></i> Draws in: <span id="grandPrizeTimer" role="timer">12:34:56</span>
+                </div>
+            </div>
+            <div class="prize-card">
+                <div class="prize-image">
+                    <img src="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" 
+                         alt="Nintendo Switch OLED with games" 
+                         loading="lazy">
+                    <div class="prize-badge">GRAND PRIZE</div>
+                </div>
+                <div class="prize-info">
+                    <h3>$500 Nintendo Switch OLED + 5 Games</h3>
+                    <p class="prize-description">Limited edition with Mario Kart, Zelda, and 3 popular games included</p>
+                    <div class="prize-details">
+                        <div class="detail">
+                            <i class="fas fa-tag"></i>
+                            <span>Value: <strong>$500</strong></span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-user-check"></i>
+                            <span>Winners today: <strong>1</strong></span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-gift"></i>
+                            <span>Available: <strong>Now</strong></span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-users"></i>
+                            <span>Entries: <strong>2,543</strong></span>
+                        </div>
+                    </div>
+                    <div class="prize-action">
+                        <button class="btn-spin-action" onclick="scrollToSpin()" aria-label="Spin to win the grand prize">
+                            <i class="fas fa-redo"></i> Spin to Win!
+                        </button>
+                        <button class="btn-secondary" onclick="viewPrizeDetails()">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spin Wheel Section -->
+        <section class="spin-section" id="spin" aria-labelledby="spinWheelTitle">
+            <div class="section-header">
+                <h2 id="spinWheelTitle"><i class="fas fa-redo"></i> DAILY SPIN WHEEL</h2>
+                <p class="section-subtitle">Spin once every 24 hours for free!</p>
+            </div>
             
-            const diff = tomorrow - now;
-            const hours = Math.floor(diff / (1000*60*60));
-            const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-            const seconds = Math.floor((diff % (1000*60)) / 1000);
-            
-            document.getElementById('timer').textContent = 
-                hours.toString().padStart(2,'0') + ':' +
-                minutes.toString().padStart(2,'0') + ':' +
-                seconds.toString().padStart(2,'0');
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-        
-        // Spin function
-        function spin() {
-            const btn = document.querySelector('.spin-btn');
-            const result = document.getElementById('result');
-            
-            btn.disabled = true;
-            btn.textContent = 'SPINNING...';
-            result.innerHTML = '🎡 Spinning...';
-            
-            setTimeout(() => {
-                const prizes = [
-                    '🎉 You won $500 Gift Card!',
-                    '⭐ You got 3 Prize Entries!',
-                    '🏆 JACKPOT! Daily Grand Prize!',
-                    '🎁 You won an Extra Spin!'
-                ];
+            <div class="spin-container">
+                <div class="wheel-container">
+                    <div class="wheel-wrapper">
+                        <canvas id="wheelCanvas" width="100" height="250" 
+                                aria-label="Spin wheel with 8 prize sections"
+                                role="img"></canvas>
+                        <div class="wheel-center">
+                            <div class="spin-pointer" aria-hidden="true">
+                                <i class="fas fa-caret-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wheel-prizes" aria-label="Available prizes on the wheel">
+                        <div class="prize-indicator" style="--i:1">iPhone 17</div>
+                        <div class="prize-indicator" style="--i:2">$500 Cash</div>
+                        <div class="prize-indicator" style="--i:3">Headphones</div>
+                        <div class="prize-indicator" style="--i:4">Try Again</div>
+                        <div class="prize-indicator" style="--i:5">PS5</div>
+                        <div class="prize-indicator" style="--i:6">$900 Card</div>
+                        <div class="prize-indicator" style="--i:7">Watch</div>
+                        <div class="prize-indicator" style="--i:8">MacBook</div>
+                    </div>
+                </div>
                 
-                const win = prizes[Math.floor(Math.random() * prizes.length)];
-                result.innerHTML = win;
-                
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.textContent = 'COME BACK TOMORROW';
-                    btn.style.background = '#00C2B5';
+                <!-- Timer & Controls -->
+                <div class="spin-controls">
+                    <div class="timer-container">
+                        <h3><i class="fas fa-clock"></i> NEXT FREE SPIN IN:</h3>
+                        <div class="timer" id="countdown" role="timer">
+                            <div class="time-unit">
+                                <span id="hours">00</span>
+                                <small>Hours</small>
+                            </div>
+                            <div class="time-separator">:</div>
+                            <div class="time-unit">
+                                <span id="minutes">00</span>
+                                <small>Minutes</small>
+                            </div>
+                            <div class="time-separator">:</div>
+                            <div class="time-unit">
+                                <span id="seconds">00</span>
+                                <small>Seconds</small>
+                            </div>
+                        </div>
+                        <div class="timer-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="spinProgress"></div>
+                            </div>
+                            <span class="progress-text">Next spin available at <span id="nextSpinTime">12:00 PM</span></span>
+                        </div>
+                    </div>
                     
-                    // Countdown
-                    let time = 10;
-                    const countdown = setInterval(() => {
-                        result.textContent = `Next spin in: ${time}s`;
-                        time--;
-                        if (time < 0) {
-                            clearInterval(countdown);
-                            btn.textContent = '🎡 SPIN NOW';
-                            btn.style.background = '#FFB347';
-                            result.textContent = 'Ready to spin!';
-                        }
-                    }, 1000);
-                }, 3000);
-            }, 2000);
+                    <button class="spin-btn" id="spinButton" disabled aria-label="Spin the wheel">
+                        <i class="fas fa-redo"></i> SPIN NOW
+                        <span class="btn-subtext">Free spin available in <span id="timeLeft">00:00:00</span></span>
+                    </button>
+                    
+                    <div class="spin-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Spins today: <strong>24,832</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-gift"></i>
+                            <span>Wins today: <strong>3,104</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="spin-info">
+                        <p><i class="fas fa-info-circle"></i> 1 free spin every 24 hours</p>
+                        <p><i class="fas fa-gift"></i> Win real prizes instantly</p>
+                        <p><i class="fas fa-user-check"></i> Login required to claim prizes</p>
+                        <p><i class="fas fa-sync-alt"></i> Additional spins available for purchase</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Prompt -->
+        <section class="registration-prompt" aria-labelledby="regPromptTitle">
+            <div class="reg-card">
+                <div class="reg-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="reg-content">
+                    <h3 id="regPromptTitle"><i class="fas fa-shield-alt"></i> Verify with $100 Gift Card</h3>
+                    <p>Register with a Steam/Apple gift card to unlock prize claiming and participate in grand prize draws</p>
+                    <div class="reg-benefits">
+                        <span><i class="fas fa-check"></i> Claim unlimited prizes</span>
+                        <span><i class="fas fa-check"></i> Join grand prize draws</span>
+                        <span><i class="fas fa-check"></i> Priority shipping</span>
+                        <span><i class="fas fa-check"></i> Verified badge</span>
+                        <span><i class="fas fa-check"></i> Extra daily spin</span>
+                        <span><i class="fas fa-check"></i> Higher win chances</span>
+                    </div>
+                    <div class="reg-actions">
+                        <a href="register.html" class="btn-register">
+                            <i class="fas fa-user-plus"></i> Register Now
+                        </a>
+                        <a href="login.html" class="btn-login-small">
+                            <i class="fas fa-sign-in-alt"></i> Already have account?
+                        </a>
+                    </div>
+                    <div class="reg-note">
+                        <p><i class="fas fa-lock"></i> Your gift card balance remains fully usable after verification</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Winners -->
+        <section class="winners-section" aria-labelledby="winnersTitle">
+            <div class="section-header">
+                <h2 id="winnersTitle"><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
+                <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="winners-grid" id="recentWinnersGrid" role="list" aria-label="List of recent winners">
+                <!-- Winners loaded via JavaScript -->
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">L</div>
+                    <div class="winner-info">
+                        <h4>LuckyStar23</h4>
+                        <p class="winner-prize">iPhone 17 Pro</p>
+                        <span class="winner-time">2 minutes ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">M</div>
+                    <div class="winner-info">
+                        <h4>MikeWins</h4>
+                        <p class="winner-prize">$500 Cash</p>
+                        <span class="winner-time">15 minutes ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">S</div>
+                    <div class="winner-info">
+                        <h4>SarahG</h4>
+                        <p class="winner-prize">PS5 Pro</p>
+                        <span class="winner-time">1 hour ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">J</div>
+                    <div class="winner-info">
+                        <h4>JohnDoe</h4>
+                        <p class="winner-prize">MacBook Pro</p>
+                        <span class="winner-time">3 hours ago</span>
+                    </div>
+                </div>
+            </div>
+            <div class="section-footer">
+                <a href="winners.html" class="btn-view-all">
+                    <i class="fas fa-users"></i> View All 5,247+ Winners
+                </a>
+            </div>
+        </section>
+
+        <!-- Leaderboard -->
+        <section class="leaderboard-section" aria-labelledby="leaderboardTitle">
+            <div class="section-header">
+                <h2 id="leaderboardTitle"><i class="fas fa-medal"></i> TOP WINNERS LEADERBOARD</h2>
+                <p class="section-subtitle">Our most successful players this month</p>
+            </div>
+            <div class="leaderboard-container">
+                <div class="leaderboard-header">
+                    <span class="rank-header">Rank</span>
+                    <span class="player-header">Player</span>
+                    <span class="wins-header">Total Wins</span>
+                    <span class="value-header">Total Value</span>
+                    <span class="status-header">Status</span>
+                </div>
+                <div class="leaderboard-list" id="leaderboard" role="list" aria-label="Top winners leaderboard">
+                    <!-- Leaderboard loaded via JavaScript -->
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank gold">1</span>
+                        <span class="player"><i class="fas fa-crown"></i> LuckyStar23</span>
+                        <span class="wins">47 wins</span>
+                        <span class="value">$12,450</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank silver">2</span>
+                        <span class="player">PrizeHunter</span>
+                        <span class="wins">32 wins</span>
+                        <span class="value">$8,760</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank bronze">3</span>
+                        <span class="player">WinMaster</span>
+                        <span class="wins">28 wins</span>
+                        <span class="value">$7,230</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                </div>
+                <div class="leaderboard-footer">
+                    <p><i class="fas fa-sync-alt"></i> Updated every hour • Last updated: <span id="leaderboardUpdate">Just now</span></p>
+                    <button class="btn-refresh" id="refreshLeaderboard" aria-label="Refresh leaderboard">
+                        <i class="fas fa-redo"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Stats -->
+        <section class="stats-section" aria-labelledby="statsTitle">
+            <div class="section-header">
+                <h2 id="statsTitle"><i class="fas fa-chart-line"></i> LIVE STATISTICS</h2>
+                <p class="section-subtitle">Real-time data from TrustCade</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card stat-primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalWinners">5,247</h3>
+                        <p>Total Winners</p>
+                        <span class="stat-trend"><i class="fas fa-arrow-up"></i> +24 today</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-success">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalValue">$892,450</h3>
+                        <p>Prizes Distributed</p>
+                        <span class="stat-trend"><i class="fas fa-arrow-up"></i> +$12,450 today</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="winsToday">324</h3>
+                        <p>Wins Today</p>
+                        <span class="stat-trend"><i class="fas fa-chart-line"></i> 1 win every 4.5 minutes</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-info">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="winRate">1:8</h3>
+                        <p>Win Rate</p>
+                        <span class="stat-trend"><i class="fas fa-user-friends"></i> 12.5% of spins win</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-note">
+                <p><i class="fas fa-info-circle"></i> Statistics update in real-time. Last updated: <span id="lastUpdated">Just now</span></p>
+                <button class="btn-refresh-stats" id="refreshStats" aria-label="Refresh statistics">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Prize Gallery -->
+        <section class="prize-gallery" id="prizes" aria-labelledby="prizesTitle">
+            <div class="section-header">
+                <h2 id="prizesTitle"><i class="fas fa-gifts"></i> WINNING PRIZES</h2>
+                <p class="section-subtitle">Amazing prizes you can win right now</p>
+            </div>
+            <div class="prizes-grid">
+                <div class="prize-category">
+                    <h3><i class="fas fa-mobile-alt"></i> Electronics</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">iPhone 17 Pro Max</span>
+                        <span class="prize-item">Samsung Galaxy S24</span>
+                        <span class="prize-item">MacBook Pro M3</span>
+                        <span class="prize-item">iPad Pro 12.9"</span>
+                        <span class="prize-item">AirPods Pro 2</span>
+                        <span class="prize-item">Apple Watch Ultra</span>
+                    </div>
+                </div>
+                <div class="prize-category">
+                    <h3><i class="fas fa-gamepad"></i> Gaming</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">PlayStation 5 Pro</span>
+                        <span class="prize-item">Xbox Series X</span>
+                        <span class="prize-item">Nintendo Switch OLED</span>
+                        <span class="prize-item">Gaming PC RTX 4090</span>
+                        <span class="prize-item">VR Headset</span>
+                        <span class="prize-item">Gaming Chair</span>
+                    </div>
+                </div>
+                <div class="prize-category">
+                    <h3><i class="fas fa-money-bill"></i> Cash & Cards</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">$5,000 Cash</span>
+                        <span class="prize-item">$1,000 Amazon</span>
+                        <span class="prize-item">$500 Steam</span>
+                        <span class="prize-item">$250 Apple</span>
+                        <span class="prize-item">$700 Google</span>
+                        <span class="prize-item">$900 Netflix</span>
+                    </div>
+                </div>
+                <div class="prize-category">
+                    <h3><i class="fas fa-tshirt"></i> Lifestyle</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">Smart TV 65"</span>
+                        <span class="prize-item">Drone Pro</span>
+                        <span class="prize-item">Camera Kit</span>
+                        <span class="prize-item">Studio Equipment</span>
+                        <span class="prize-item">Designer Watch</span>
+                        <span class="prize-item">Electric Scooter</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works" aria-labelledby="howItWorksTitle">
+            <div class="section-header">
+                <h2 id="howItWorksTitle"><i class="fas fa-play-circle"></i> HOW IT WORKS</h2>
+                <p class="section-subtitle">Win prizes in 3 easy steps</p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>Register & Verify</h3>
+                    <p>Create your account and verify with a $100 gift card to unlock all features</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <h3>Spin Daily</h3>
+                    <p>Use your free daily spin or purchase additional spins for more chances</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>Claim Prize</h3>
+                    <p>If you win, claim your prize instantly. We ship worldwide for free!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updates Section -->
+        <section class="updates-section" aria-labelledby="updatesTitle">
+            <div class="section-header">
+                <h2 id="updatesTitle"><i class="fas fa-bullhorn"></i> LATEST UPDATES</h2>
+                <a href="#" class="view-all-link">All Updates <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="updates-grid">
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="iPhone 17" 
+                             loading="lazy">
+                        <div class="update-badge">NEW</div>
+                    </div>
+                    <div class="update-content">
+                        <span class="update-date"><i class="far fa-clock"></i> 2 hours ago</span>
+                        <h3>iPhone 17 Added to Prize Pool!</h3>
+                        <p>The latest iPhone model is now available to win. Be the first to get it!</p>
+                        <a href="#" class="update-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Big Win Celebration" 
+                             loading="lazy">
+                        <div class="update-badge">HOT</div>
+                    </div>
+                    <div class="update-content">
+                        <span class="update-date"><i class="far fa-clock"></i> 1 day ago</span>
+                        <h3>Record $5,000 Win!</h3>
+                        <p>User "LuckyStar" just won our biggest cash prize ever. You could be next!</p>
+                        <a href="#" class="update-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Mobile App" 
+                             loading="lazy">
+                        <div class="update-badge">UPDATE</div>
+                    </div>
+                    <div class="update-content">
+                        <span class="update-date"><i class="far fa-clock"></i> 3 days ago</span>
+                        <h3>New Mobile App Launched!</h3>
+                        <p>Spin on the go with our new iOS and Android apps. Download now!</p>
+                        <a href="#" class="update-link">Download <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Links -->
+        <section class="social-section" aria-labelledby="socialTitle">
+            <div class="section-header">
+                <h2 id="socialTitle"><i class="fas fa-comments"></i> STAY CONNECTED</h2>
+                <p class="section-subtitle">Follow us for updates and winner announcements</p>
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-btn social-instagram" aria-label="Follow on Instagram">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                    <small>@TrustCadeWins</small>
+                </a>
+                <a href="#" class="social-btn social-twitter" aria-label="Follow on Twitter">
+                    <i class="fab fa-twitter"></i>
+                    <span>Twitter</span>
+                    <small>@TrustCade</small>
+                </a>
+                <a href="#" class="social-btn social-facebook" aria-label="Follow on Facebook">
+                    <i class="fab fa-facebook"></i>
+                    <span>Facebook</span>
+                    <small>/TrustCade</small>
+                </a>
+                <a href="#" class="social-btn social-youtube" aria-label="Subscribe on YouTube">
+                    <i class="fab fa-youtube"></i>
+                    <span>YouTube</span>
+                    <small>Unboxing videos</small>
+                </a>
+                <a href="mailto:contact@trustcade.com" class="social-btn social-email" aria-label="Send email">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email</span>
+                    <small>24/7 Support</small>
+                </a>
+                <a href="#" class="social-btn social-whatsapp" aria-label="Chat on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                    <small>Quick Help</small>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-gift"></i> TrustCade</h3>
+                    <p>Your trusted platform for winning real prizes through daily spins. Verified winners, transparent system.</p>
+                    <div class="footer-trust">
+                        <span><i class="fas fa-check-circle"></i> 100% Legit</span>
+                        <span><i class="fas fa-shield-alt"></i> Secure</span>
+                        <span><i class="fas fa-truck"></i> Free Shipping</span>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                    <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                    <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+                    <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="privacy.html"><i class="fas fa-lock"></i> Privacy Policy</a>
+                    <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+                    <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                    <a href="rules.html"><i class="fas fa-book"></i> Contest Rules</a>
+                    <a href="disclaimer.html"><i class="fas fa-exclamation-circle"></i> Disclaimer</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> support@trustcade.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Prize Street, NY</p>
+                    <div class="newsletter">
+                        <h5>Get Updates</h5>
+                        <div class="newsletter-input">
+                            <input type="email" placeholder="Your email" aria-label="Email for newsletter">
+                            <button aria-label="Subscribe to newsletter"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners, Real Fun!</p>
+                <p>Odds displayed: 1:8 win rate | Verified business | Transparent system | Must be 18+ to play</p>
+                <div class="payment-methods" aria-label="Accepted payment methods">
+                    <i class="fab fa-cc-visa" title="Visa"></i>
+                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fab fa-cc-amex" title="American Express"></i>
+                    <i class="fab fa-cc-paypal" title="PayPal"></i>
+                    <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
+                    <i class="fab fa-google-pay" title="Google Pay"></i>
+                </div>
+                <div class="footer-legal">
+                    <span><i class="fas fa-globe"></i> Worldwide shipping</span>
+                    <span><i class="fas fa-user-check"></i> Age verification required</span>
+                    <span><i class="fas fa-balance-scale"></i> Gambling license: GL-2024-98765</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Win Notification (Hidden by default) -->
+    <div id="winNotification" class="win-notification" role="alert" aria-live="polite" hidden>
+        <div class="notification-content">
+            <div class="notification-icon">🎉</div>
+            <div class="notification-text">
+                <h4>Congratulations!</h4>
+                <p>You won <span id="wonPrize">iPhone 17</span>!</p>
+                <small>Value: <span id="wonValue">$1,299</span></small>
+            </div>
+            <a href="profile.html" class="notification-btn">Claim Now</a>
+            <button class="notification-close" aria-label="Close notification">&times;</button>
+        </div>
+    </div>
+
+    <!-- Login Modal (Hidden by default) -->
+    <div id="loginModal" class="modal" role="dialog" aria-labelledby="modalTitle" hidden>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <h2 id="modalTitle"><i class="fas fa-sign-in-alt"></i> Login to TrustCade</h2>
+            <form id="quickLoginForm">
+                <input type="email" placeholder="Email Address" required aria-label="admin@gmail.com">
+                <input type="password" placeholder="Password" required aria-label="admin123">
+                <button type="submit" class="spin-btn">Login</button>
+            </form>
+            <div class="login-options">
+                <button class="login-option-btn">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+                <button class="login-option-btn">
+                    <i class="fab fa-apple"></i> Continue with Apple
+                </button>
+            </div>
+            <p class="modal-footer">
+                New user? <a href="register.html">Register here</a> |
+                <a href="forgot-password.html">Forgot password?</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Offline Notification -->
+    <div id="offlineNotification" class="offline-notification" hidden>
+        <i class="fas fa-wifi-slash"></i>
+        <span>You're offline. Some features may not work.</span>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Initialize scripts -->
+    <script>
+        // Simple initialization for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 300);
+                }, 500);
+            }
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('active');
+                });
+                
+                if (mobileMenuClose) {
+                    mobileMenuClose.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                    });
+                }
+            }
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                });
+                
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+        
+        // Helper functions
+        function scrollToSpin() {
+            document.getElementById('spin').scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Rotate prize
-        const prizes = [
-            {name:'Nintendo Switch', value:'$349.99'},
-            {name:'iPhone 14 Pro', value:'$999.99'},
-            {name:'PlayStation 5', value:'$499.99'}
-        ];
-        let current = 0;
-        setInterval(() => {
-            current = (current + 1) % prizes.length;
-            document.getElementById('prizeName').textContent = prizes[current].name;
-            document.getElementById('prizeValue').textContent = prizes[current].value;
-        }, 8000);
+        function viewPrizeDetails() {
+            // This would normally open a modal or navigate to details page
+            alert('Prize details would be shown here. In a real app, this would open a detailed view.');
+        }
     </script>
 </body>
-</html>
+    </html>
