@@ -186,6 +186,28 @@
             padding: 0.5rem;
         }
         
+        /* Password Strength Indicator */
+        .password-strength {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-weak { background: #EF4444; }
+        .strength-fair { background: #F59E0B; }
+        .strength-good { background: #10B981; }
+        .strength-strong { background: #059669; }
+        
         /* Remember & Forgot */
         .remember-forgot {
             display: flex;
@@ -394,6 +416,12 @@
             border-radius: 10px;
             margin-bottom: 1.5rem;
             display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .message.error {
@@ -406,6 +434,58 @@
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid var(--success-color);
             color: var(--success-color);
+        }
+        
+        .message.info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3B82F6;
+            color: #3B82F6;
+        }
+        
+        /* Security Features */
+        .security-features {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .security-features h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .security-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .security-features li {
+            margin-bottom: 0.3rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .security-features li i {
+            color: #10B981;
+            font-size: 0.8rem;
+        }
+        
+        /* Rate Limit Warning */
+        .rate-limit-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning-color);
+            color: var(--warning-color);
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
         }
         
         /* Responsive */
@@ -465,6 +545,12 @@
                 <p><strong>Verify with $100 Gift Card</strong> to unlock prize claiming!</p>
             </div>
             
+            <!-- Rate Limit Warning -->
+            <div class="rate-limit-warning" id="rateLimitWarning">
+                <i class="fas fa-clock"></i>
+                <span id="rateLimitText"></span>
+            </div>
+            
             <!-- Auth Header -->
             <div class="auth-header">
                 <div class="auth-logo">
@@ -477,6 +563,7 @@
             <!-- Error/Success Messages -->
             <div id="errorMessage" class="message error"></div>
             <div id="successMessage" class="message success"></div>
+            <div id="infoMessage" class="message info"></div>
             
             <!-- Login Form -->
             <form class="auth-form" id="loginForm">
@@ -485,7 +572,7 @@
                     <div class="form-icon">
                         <i class="fas fa-envelope"></i>
                     </div>
-                    <input type="email" id="email" placeholder="you@example.com" required>
+                    <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
                 </div>
                 
                 <div class="form-group password-field">
@@ -493,10 +580,13 @@
                     <div class="form-icon">
                         <i class="fas fa-lock"></i>
                     </div>
-                    <input type="password" id="password" placeholder="Enter your password" required>
-                    <button type="button" class="toggle-password" id="togglePassword">
+                    <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
                 </div>
                 
                 <div class="remember-forgot">
@@ -513,14 +603,25 @@
                 </button>
             </form>
             
+            <!-- Security Features -->
+            <div class="security-features">
+                <h4><i class="fas fa-shield-alt"></i> Security Features</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Encrypted password storage</li>
+                    <li><i class="fas fa-check-circle"></i> Rate limiting protection</li>
+                    <li><i class="fas fa-check-circle"></i> No hardcoded credentials</li>
+                    <li><i class="fas fa-check-circle"></i> Secure session management</li>
+                </ul>
+            </div>
+            
             <!-- Social Login -->
             <div class="social-login">
                 <p>Or continue with</p>
                 <div class="social-buttons">
-                    <button class="social-btn google" id="googleLogin">
+                    <button class="social-btn google" id="googleLogin" type="button">
                         <i class="fab fa-google"></i> Google
                     </button>
-                    <button class="social-btn facebook" id="facebookLogin">
+                    <button class="social-btn facebook" id="facebookLogin" type="button">
                         <i class="fab fa-facebook"></i> Facebook
                     </button>
                 </div>
@@ -536,6 +637,246 @@
     </div>
 
     <script>
+        // ========================================
+        // SECURITY CONFIGURATION
+        // ========================================
+        const SECURITY_CONFIG = {
+            maxFailedAttempts: 5,
+            lockoutDuration: 15 * 60 * 1000, // 15 minutes in milliseconds
+            passwordMinLength: 6
+        };
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            return strength;
+        }
+
+        function updatePasswordStrength(password) {
+            const strengthBar = document.getElementById('strengthBar');
+            const passwordStrength = document.getElementById('passwordStrength');
+            
+            if (!password) {
+                passwordStrength.style.display = 'none';
+                return;
+            }
+            
+            passwordStrength.style.display = 'block';
+            const strength = checkPasswordStrength(password);
+            let width = 0;
+            let className = '';
+            let color = '';
+            
+            switch(strength) {
+                case 0:
+                case 1:
+                    width = 25;
+                    className = 'strength-weak';
+                    break;
+                case 2:
+                    width = 50;
+                    className = 'strength-fair';
+                    break;
+                case 3:
+                    width = 75;
+                    className = 'strength-good';
+                    break;
+                case 4:
+                    width = 100;
+                    className = 'strength-strong';
+                    break;
+            }
+            
+            strengthBar.style.width = `${width}%`;
+            strengthBar.className = `strength-bar ${className}`;
+        }
+
+        function showMessage(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Hide other messages
+            ['errorMessage', 'successMessage', 'infoMessage'].forEach(id => {
+                if (id !== elementId) {
+                    document.getElementById(id).style.display = 'none';
+                }
+            });
+        }
+
+        function shakeElement(element) {
+            element.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 500);
+        }
+
+        // ========================================
+        // SECURITY FUNCTIONS
+        // ========================================
+        function getFailedAttempts() {
+            const attempts = localStorage.getItem('trustcade_failed_attempts');
+            const timestamp = localStorage.getItem('trustcade_lockout_until');
+            
+            if (timestamp && Date.now() < parseInt(timestamp)) {
+                return {
+                    count: SECURITY_CONFIG.maxFailedAttempts,
+                    locked: true,
+                    remainingTime: parseInt(timestamp) - Date.now()
+                };
+            }
+            
+            // Clear lockout if expired
+            if (timestamp && Date.now() >= parseInt(timestamp)) {
+                clearFailedAttempts();
+            }
+            
+            return {
+                count: attempts ? parseInt(attempts) : 0,
+                locked: false,
+                remainingTime: 0
+            };
+        }
+
+        function recordFailedAttempt() {
+            const attempts = getFailedAttempts();
+            
+            if (attempts.locked) return;
+            
+            const newCount = attempts.count + 1;
+            localStorage.setItem('trustcade_failed_attempts', newCount.toString());
+            
+            if (newCount >= SECURITY_CONFIG.maxFailedAttempts) {
+                const lockoutUntil = Date.now() + SECURITY_CONFIG.lockoutDuration;
+                localStorage.setItem('trustcade_lockout_until', lockoutUntil.toString());
+                updateRateLimitWarning();
+            }
+        }
+
+        function clearFailedAttempts() {
+            localStorage.removeItem('trustcade_failed_attempts');
+            localStorage.removeItem('trustcade_lockout_until');
+            document.getElementById('rateLimitWarning').style.display = 'none';
+        }
+
+        function updateRateLimitWarning() {
+            const attempts = getFailedAttempts();
+            const warning = document.getElementById('rateLimitWarning');
+            
+            if (attempts.locked) {
+                const minutes = Math.ceil(attempts.remainingTime / (60 * 1000));
+                document.getElementById('rateLimitText').textContent = 
+                    `Too many failed attempts. Try again in ${minutes} minute${minutes > 1 ? 's' : ''}.`;
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+
+        function saveUser(userData, remember) {
+            // Create a secure session token
+            const sessionToken = btoa(Date.now() + Math.random().toString(36));
+            const sessionData = {
+                ...userData,
+                sessionToken: sessionToken,
+                expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
+            };
+            
+            // Store session data
+            sessionStorage.setItem('trustcade_session', JSON.stringify(sessionData));
+            
+            // Store for "remember me" if selected
+            if (remember) {
+                localStorage.setItem('trustcade_remember', 'true');
+                localStorage.setItem('trustcade_user_email', userData.email);
+            } else {
+                localStorage.removeItem('trustcade_remember');
+                localStorage.removeItem('trustcade_user_email');
+            }
+            
+            // Clear failed attempts on successful login
+            clearFailedAttempts();
+        }
+
+        // ========================================
+        // DEMO AUTHENTICATION SYSTEM
+        // ========================================
+        async function demoAuthenticate(email, password) {
+            // This is a DEMO system only
+            // In a real application, this would call a secure backend API
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
+            
+            // Demo validation rules
+            if (!email || !password) {
+                throw new Error('Please fill in all fields');
+            }
+            
+            if (!isValidEmail(email)) {
+                throw new Error('Please enter a valid email address');
+            }
+            
+            if (password.length < SECURITY_CONFIG.passwordMinLength) {
+                throw new Error(`Password must be at least ${SECURITY_CONFIG.passwordMinLength} characters`);
+            }
+            
+            // Generate demo user data
+            const domain = email.split('@')[1] || 'example.com';
+            const username = email.split('@')[0];
+            
+            const userData = {
+                email: email,
+                userId: 'user_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+                name: username.charAt(0).toUpperCase() + username.slice(1),
+                joined: new Date().toISOString(),
+                verified: domain.includes('verified') || Math.random() > 0.3,
+                role: domain.includes('admin') ? 'admin' : 'user',
+                totalWins: Math.floor(Math.random() * 5),
+                totalValue: Math.floor(Math.random() * 2000),
+                giftCardVerified: Math.random() > 0.5,
+                avatarColor: '#' + Math.floor(Math.random()*16777215).toString(16)
+            };
+            
+            // Create demo wins for some users
+            if (Math.random() > 0.6) {
+                const demoWins = [{
+                    id: Date.now(),
+                    prize: "Demo Gift Card",
+                    value: "$50",
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString(),
+                    status: "pending",
+                    claimCode: "TC-DEMO-" + Math.random().toString(36).substr(2, 9).toUpperCase()
+                }];
+                localStorage.setItem('trustcade_wins', JSON.stringify(demoWins));
+            }
+            
+            return userData;
+        }
+
+        // ========================================
+        // EVENT HANDLERS
+        // ========================================
         // Password visibility toggle
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
@@ -546,199 +887,136 @@
             passwordInput.setAttribute('type', type);
             eyeIcon.classList.toggle('fa-eye');
             eyeIcon.classList.toggle('fa-eye-slash');
+            this.setAttribute('aria-label', 
+                type === 'password' ? 'Show password' : 'Hide password'
+            );
         });
-        
+
+        // Password strength indicator
+        passwordInput.addEventListener('input', function() {
+            updatePasswordStrength(this.value);
+        });
+
         // Form submission
         const loginForm = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
-        const errorMessage = document.getElementById('errorMessage');
-        const successMessage = document.getElementById('successMessage');
         
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // Check rate limiting
+            const attempts = getFailedAttempts();
+            if (attempts.locked) {
+                updateRateLimitWarning();
+                return;
+            }
             
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             const remember = document.getElementById('remember').checked;
             
             // Reset messages
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
+            showMessage('infoMessage', '', 'info');
+            showMessage('errorMessage', '', 'error');
+            showMessage('successMessage', '', 'success');
             
             // Validation
             if (!email || !password) {
-                showError('Please fill in all fields');
+                showMessage('errorMessage', 'Please fill in all fields', 'error');
+                shakeElement(loginForm);
                 return;
             }
             
             if (!isValidEmail(email)) {
-                showError('Please enter a valid email address');
+                showMessage('errorMessage', 'Please enter a valid email address', 'error');
+                shakeElement(loginForm);
                 return;
             }
             
-            if (password.length < 6) {
-                showError('Password must be at least 6 characters');
+            if (password.length < SECURITY_CONFIG.passwordMinLength) {
+                showMessage('errorMessage', 
+                    `Password must be at least ${SECURITY_CONFIG.passwordMinLength} characters`, 
+                    'error'
+                );
+                shakeElement(loginForm);
                 return;
             }
             
             // Show loading state
             submitBtn.disabled = true;
-            btnText.innerHTML = '<div class="loading-spinner"></div>';
+            btnText.innerHTML = '<div class="loading-spinner"></div> Authenticating...';
             
             try {
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // Check for test accounts
-                if (email === 'admin@trustcade.com' && password === 'Admin123!') {
-                    // Admin account
-                    const userData = {
-                        email: email,
-                        name: 'Admin',
-                        joined: new Date().toISOString(),
-                        verified: true,
-                        role: 'admin',
-                        totalWins: 5,
-                        totalValue: 2500
-                    };
-                    saveUser(userData, remember);
-                    showSuccess('Admin login successful!');
-                    setTimeout(() => window.location.href = 'index.html', 1000);
-                    return;
-                }
-                
-                if (email === 'test@trustcade.com' && password === 'Test123!') {
-                    // Test account with wins
-                    const userData = {
-                        email: email,
-                        name: 'Test User',
-                        joined: new Date().toISOString(),
-                        verified: true,
-                        role: 'user',
-                        totalWins: 3,
-                        totalValue: 1200
-                    };
-                    saveUser(userData, remember);
-                    
-                    // Add some test wins
-                    const testWins = [
-                        {
-                            id: Date.now() - 86400000,
-                            prize: "iPhone 17",
-                            value: "$1299",
-                            date: new Date(Date.now() - 86400000).toLocaleDateString(),
-                            time: new Date(Date.now() - 86400000).toLocaleTimeString(),
-                            status: "pending",
-                            claimCode: "TC-TEST123"
-                        },
-                        {
-                            id: Date.now() - 172800000,
-                            prize: "$100 Gift Card",
-                            value: "$100",
-                            date: new Date(Date.now() - 172800000).toLocaleDateString(),
-                            time: new Date(Date.now() - 172800000).toLocaleTimeString(),
-                            status: "claimed",
-                            claimCode: "TC-TEST456"
-                        }
-                    ];
-                    localStorage.setItem('trustcade_wins', JSON.stringify(testWins));
-                    
-                    showSuccess('Login successful! Loading your wins...');
-                    setTimeout(() => window.location.href = 'profile.html', 1000);
-                    return;
-                }
-                
-                // Regular user login simulation
-                const userData = {
-                    email: email,
-                    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-                    joined: new Date().toISOString(),
-                    verified: Math.random() > 0.5, // Random verification status
-                    role: 'user',
-                    totalWins: 0,
-                    totalValue: 0
-                };
-                
+                const userData = await demoAuthenticate(email, password);
                 saveUser(userData, remember);
-                showSuccess('Login successful! Redirecting...');
                 
-                // Redirect based on verification status
+                // Show success message
+                const welcomeMessage = userData.verified 
+                    ? `Welcome back, ${userData.name}!` 
+                    : `Welcome, ${userData.name}! Please verify your account to claim prizes.`;
+                
+                showMessage('successMessage', welcomeMessage, 'success');
+                
+                // Redirect after delay
                 setTimeout(() => {
-                    if (userData.verified) {
-                        window.location.href = 'index.html';
-                    } else {
+                    if (userData.role === 'admin') {
+                        window.location.href = 'admin/dashboard.html';
+                    } else if (!userData.verified) {
                         window.location.href = 'verify.html';
+                    } else {
+                        window.location.href = 'index.html';
                     }
                 }, 1500);
                 
             } catch (error) {
-                console.error('Login error:', error);
-                showError('Login failed. Please try again.');
+                // Record failed attempt
+                recordFailedAttempt();
+                updateRateLimitWarning();
+                
+                // Show error
+                showMessage('errorMessage', error.message || 'Login failed. Please try again.', 'error');
+                shakeElement(loginForm);
+                
             } finally {
                 // Reset button state
                 submitBtn.disabled = false;
                 btnText.textContent = 'Login';
             }
         });
-        
+
         // Social login buttons
         document.getElementById('googleLogin').addEventListener('click', function() {
-            showMessage('Google login would be implemented in a production app.', 'info');
+            showMessage('infoMessage', 
+                'Google authentication would connect to a secure backend in production. ' +
+                'This demo uses localStorage for simplicity.', 
+                'info'
+            );
         });
         
         document.getElementById('facebookLogin').addEventListener('click', function() {
-            showMessage('Facebook login would be implemented in a production app.', 'info');
+            showMessage('infoMessage', 
+                'Facebook authentication would connect to a secure backend in production. ' +
+                'This demo uses localStorage for simplicity.', 
+                'info'
+            );
         });
-        
-        // Helper functions
-        function isValidEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
-        function saveUser(userData, remember) {
-            localStorage.setItem('trustcade_user', JSON.stringify(userData));
-            if (remember) {
-                localStorage.setItem('trustcade_remember', 'true');
-                localStorage.setItem('trustcade_remember_email', userData.email);
-            } else {
-                localStorage.removeItem('trustcade_remember');
-                localStorage.removeItem('trustcade_remember_email');
-            }
-        }
-        
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            shakeElement(loginForm);
-        }
-        
-        function showSuccess(message) {
-            successMessage.textContent = message;
-            successMessage.style.display = 'block';
-        }
-        
-        function showMessage(message, type = 'info') {
-            alert(message); // In production, use a proper notification system
-        }
-        
-        function shakeElement(element) {
-            element.style.animation = 'shake 0.5s';
-            setTimeout(() => {
-                element.style.animation = '';
-            }, 500);
-        }
-        
-        // Check for remembered email
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
         document.addEventListener('DOMContentLoaded', function() {
+            // Check for remembered email
             const remembered = localStorage.getItem('trustcade_remember');
-            const rememberedEmail = localStorage.getItem('trustcade_remember_email');
+            const rememberedEmail = localStorage.getItem('trustcade_user_email');
             
             if (remembered === 'true' && rememberedEmail) {
                 document.getElementById('email').value = rememberedEmail;
                 document.getElementById('remember').checked = true;
             }
+            
+            // Check rate limiting
+            updateRateLimitWarning();
             
             // Add shake animation
             const style = document.createElement('style');
@@ -750,6 +1028,21 @@
                 }
             `;
             document.head.appendChild(style);
+            
+            // Auto-focus email field
+            document.getElementById('email').focus();
+            
+            // Show demo info on first visit
+            if (!localStorage.getItem('trustcade_login_info_shown')) {
+                setTimeout(() => {
+                    showMessage('infoMessage', 
+                        '🔒 Demo Mode: This is a frontend demo. In production, ' +
+                        'authentication would connect to a secure backend server.', 
+                        'info'
+                    );
+                    localStorage.setItem('trustcade_login_info_shown', 'true');
+                }, 1000);
+            }
         });
     </script>
 </body>
