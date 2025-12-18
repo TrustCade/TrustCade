@@ -3,970 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrustCade</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-</head>
-<body>
-
-<!-- ========== LOADING SCREEN ========== -->
-<div id="loadingScreen">
-    <h2>Loading TrustCade...</h2>
-</div>
-
-<!-- ========== HEADER ========== -->
-<header>
-    <nav>
-        <a href="#" id="logo">TrustCade</a>
-        <a href="#" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
-        <button id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
-    </nav>
-</header>
-
-<!-- ========== MOBILE MENU ========== -->
-<div id="mobileMenu">
-    <button id="mobileMenuClose"><i class="fas fa-times"></i> Close</button>
-    <a href="#">Home</a>
-    <a href="#">Leaderboard</a>
-    <a href="#">Recent Winners</a>
-    <a href="#">Profile</a>
-</div>
-
-<!-- ========== WHEEL SECTION ========== -->
-<section class="wheel-section">
-    <canvas id="wheelCanvas"></canvas>
-    <button id="spinButton"><i class="fas fa-redo"></i> SPIN NOW!</button>
-    <div id="spinProgressContainer">
-        <div id="spinProgress"></div>
-    </div>
-    <div class="countdown">
-        <span id="hours">00</span> :
-        <span id="minutes">00</span> :
-        <span id="seconds">00</span>
-    </div>
-</section>
-
-<!-- ========== RECENT WINNERS ========== -->
-<section>
-    <h2 style="text-align:center; margin-top:2rem;">Recent Winners</h2>
-    <div id="recentWinnersGrid"></div>
-</section>
-
-<!-- ========== LEADERBOARD ========== -->
-<section>
-    <h2 style="text-align:center; margin-top:2rem;">Leaderboard</h2>
-    <div id="leaderboard"></div>
-</section>
-
-<!-- ========== NEWSLETTER ========== -->
-<section>
-    <div class="newsletter-input">
-        <input type="email" placeholder="Enter your email">
-        <button>Subscribe</button>
-    </div>
-</section>
-
-<!-- ========== BACK TO TOP BUTTON ========== -->
-<button id="backToTop"><i class="fas fa-chevron-up"></i></button>
-
-<!-- ========== WIN NOTIFICATION ========== -->
-<div id="winNotification">
-    <div id="wonPrize" style="font-size:1.3rem;font-weight:bold;"></div>
-    <div id="wonValue" style="margin-bottom:1rem;"></div>
-    <button class="notification-btn">Claim Now</button>
-    <button class="notification-close" style="margin-left:0.5rem;">&times;</button>
-</div>
-
-<!-- ========== LOGIN MODAL ========== -->
-<div class="modal" id="loginModal">
-    <div class="modal-content">
-        <button class="modal-close">&times;</button>
-        <h3>Login</h3>
-        <form id="quickLoginForm">
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <button class="login-option-btn"><i class="fab fa-google"></i> Login with Google</button>
-        <button class="login-option-btn"><i class="fab fa-facebook"></i> Login with Facebook</button>
-    </div>
-</div>
-
-<!-- ========== SCRIPTS ========== -->
-<script src="trustcade.js"></script>
-</body>
-</html>    transform:translate(-50%,-50%);
-    width:70px;
-    height:70px;
-    border-radius:50%;
-    background:#FF6B6B;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    font-weight:bold;
-    font-size:1.2rem;
-    box-shadow:0 5px 15px rgba(0,0,0,0.3);
-}
-.spin-pointer{
-    position:absolute;
-    top:-45px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:3rem;
-    color:#FF6B6B;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-#spinBtn{
-    margin-top:20px;
-    padding:1rem 2rem;
-    font-size:1.2rem;
-    background:linear-gradient(45deg,#FF6B6B,#FF8E53);
-    color:white;
-    border:none;
-    border-radius:25px;
-    cursor:pointer;
-    box-shadow:0 5px 15px rgba(0,0,0,0.3);
-    transition:0.3s ease;
-}
-#spinBtn:disabled{
-    background:#ccc;
-    cursor:not-allowed;
-}
-#result{
-    margin-top:15px;
-    font-size:1.2rem;
-    color:white;
-    font-weight:bold;
-}
-/* Confetti canvas */
-#confettiCanvas{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-    z-index:10000;
-}
-</style>
-</head>
-<body>
-
-<h1>Fancy Spin Wheel!</h1>
-<div id="wheelContainer">
-    <canvas id="wheelCanvas"></canvas>
-    <div class="wheel-center">GO</div>
-    <div class="spin-pointer">⬆</div>
-</div>
-<button id="spinBtn">Spin</button>
-<div id="result"></div>
-<canvas id="confettiCanvas"></canvas>
-
-<script>
-// ======= Prize Data =======
-const prizes = [
-    {name:"Free Spin", img:"https://i.imgur.com/5bX0iVw.png"},
-    {name:"$5 Gift Card", img:"https://i.imgur.com/7n5cY7A.png"},
-    {name:"$10 Gift Card", img:"https://i.imgur.com/1YxGgFw.png"},
-    {name:"Try Again", img:"https://i.imgur.com/3yX5N5E.png"},
-    {name:"Lucky Bonus", img:"https://i.imgur.com/Cl5MPoD.png"},
-    {name:"$20 Gift Card", img:"https://i.imgur.com/9uJ3k7V.png"},
-    {name:"Jackpot", img:"https://i.imgur.com/o1X1Ocz.png"},
-    {name:"Gift Pack", img:"https://i.imgur.com/xA0WlD5.png"}
-];
-
-// Load images
-prizes.forEach(p=>{p.imgObj=new Image(); p.imgObj.src=p.img;});
-
-// Canvas Setup
-const canvas = document.getElementById("wheelCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = 350;
-canvas.height = 350;
-const cx = canvas.width/2;
-const cy = canvas.height/2;
-const radius = canvas.width/2 - 10;
-const segmentAngle = (2*Math.PI)/prizes.length;
-let rotation = 0;
-
-// Draw Wheel
-function drawWheel(rot=0){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    for(let i=0;i<prizes.length;i++){
-        // Segment background
-        ctx.beginPath();
-        ctx.moveTo(cx,cy);
-        ctx.arc(cx,cy,radius,segmentAngle*i,segmentAngle*(i+1));
-        ctx.fillStyle=i%2===0?"#FFCE00":"#FF5733";
-        ctx.fill();
-        ctx.save();
-        ctx.translate(cx,cy);
-        ctx.rotate(segmentAngle*i + segmentAngle/2 + rot);
-        // Draw text
-        ctx.rotate(-segmentAngle/2);
-        ctx.textAlign="right";
-        ctx.fillStyle="#fff";
-        ctx.font="14px sans-serif";
-        ctx.fillText(prizes[i].name,radius-10,5);
-        // Draw image
-        if(prizes[i].imgObj.complete){
-            ctx.drawImage(prizes[i].imgObj,radius-50,-20,30,30);
-        }
-        ctx.restore();
-    }
-}
-drawWheel();
-
-// Spin Logic
-function spinWheel(){
-    const spinBtn=document.getElementById("spinBtn");
-    spinBtn.disabled=true;
-    const spins = 3 + Math.random()*3;
-    const prizeIndex=Math.floor(Math.random()*prizes.length);
-    const finalAngle=(2*Math.PI*spins) + (prizeIndex*segmentAngle) + segmentAngle/2;
-    const duration=3000;
-    const start=performance.now();
-
-    function animate(now){
-        let elapsed=now-start;
-        if(elapsed<duration){
-            rotation = easeOut(elapsed,duration,0,finalAngle);
-            drawWheel(rotation);
-            requestAnimationFrame(animate);
-        }else{
-            rotation=finalAngle;
-            drawWheel(rotation);
-            spinBtn.disabled=false;
-            const result=prizes[prizeIndex].name;
-            document.getElementById("result").innerText="🎉 You won: "+result;
-            launchConfetti();
-        }
-    }
-    requestAnimationFrame(animate);
-}
-
-// Easing
-function easeOut(t,d,b,c){
-    t/=d;
-    t--;
-    return c*(t*t*t +1)+b;
-}
-
-document.getElementById("spinBtn").addEventListener("click",spinWheel);
-
-// ===== Confetti =====
-const confettiCanvas = document.getElementById('confettiCanvas');
-const confettiCtx = confettiCanvas.getContext('2d');
-confettiCanvas.width = window.innerWidth;
-confettiCanvas.height = window.innerHeight;
-const confettiPieces = [];
-for(let i=0;i<150;i++){
-    confettiPieces.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height- confettiCanvas.height,r:Math.random()*6+4,d:Math.random()*150+50,color:`hsl(${Math.random()*360},100%,50%)`,tilt:Math.random()*10-10,tiltAngleIncrement:Math.random()*0.07+0.05,tiltAngle:0});
-}
-
-function drawConfetti(){
-    confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-    for(let p of confettiPieces){
-        confettiCtx.beginPath();
-        confettiCtx.lineWidth=p.r/2;
-        confettiCtx.strokeStyle=p.color;
-        confettiCtx.moveTo(p.x+p.tilt+p.r/4,p.y);
-        confettiCtx.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/4);
-        confettiCtx.stroke();
-    }
-    updateConfetti();
-}
-
-function updateConfetti(){
-    for(let p of confettiPieces){
-        p.tiltAngle+=p.tiltAngleIncrement;
-        p.y += (Math.cos(p.d)+3+p.r/2)/2;
-        p.x += Math.sin(p.d);
-        p.tilt = Math.sin(p.tiltAngle)*15;
-        if(p.y>confettiCanvas.height){p.x=Math.random()*confettiCanvas.width;p.y=-10;p.tilt=Math.random()*10-10;}
-    }
-}
-
-let confettiInterval;
-function launchConfetti(){
-    confettiCanvas.style.display='block';
-    confettiInterval=setInterval(drawConfetti,16);
-    setTimeout(()=>{clearInterval(confettiInterval); confettiCanvas.style.display='none';},3000);
-}
-
-// Resize Confetti
-window.addEventListener('resize',()=>{confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight;});
-</script>
-</body>
-</html></div>
-
-<canvas id="wheelCanvas" width="250" height="250" style="display:none;"></canvas>
-<div id="pointer"></div>
-<button id="spinBtn" style="display:none;">Spin</button>
-<div id="result"></div>
-
-<div id="streakContainer">
-  <div id="streakBar"></div>
-</div>
-<div id="streakText">Streak: 0</div>
-
-<h2>Your Prizes</h2>
-<ul id="prizeList"><li>No prizes yet</li></ul>
-
-<h2>Leaderboard (Top 10)</h2>
-<ul id="leaderboardList"><li>Loading...</li></ul>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<script>
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-firebase.firestore().enablePersistence().catch(()=>console.log("Offline mode not supported"));
-
-const prizes = ["Free Spin", "$5 Gift Card", "$10 Gift Card", "Try Again", "Lucky Bonus"];
-const streakRewards = {3: "$20 Bonus", 5: "Jackpot Spin"};
-const colors = ["#e74c3c","#3498db","#2ecc71","#f1c40f","#9b59b6"];
-const cooldownHours = 6;
-
-const canvas = document.getElementById("wheelCanvas");
-const ctx = canvas.getContext("2d");
-const spinBtn = document.getElementById("spinBtn");
-const loginForm = document.getElementById("loginForm");
-const logoutBtn = document.getElementById("logoutBtn");
-const loginMessage = document.getElementById("loginMessage");
-const resultDiv = document.getElementById("result");
-const leaderboardList = document.getElementById("leaderboardList");
-const streakBar = document.getElementById("streakBar");
-const streakText = document.getElementById("streakText");
-
-let angle = 0;
-const numPrizes = prizes.length;
-const arc = 2 * Math.PI / numPrizes;
-
-const spinSound = new Audio('https://freesound.org/data/previews/146/146725_2542536-lq.mp3');
-const winSound = new Audio('https://freesound.org/data/previews/341/341695_3248244-lq.mp3');
-spinSound.load(); winSound.load();
-
-function drawWheel(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  for(let i=0;i<numPrizes;i++){
-    const start = angle + i*arc;
-    const end = start + arc;
-    ctx.beginPath();
-    ctx.moveTo(125,125);
-    ctx.arc(125,125,110,start,end);
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.fill(); ctx.stroke();
-    ctx.save();
-    ctx.translate(125,125);
-    ctx.rotate(start+arc/2);
-    ctx.textAlign="right"; ctx.fillStyle="#fff"; ctx.font="bold 12px Arial";
-    ctx.fillText(prizes[i],100,3);
-    ctx.restore();
-  }
-}
-drawWheel();
-
-document.getElementById("loginBtn").addEventListener("click",()=>{
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  auth.signInWithEmailAndPassword(email,password)
-      .then(()=>loginMessage.textContent="Logged in successfully!")
-      .catch(err=>loginMessage.textContent=err.message);
-});
-document.getElementById("signupBtn").addEventListener("click",()=>{
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  auth.createUserWithEmailAndPassword(email,password)
-      .then(()=>loginMessage.textContent="Account created! You are logged in.")
-      .catch(err=>loginMessage.textContent=err.message);
-});
-document.getElementById("signOutBtn").addEventListener("click",()=>auth.signOut());
-
-function createConfetti(){
-  for(let i=0;i<30;i++){
-    const conf=document.createElement('div'); conf.classList.add('confetti');
-    conf.style.left=Math.random()*window.innerWidth+'px';
-    conf.style.background=colors[Math.floor(Math.random()*colors.length)];
-    document.body.appendChild(conf);
-    setTimeout(()=>conf.remove(),2000);
-  }
-}
-
-function updateStreakUI(streak){
-  streakText.textContent = "Streak: "+streak;
-  const milestones = Object.keys(streakRewards).map(Number).sort((a,b)=>a-b);
-  let nextMilestone = milestones.find(m=>m>streak) || milestones[milestones.length-1];
-  streakBar.style.width = Math.min(100,(streak/nextMilestone)*100)+"%";
-}
-
-async function spinWheel(){
-  const user=auth.currentUser; if(!user){alert("Please login first"); return;}
-  const userRef=db.collection("users").doc(user.uid);
-  const doc=await userRef.get();
-  const lastSpin=doc.exists && doc.data().lastSpin ? doc.data().lastSpin.toDate() : null;
-  const now=new Date();
-  let streak=doc.exists && doc.data().streak ? doc.data().streak : 0;
-
-  if(lastSpin && (now-lastSpin)<cooldownHours*60*60*1000){
-    const remaining=cooldownHours*60*60*1000-(now-lastSpin);
-    const hours=Math.floor(remaining/(1000*60*60));
-    const minutes=Math.floor((remaining%(1000*60*60))/(1000*60));
-    alert(`You can spin again in ${hours}h ${minutes}m`);
-    return;
-  }
-
-  if(lastSpin && (now-lastSpin)<2*cooldownHours*60*60*1000){streak++;} else {streak=1;}
-  updateStreakUI(streak);
-
-  spinBtn.disabled=true; resultDiv.textContent=""; spinSound.play();
-  const prizeIndex=Math.floor(Math.random()*prizes.length);
-  const spins=5; const targetAngle=spins*2*Math.PI + prizeIndex*arc + arc/2;
-  const duration=4000; const start=performance.now();
-
-  function animate(time){
-    const elapsed=time-start;
-    const progress=Math.min(elapsed/duration,1);
-    const ease=1-Math.pow(1-progress,3);
-    angle=ease*targetAngle; drawWheel();
-    if(progress<1){requestAnimationFrame(animate);} 
-    else{
-      let prize=prizes[prizeIndex];
-      if(streakRewards[streak]) prize+=" + "+streakRewards[streak];
-      resultDiv.textContent="🎉 You won: "+prize;
-      winSound.play(); createConfetti();
-      userRef.set({
-        email:user.email,
-        prizes:firebase.firestore.FieldValue.arrayUnion(prize),
-        lastSpin:firebase.firestore.FieldValue.serverTimestamp(),
-        streak:streak
-      },{merge:true}).then(()=>loadPrizes()).catch(console.error);
-      spinBtn.disabled=false; angle%=2*Math.PI;
-    }
-  }
-  requestAnimationFrame(animate);
-}
-
-// Support touch
-spinBtn.addEventListener("click",spinWheel);
-spinBtn.addEventListener("touchstart",spinWheel);
-
-async function loadPrizes(){
-  const user=auth.currentUser; if(!user) return;
-  const docSnap=await db.collection("users").doc(user.uid).get();
-  const list=document.getElementById("prizeList"); list.innerHTML="";
-  if(!docSnap.exists || !docSnap.data().prizes){ list.innerHTML="<li>No prizes yet</li>"; return;}
-  docSnap.data().prizes.forEach(p=>{const li=document.createElement("li"); li.textContent=p; list.appendChild(li);});
-  if(docSnap.exists && docSnap.data().streak) updateStreakUI(docSnap.data().streak);
-}
-
-function setupLeaderboardRealtime(){
-  db.collection("users").limit(10).onSnapshot(snapshot=>{
-    const users=[];
-    snapshot.forEach(doc=>{
-      const data=doc.data(); if(!data.prizes) return;
-      const counts={}; data.prizes.forEach(p=>counts[p]=(counts[p]||0)+1);
-      users.push({email:data.email||doc.id,total:data.prizes.length,counts});
-    });
-    users.sort((a,b)=>b.total-a.total);
-    leaderboardList.innerHTML="";
-    users.forEach(u=>{
-      let prizeDetails=Object.entries(u.counts).map(([k,v])=>`${k} x${v}`).join(", ");
-      const li=document.createElement("li"); li.textContent=`${u.email}: ${prizeDetails}`; leaderboardList.appendChild(li);
-    });
-  });
-}
-
-auth.onAuthStateChanged(user=>{
-  if(user){
-    loginForm.style.display="none"; logoutBtn.style.display="block"; spinBtn.style.display="inline-block"; canvas.style.display="block";
-    loadPrizes(); setupLeaderboardRealtime();
-  } else{
-    loginForm.style.display="block"; logoutBtn.style.display="none"; spinBtn.style.display="none"; canvas.style.display="none";
-    document.getElementById("prizeList").innerHTML="<li>No prizes yet</li>"; leaderboardList.innerHTML="<li>Loading...</li>"; resultDiv.textContent="";
-    updateStreakUI(0);
-  }
-});
-</script>
-
-</body>
-</html><body>
-
-  <h1>🎡 Spin the Wheel!</h1>
-  <button id="spinBtn">Spin</button>
-  <div id="result"></div>
-
-  <h2>Your Prizes</h2>
-  <ul id="prizeList">
-    <li>Loading...</li>
-  </ul>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <script>
-    // ========= FIREBASE CONFIG =========
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // ========= PRIZES =========
-    const prizes = [
-      "Free Spin",
-      "$5 Gift Card",
-      "$10 Gift Card",
-      "Try Again",
-      "Lucky Bonus"
-    ];
-
-    // ========= SPIN WHEEL =========
-    async function spinWheel() {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("Please login first");
-        return;
-      }
-
-      const spinBtn = document.getElementById("spinBtn");
-      spinBtn.disabled = true;
-
-      const prize = prizes[Math.floor(Math.random() * prizes.length)];
-      document.getElementById("result").innerText = "🎉 You won: " + prize;
-
-      try {
-        const userRef = db.collection("users").doc(user.uid);
-        await userRef.update({
-          prizes: firebase.firestore.FieldValue.arrayUnion(prize),
-          lastSpin: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        loadPrizes();
-      } catch (error) {
-        console.error("Error updating prizes:", error);
-      } finally {
-        setTimeout(() => spinBtn.disabled = false, 3000);
-      }
-    }
-
-    // ========= LOAD USER PRIZES =========
-    async function loadPrizes() {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const docSnap = await db.collection("users").doc(user.uid).get();
-      const list = document.getElementById("prizeList");
-      list.innerHTML = "";
-
-      if (!docSnap.exists || !docSnap.data().prizes) {
-        list.innerHTML = "<li>No prizes yet</li>";
-        return;
-      }
-
-      docSnap.data().prizes.forEach((p) => {
-        const li = document.createElement("li");
-        li.textContent = p;
-        list.appendChild(li);
-      });
-    }
-
-    // ========= AUTO LOAD =========
-    auth.onAuthStateChanged((user) => {
-      if (user) loadPrizes();
-    });
-
-    // ========= BUTTON EVENT =========
-    document.getElementById("spinBtn").addEventListener("click", spinWheel);
-  </script>
-
-</body>
-</html>            margin-bottom: 1rem;
-            animation: spin 2s linear infinite;
-        }
-        
-        .spinner p {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            padding: 1rem;
-            z-index: 10000;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            max-width: 350px;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification-success {
-            border-left-color: var(--secondary-color);
-        }
-        
-        .notification-error {
-            border-left-color: var(--accent-color);
-        }
-        
-        .notification-info {
-            border-left-color: var(--primary-color);
-        }
-        
-        .notification-content {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex: 1;
-        }
-        
-        .notification-content i {
-            font-size: 1.2rem;
-        }
-        
-        .notification-success i {
-            color: var(--secondary-color);
-        }
-        
-        .notification-error i {
-            color: var(--accent-color);
-        }
-        
-        .notification-info i {
-            color: var(--primary-color);
-        }
-        
-        .notification-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text-light);
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-            opacity: 0.7;
-            transition: var(--transition);
-        }
-        
-        .notification-close:hover {
-            opacity: 1;
-        }
-        
-        /* Progress Bar for Spin Timer */
-        .progress-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-secondary);
-            width: 0%;
-            transition: width 1s linear;
-            border-radius: var(--radius-sm);
-        }
-        
-        /* Back to Top Button */
-        #backToTop {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: var(--shadow-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        #backToTop.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        #backToTop:hover {
-            background: #7c3aed;
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        /* Mobile Menu Close Button */
-        #mobileMenuClose {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-        
-        /* Leaderboard Rank Colors */
-        .rank {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-            border-radius: 50%;
-            font-weight: bold;
-            color: white;
-            margin-right: 0.5rem;
-        }
-        
-        .rank.gold {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-        }
-        
-        .rank.silver {
-            background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
-        }
-        
-        .rank.bronze {
-            background: linear-gradient(135deg, #CD7F32, #A6692E);
-        }
-        
-        /* Status Badges */
-        .status {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        
-        .status.verified {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--secondary-color);
-        }
-        
-        .status.pending {
-            background: rgba(245, 158, 11, 0.1);
-            color: #F59E0B;
-        }
-        
-        /* Winner Avatar */
-        .winner-avatar {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 0 auto 1rem;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        /* Spin Progress Indicator */
-        #spinProgressContainer {
-            margin: 1rem 0;
-        }
-        
-        #spinProgress {
-            height: 8px;
-            background: var(--light-color);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-        }
-        
-        #spinProgressFill {
-            height: 100%;
-            background: var(--gradient-secondary);
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: var(--radius-sm);
-        }
-        
-        /* Next Spin Time */
-        .next-spin-time {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        /* Refresh Buttons */
-        .refresh-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0.5rem;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-        }
-        
-        .refresh-btn:hover {
-            background: rgba(139, 92, 246, 0.1);
-        }
-        
-        /* Login Modal Updates */
-        .login-options {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .login-option-btn {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid #e9ecef;
-            border-radius: var(--radius-sm);
-            background: white;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .login-option-btn:hover {
-            border-color: var(--primary-color);
-            background: var(--light-color);
-        }
-        
-        /* Developer Debug Panel (Hidden by default) */
-        #debugPanel {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 0.5rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.8rem;
-            z-index: 9999;
-            display: none;
-        }
-        
-        #debugPanel.show {
-            display: block;
-        }
-        
-        /* Update mobile menu to include close button */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
-            z-index: 999;
-            flex-direction: column;
-            padding: 4rem 2rem 2rem;
-            overflow-y: auto;
-        }
-        
-        .mobile-menu.active {
-            display: flex;
-        }
-    </style>
+    <title>TrustCade - Spin & Win Real Prizes</title>
+    <meta name="description" content="Spin daily and win real prizes! iPhone 17, PS5, cash prizes, and more. Free daily spin, verified winners, secure platform.">
+    <meta name="keywords" content="spin wheel, win prizes, daily spin, free prizes, iPhone, PS5, cash prizes">
+    
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="TrustCade - Spin & Win Real Prizes">
+    <meta property="og:description" content="Win iPhone 17, PS5, cash prizes and more with daily free spins!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:url" content="https://trustcade.com">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="manifest" href="assets/site.webmanifest">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical images -->
+    <link rel="preload" href="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" as="image">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://trustcade.com">
 </head>
 <body>
     <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="spinner">
-            <i class="fas fa-gift"></i>
-            <p>Loading TrustCade...</p>
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner">
+            <i class="fas fa-gift fa-spin"></i>
         </div>
+        <p>Loading TrustCade...</p>
     </div>
-  <!-- Secret Admin Button - Shows when you press Ctrl+Shift+A -->
-<div id="secretAdminBtn" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
-    <button onclick="window.location.href='admin-login.html'" 
-            style="background: #8B5CF6; color: white; border: none; padding: 15px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">
-        👑
-    </button>
-</div>
 
-<script>
-// Press Ctrl+Shift+A to show admin button
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-        const btn = document.getElementById('secretAdminBtn');
-        btn.style.display = 'block';
-        setTimeout(() => btn.style.display = 'none', 5000); // Hide after 5 seconds
-    }
-});
-</script>  
     <!-- Header -->
     <header>
         <div class="container">
             <div class="logo">
-                <h1><i class="fas fa-gift"></i> TrustCade</h1>
-                <p class="tagline">Spin & Win Real Prizes</p>
+                <a href="index.html" class="logo-link">
+                    <h1><i class="fas fa-gift"></i> TrustCade</h1>
+                    <p class="tagline">Spin & Win Real Prizes</p>
+                </a>
             </div>
-            <nav>
-                <a href="#spin" class="btn-spin">SPIN NOW</a>
+            <nav class="desktop-nav">
+                <a href="#spin" class="btn-spin"><i class="fas fa-redo"></i> SPIN NOW</a>
                 <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
-                <a href="profile.html" id="profileBtn"><i class="fas fa-user"></i> My Prizes</a>
-                <a href="#prizes">Prizes</a>
-                <a href="login.html" class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+                <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+                <button class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
             </nav>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
@@ -974,19 +65,27 @@ document.addEventListener('keydown', function(e) {
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <button id="mobileMenuClose" class="mobile-menu-close">
-            <i class="fas fa-times"></i>
-        </button>
-        <a href="index.html" class="active">Home</a>
-        <a href="#spin">Spin Wheel</a>
-        <a href="winners.html">Winners</a>
-        <a href="profile.html">My Prizes</a>
-        <a href="#prizes">Prizes</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="login.html" id="mobileLoginBtn">Login</a>
-        <a href="register.html">Register</a>
+        <div class="mobile-menu-header">
+            <h3><i class="fas fa-gift"></i> TrustCade</h3>
+            <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="#spin"><i class="fas fa-redo"></i> Spin Wheel</a>
+            <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+            <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+            <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+            <a href="login.html" id="mobileLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
         <div class="mobile-menu-footer">
-            <p>Need help? <a href="mailto:support@trustcade.com">Contact Support</a></p>
+            <div class="mobile-trust-badges">
+                <span><i class="fas fa-shield-alt"></i> Verified</span>
+                <span><i class="fas fa-trophy"></i> 5,247+ Wins</span>
+                <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            </div>
         </div>
     </div>
 
@@ -994,25 +93,29 @@ document.addEventListener('keydown', function(e) {
     <div class="trust-badges">
         <div class="container">
             <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
-            <span><i class="fas fa-trophy"></i> <span id="totalWinnersCount">5,247</span>+ Winners</span>
+            <span><i class="fas fa-trophy"></i> 5,247+ Winners</span>
             <span><i class="fas fa-box-open"></i> Real Prizes</span>
             <span><i class="fas fa-clock"></i> Free Daily Spin</span>
+            <span><i class="fas fa-shipping-fast"></i> Free Shipping</span>
+            <span><i class="fas fa-headset"></i> 24/7 Support</span>
         </div>
     </div>
 
     <!-- Main Content -->
     <main class="container">
         <!-- Grand Prize Display -->
-        <section class="grand-prize">
+        <section class="grand-prize" aria-labelledby="grandPrizeTitle">
             <div class="section-header">
-                <h2><i class="fas fa-crown"></i> TODAY'S GRAND PRIZE</h2>
+                <h2 id="grandPrizeTitle"><i class="fas fa-crown"></i> TODAY'S GRAND PRIZE</h2>
                 <div class="prize-timer">
-                    <i class="fas fa-clock"></i> Draws in: <span id="grandPrizeTimer">12:34:56</span>
+                    <i class="fas fa-clock"></i> Draws in: <span id="grandPrizeTimer" role="timer">12:34:56</span>
                 </div>
             </div>
             <div class="prize-card">
                 <div class="prize-image">
-                    <img src="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Nintendo Switch">
+                    <img src="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" 
+                         alt="Nintendo Switch OLED with games" 
+                         loading="lazy">
                     <div class="prize-badge">GRAND PRIZE</div>
                 </div>
                 <div class="prize-info">
@@ -1031,10 +134,17 @@ document.addEventListener('keydown', function(e) {
                             <i class="fas fa-gift"></i>
                             <span>Available: <strong>Now</strong></span>
                         </div>
+                        <div class="detail">
+                            <i class="fas fa-users"></i>
+                            <span>Entries: <strong>2,543</strong></span>
+                        </div>
                     </div>
                     <div class="prize-action">
-                        <button class="btn-spin-action" onclick="document.getElementById('spin').scrollIntoView({behavior: 'smooth'})">
+                        <button class="btn-spin-action" onclick="scrollToSpin()" aria-label="Spin to win the grand prize">
                             <i class="fas fa-redo"></i> Spin to Win!
+                        </button>
+                        <button class="btn-secondary" onclick="viewPrizeDetails()">
+                            <i class="fas fa-info-circle"></i> Details
                         </button>
                     </div>
                 </div>
@@ -1042,21 +152,25 @@ document.addEventListener('keydown', function(e) {
         </section>
 
         <!-- Spin Wheel Section -->
-        <section class="spin-section" id="spin">
+        <section class="spin-section" id="spin" aria-labelledby="spinWheelTitle">
             <div class="section-header">
-                <h2><i class="fas fa-redo"></i> DAILY SPIN WHEEL</h2>
+                <h2 id="spinWheelTitle"><i class="fas fa-redo"></i> DAILY SPIN WHEEL</h2>
                 <p class="section-subtitle">Spin once every 24 hours for free!</p>
             </div>
             
             <div class="spin-container">
                 <div class="wheel-container">
-                    <canvas id="wheelCanvas" width="500" height="500"></canvas>
-                    <div class="wheel-center">
-                        <div class="spin-pointer">
-                            <i class="fas fa-caret-down"></i>
+                    <div class="wheel-wrapper">
+                        <canvas id="wheelCanvas" width="400" height="400" 
+                                aria-label="Spin wheel with 8 prize sections"
+                                role="img"></canvas>
+                        <div class="wheel-center">
+                            <div class="spin-pointer" aria-hidden="true">
+                                <i class="fas fa-caret-down"></i>
+                            </div>
                         </div>
                     </div>
-                    <div class="wheel-prizes">
+                    <div class="wheel-prizes" aria-label="Available prizes on the wheel">
                         <div class="prize-indicator" style="--i:1">iPhone 17</div>
                         <div class="prize-indicator" style="--i:2">$500 Cash</div>
                         <div class="prize-indicator" style="--i:3">Headphones</div>
@@ -1072,7 +186,7 @@ document.addEventListener('keydown', function(e) {
                 <div class="spin-controls">
                     <div class="timer-container">
                         <h3><i class="fas fa-clock"></i> NEXT FREE SPIN IN:</h3>
-                        <div class="timer" id="countdown">
+                        <div class="timer" id="countdown" role="timer">
                             <div class="time-unit">
                                 <span id="hours">00</span>
                                 <small>Hours</small>
@@ -1088,47 +202,56 @@ document.addEventListener('keydown', function(e) {
                                 <small>Seconds</small>
                             </div>
                         </div>
-                        
-                        <!-- Progress Bar -->
-                        <div id="spinProgressContainer">
-                            <div id="spinProgress">
-                                <div id="spinProgressFill"></div>
+                        <div class="timer-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="spinProgress"></div>
                             </div>
-                            <div class="next-spin-time">
-                                <i class="far fa-clock"></i>
-                                Next spin at: <span id="nextSpinTime">--:--</span>
-                            </div>
+                            <span class="progress-text">Next spin available at <span id="nextSpinTime">12:00 PM</span></span>
                         </div>
                     </div>
                     
-                    <button class="spin-btn" id="spinButton" disabled>
+                    <button class="spin-btn" id="spinButton" disabled aria-label="Spin the wheel">
                         <i class="fas fa-redo"></i> SPIN NOW
                         <span class="btn-subtext">Free spin available in <span id="timeLeft">00:00:00</span></span>
                     </button>
+                    
+                    <div class="spin-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Spins today: <strong>24,832</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-gift"></i>
+                            <span>Wins today: <strong>3,104</strong></span>
+                        </div>
+                    </div>
                     
                     <div class="spin-info">
                         <p><i class="fas fa-info-circle"></i> 1 free spin every 24 hours</p>
                         <p><i class="fas fa-gift"></i> Win real prizes instantly</p>
                         <p><i class="fas fa-user-check"></i> Login required to claim prizes</p>
+                        <p><i class="fas fa-sync-alt"></i> Additional spins available for purchase</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Registration Prompt -->
-        <section class="registration-prompt">
+        <section class="registration-prompt" aria-labelledby="regPromptTitle">
             <div class="reg-card">
                 <div class="reg-icon">
                     <i class="fas fa-gift"></i>
                 </div>
                 <div class="reg-content">
-                    <h3><i class="fas fa-shield-alt"></i> Verify with $100 Gift Card</h3>
+                    <h3 id="regPromptTitle"><i class="fas fa-shield-alt"></i> Verify with $100 Gift Card</h3>
                     <p>Register with a Steam/Apple gift card to unlock prize claiming and participate in grand prize draws</p>
                     <div class="reg-benefits">
                         <span><i class="fas fa-check"></i> Claim unlimited prizes</span>
                         <span><i class="fas fa-check"></i> Join grand prize draws</span>
                         <span><i class="fas fa-check"></i> Priority shipping</span>
                         <span><i class="fas fa-check"></i> Verified badge</span>
+                        <span><i class="fas fa-check"></i> Extra daily spin</span>
+                        <span><i class="fas fa-check"></i> Higher win chances</span>
                     </div>
                     <div class="reg-actions">
                         <a href="register.html" class="btn-register">
@@ -1138,41 +261,66 @@ document.addEventListener('keydown', function(e) {
                             <i class="fas fa-sign-in-alt"></i> Already have account?
                         </a>
                     </div>
+                    <div class="reg-note">
+                        <p><i class="fas fa-lock"></i> Your gift card balance remains fully usable after verification</p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Recent Winners -->
-        <section class="winners-section">
+        <section class="winners-section" aria-labelledby="winnersTitle">
             <div class="section-header">
-                <h2><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
-                <div>
-                    <button class="refresh-btn" id="refreshWinners" title="Refresh winners">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
-                </div>
+                <h2 id="winnersTitle"><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
+                <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="winners-grid" id="recentWinnersGrid">
+            <div class="winners-grid" id="recentWinnersGrid" role="list" aria-label="List of recent winners">
                 <!-- Winners loaded via JavaScript -->
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">L</div>
+                    <div class="winner-info">
+                        <h4>LuckyStar23</h4>
+                        <p class="winner-prize">iPhone 17 Pro</p>
+                        <span class="winner-time">2 minutes ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">M</div>
+                    <div class="winner-info">
+                        <h4>MikeWins</h4>
+                        <p class="winner-prize">$500 Cash</p>
+                        <span class="winner-time">15 minutes ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">S</div>
+                    <div class="winner-info">
+                        <h4>SarahG</h4>
+                        <p class="winner-prize">PS5 Pro</p>
+                        <span class="winner-time">1 hour ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">J</div>
+                    <div class="winner-info">
+                        <h4>JohnDoe</h4>
+                        <p class="winner-prize">MacBook Pro</p>
+                        <span class="winner-time">3 hours ago</span>
+                    </div>
+                </div>
             </div>
             <div class="section-footer">
                 <a href="winners.html" class="btn-view-all">
-                    <i class="fas fa-users"></i> View All <span id="totalWinners">5,247</span>+ Winners
+                    <i class="fas fa-users"></i> View All 5,247+ Winners
                 </a>
             </div>
         </section>
 
         <!-- Leaderboard -->
-        <section class="leaderboard-section">
+        <section class="leaderboard-section" aria-labelledby="leaderboardTitle">
             <div class="section-header">
-                <h2><i class="fas fa-medal"></i> TOP WINNERS LEADERBOARD</h2>
-                <div>
-                    <button class="refresh-btn" id="refreshLeaderboard" title="Refresh leaderboard">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <p class="section-subtitle">Updated: <span id="leaderboardUpdate">Just now</span></p>
-                </div>
+                <h2 id="leaderboardTitle"><i class="fas fa-medal"></i> TOP WINNERS LEADERBOARD</h2>
+                <p class="section-subtitle">Our most successful players this month</p>
             </div>
             <div class="leaderboard-container">
                 <div class="leaderboard-header">
@@ -1182,25 +330,44 @@ document.addEventListener('keydown', function(e) {
                     <span class="value-header">Total Value</span>
                     <span class="status-header">Status</span>
                 </div>
-                <div class="leaderboard-list" id="leaderboard">
+                <div class="leaderboard-list" id="leaderboard" role="list" aria-label="Top winners leaderboard">
                     <!-- Leaderboard loaded via JavaScript -->
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank gold">1</span>
+                        <span class="player"><i class="fas fa-crown"></i> LuckyStar23</span>
+                        <span class="wins">47 wins</span>
+                        <span class="value">$12,450</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank silver">2</span>
+                        <span class="player">PrizeHunter</span>
+                        <span class="wins">32 wins</span>
+                        <span class="value">$8,760</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank bronze">3</span>
+                        <span class="player">WinMaster</span>
+                        <span class="wins">28 wins</span>
+                        <span class="value">$7,230</span>
+                        <span class="status verified">Verified</span>
+                    </div>
                 </div>
                 <div class="leaderboard-footer">
-                    <p><i class="fas fa-sync-alt"></i> Updates every hour</p>
+                    <p><i class="fas fa-sync-alt"></i> Updated every hour • Last updated: <span id="leaderboardUpdate">Just now</span></p>
+                    <button class="btn-refresh" id="refreshLeaderboard" aria-label="Refresh leaderboard">
+                        <i class="fas fa-redo"></i> Refresh
+                    </button>
                 </div>
             </div>
         </section>
 
         <!-- Live Stats -->
-        <section class="stats-section">
+        <section class="stats-section" aria-labelledby="statsTitle">
             <div class="section-header">
-                <h2><i class="fas fa-chart-line"></i> LIVE STATISTICS</h2>
-                <div>
-                    <button class="refresh-btn" id="refreshStats" title="Refresh statistics">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <p class="section-subtitle">Real-time data from TrustCade</p>
-                </div>
+                <h2 id="statsTitle"><i class="fas fa-chart-line"></i> LIVE STATISTICS</h2>
+                <p class="section-subtitle">Real-time data from TrustCade</p>
             </div>
             <div class="stats-grid">
                 <div class="stat-card stat-primary">
@@ -1208,7 +375,7 @@ document.addEventListener('keydown', function(e) {
                         <i class="fas fa-trophy"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="totalWinnersStat">5,247</h3>
+                        <h3 id="totalWinners">5,247</h3>
                         <p>Total Winners</p>
                         <span class="stat-trend"><i class="fas fa-arrow-up"></i> +24 today</span>
                     </div>
@@ -1218,7 +385,7 @@ document.addEventListener('keydown', function(e) {
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="totalValueStat">$892,450</h3>
+                        <h3 id="totalValue">$892,450</h3>
                         <p>Prizes Distributed</p>
                         <span class="stat-trend"><i class="fas fa-arrow-up"></i> +$12,450 today</span>
                     </div>
@@ -1228,7 +395,7 @@ document.addEventListener('keydown', function(e) {
                         <i class="fas fa-bolt"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="winsTodayStat">324</h3>
+                        <h3 id="winsToday">324</h3>
                         <p>Wins Today</p>
                         <span class="stat-trend"><i class="fas fa-chart-line"></i> 1 win every 4.5 minutes</span>
                     </div>
@@ -1238,7 +405,7 @@ document.addEventListener('keydown', function(e) {
                         <i class="fas fa-percentage"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 id="winRateStat">1:8</h3>
+                        <h3 id="winRate">1:8</h3>
                         <p>Win Rate</p>
                         <span class="stat-trend"><i class="fas fa-user-friends"></i> 12.5% of spins win</span>
                     </div>
@@ -1246,13 +413,16 @@ document.addEventListener('keydown', function(e) {
             </div>
             <div class="stats-note">
                 <p><i class="fas fa-info-circle"></i> Statistics update in real-time. Last updated: <span id="lastUpdated">Just now</span></p>
+                <button class="btn-refresh-stats" id="refreshStats" aria-label="Refresh statistics">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
         </section>
 
         <!-- Prize Gallery -->
-        <section class="prize-gallery" id="prizes">
+        <section class="prize-gallery" id="prizes" aria-labelledby="prizesTitle">
             <div class="section-header">
-                <h2><i class="fas fa-gifts"></i> WINNING PRIZES</h2>
+                <h2 id="prizesTitle"><i class="fas fa-gifts"></i> WINNING PRIZES</h2>
                 <p class="section-subtitle">Amazing prizes you can win right now</p>
             </div>
             <div class="prizes-grid">
@@ -1304,9 +474,9 @@ document.addEventListener('keydown', function(e) {
         </section>
 
         <!-- How It Works -->
-        <section class="how-it-works" id="how-it-works">
+        <section class="how-it-works" aria-labelledby="howItWorksTitle">
             <div class="section-header">
-                <h2><i class="fas fa-play-circle"></i> HOW IT WORKS</h2>
+                <h2 id="howItWorksTitle"><i class="fas fa-play-circle"></i> HOW IT WORKS</h2>
                 <p class="section-subtitle">Win prizes in 3 easy steps</p>
             </div>
             <div class="steps-container">
@@ -1338,15 +508,17 @@ document.addEventListener('keydown', function(e) {
         </section>
 
         <!-- Updates Section -->
-        <section class="updates-section">
+        <section class="updates-section" aria-labelledby="updatesTitle">
             <div class="section-header">
-                <h2><i class="fas fa-bullhorn"></i> LATEST UPDATES</h2>
+                <h2 id="updatesTitle"><i class="fas fa-bullhorn"></i> LATEST UPDATES</h2>
                 <a href="#" class="view-all-link">All Updates <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="updates-grid">
                 <div class="update-card">
                     <div class="update-image">
-                        <img src="https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="iPhone 17">
+                        <img src="https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="iPhone 17" 
+                             loading="lazy">
                         <div class="update-badge">NEW</div>
                     </div>
                     <div class="update-content">
@@ -1358,7 +530,9 @@ document.addEventListener('keydown', function(e) {
                 </div>
                 <div class="update-card">
                     <div class="update-image">
-                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w-600&q=80" alt="Big Win">
+                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Big Win Celebration" 
+                             loading="lazy">
                         <div class="update-badge">HOT</div>
                     </div>
                     <div class="update-content">
@@ -1370,7 +544,9 @@ document.addEventListener('keydown', function(e) {
                 </div>
                 <div class="update-card">
                     <div class="update-image">
-                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="New Feature">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Mobile App" 
+                             loading="lazy">
                         <div class="update-badge">UPDATE</div>
                     </div>
                     <div class="update-content">
@@ -1384,38 +560,38 @@ document.addEventListener('keydown', function(e) {
         </section>
 
         <!-- Social Links -->
-        <section class="social-section">
+        <section class="social-section" aria-labelledby="socialTitle">
             <div class="section-header">
-                <h2><i class="fas fa-comments"></i> STAY CONNECTED</h2>
+                <h2 id="socialTitle"><i class="fas fa-comments"></i> STAY CONNECTED</h2>
                 <p class="section-subtitle">Follow us for updates and winner announcements</p>
             </div>
             <div class="social-links">
-                <a href="#" class="social-btn social-instagram">
+                <a href="#" class="social-btn social-instagram" aria-label="Follow on Instagram">
                     <i class="fab fa-instagram"></i>
                     <span>Instagram</span>
                     <small>@TrustCadeWins</small>
                 </a>
-                <a href="#" class="social-btn social-twitter">
+                <a href="#" class="social-btn social-twitter" aria-label="Follow on Twitter">
                     <i class="fab fa-twitter"></i>
                     <span>Twitter</span>
                     <small>@TrustCade</small>
                 </a>
-                <a href="#" class="social-btn social-facebook">
+                <a href="#" class="social-btn social-facebook" aria-label="Follow on Facebook">
                     <i class="fab fa-facebook"></i>
                     <span>Facebook</span>
                     <small>/TrustCade</small>
                 </a>
-                <a href="#" class="social-btn social-youtube">
+                <a href="#" class="social-btn social-youtube" aria-label="Subscribe on YouTube">
                     <i class="fab fa-youtube"></i>
                     <span>YouTube</span>
                     <small>Unboxing videos</small>
                 </a>
-                <a href="mailto:contact@trustcade.com" class="social-btn social-email">
+                <a href="mailto:contact@trustcade.com" class="social-btn social-email" aria-label="Send email">
                     <i class="fas fa-envelope"></i>
                     <span>Email</span>
                     <small>24/7 Support</small>
                 </a>
-                <a href="#" class="social-btn social-whatsapp">
+                <a href="#" class="social-btn social-whatsapp" aria-label="Chat on WhatsApp">
                     <i class="fab fa-whatsapp"></i>
                     <span>WhatsApp</span>
                     <small>Quick Help</small>
@@ -1439,21 +615,21 @@ document.addEventListener('keydown', function(e) {
                 </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
-                    <a href="index.html">Home</a>
-                    <a href="winners.html">Winners</a>
-                    <a href="profile.html">My Profile</a>
-                    <a href="#prizes">Prizes</a>
-                    <a href="login.html">Login</a>
-                    <a href="register.html">Register</a>
+                    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                    <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                    <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+                    <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
                 </div>
                 <div class="footer-section">
                     <h4>Legal</h4>
-                    <a href="terms.html">Terms of Service</a>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="contact.html">Contact Us</a>
-                    <a href="faq.html">FAQ</a>
-                    <a href="rules.html">Contest Rules</a>
-                    <a href="disclaimer.html">Disclaimer</a>
+                    <a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="privacy.html"><i class="fas fa-lock"></i> Privacy Policy</a>
+                    <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+                    <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                    <a href="rules.html"><i class="fas fa-book"></i> Contest Rules</a>
+                    <a href="disclaimer.html"><i class="fas fa-exclamation-circle"></i> Disclaimer</a>
                 </div>
                 <div class="footer-section">
                     <h4>Contact Info</h4>
@@ -1463,8 +639,8 @@ document.addEventListener('keydown', function(e) {
                     <div class="newsletter">
                         <h5>Get Updates</h5>
                         <div class="newsletter-input">
-                            <input type="email" placeholder="Your email" id="newsletterEmail">
-                            <button id="newsletterBtn"><i class="fas fa-paper-plane"></i></button>
+                            <input type="email" placeholder="Your email" aria-label="Email for newsletter">
+                            <button aria-label="Subscribe to newsletter"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                 </div>
@@ -1472,25 +648,25 @@ document.addEventListener('keydown', function(e) {
             <div class="footer-bottom">
                 <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners, Real Fun!</p>
                 <p>Odds displayed: 1:8 win rate | Verified business | Transparent system | Must be 18+ to play</p>
-                <div class="payment-methods">
+                <div class="payment-methods" aria-label="Accepted payment methods">
                     <i class="fab fa-cc-visa" title="Visa"></i>
                     <i class="fab fa-cc-mastercard" title="Mastercard"></i>
                     <i class="fab fa-cc-amex" title="American Express"></i>
                     <i class="fab fa-cc-paypal" title="PayPal"></i>
                     <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
-                    <i class="fab fa-cc-google-pay" title="Google Pay"></i>
+                    <i class="fab fa-google-pay" title="Google Pay"></i>
+                </div>
+                <div class="footer-legal">
+                    <span><i class="fas fa-globe"></i> Worldwide shipping</span>
+                    <span><i class="fas fa-user-check"></i> Age verification required</span>
+                    <span><i class="fas fa-balance-scale"></i> Gambling license: GL-2024-98765</span>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
     <!-- Win Notification (Hidden by default) -->
-    <div id="winNotification" class="win-notification">
+    <div id="winNotification" class="win-notification" role="alert" aria-live="polite" hidden>
         <div class="notification-content">
             <div class="notification-icon">🎉</div>
             <div class="notification-text">
@@ -1499,29 +675,28 @@ document.addEventListener('keydown', function(e) {
                 <small>Value: <span id="wonValue">$1,299</span></small>
             </div>
             <a href="profile.html" class="notification-btn">Claim Now</a>
-            <button class="notification-close">&times;</button>
+            <button class="notification-close" aria-label="Close notification">&times;</button>
         </div>
     </div>
 
     <!-- Login Modal (Hidden by default) -->
-    <div id="loginModal" class="modal">
+    <div id="loginModal" class="modal" role="dialog" aria-labelledby="modalTitle" hidden>
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h2><i class="fas fa-sign-in-alt"></i> Login to TrustCade</h2>
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <h2 id="modalTitle"><i class="fas fa-sign-in-alt"></i> Login to TrustCade</h2>
             <form id="quickLoginForm">
-                <input type="email" placeholder="Email Address" required>
-                <input type="password" placeholder="Password" required>
+                <input type="email" placeholder="Email Address" required aria-label="Email address">
+                <input type="password" placeholder="Password" required aria-label="Password">
                 <button type="submit" class="spin-btn">Login</button>
-                
-                <div class="login-options">
-                    <button type="button" class="login-option-btn">
-                        <i class="fab fa-google"></i> Google
-                    </button>
-                    <button type="button" class="login-option-btn">
-                        <i class="fab fa-facebook"></i> Facebook
-                    </button>
-                </div>
             </form>
+            <div class="login-options">
+                <button class="login-option-btn">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+                <button class="login-option-btn">
+                    <i class="fab fa-apple"></i> Continue with Apple
+                </button>
+            </div>
             <p class="modal-footer">
                 New user? <a href="register.html">Register here</a> |
                 <a href="forgot-password.html">Forgot password?</a>
@@ -1529,50 +704,76 @@ document.addEventListener('keydown', function(e) {
         </div>
     </div>
 
-    <!-- Developer Debug Panel (Toggle with Ctrl+Shift+D) -->
-    <div id="debugPanel">
-        <div>Spins: <span id="debugSpins">0</span></div>
-        <div>Wins: <span id="debugWins">0</span></div>
-        <div>Next Spin: <span id="debugNextSpin">--:--</span></div>
-        <button onclick="window.resetTrustCadeData()" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; margin-top: 0.3rem;">Reset Data</button>
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Offline Notification -->
+    <div id="offlineNotification" class="offline-notification" hidden>
+        <i class="fas fa-wifi-slash"></i>
+        <span>You're offline. Some features may not work.</span>
     </div>
 
     <script src="script.js"></script>
-    
-    <!-- Initialize debug panel -->
+    <!-- Initialize scripts -->
     <script>
-        // Debug panel toggle with Ctrl+Shift+D
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-                const debugPanel = document.getElementById('debugPanel');
-                debugPanel.classList.toggle('show');
-                e.preventDefault();
+        // Simple initialization for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 300);
+                }, 500);
+            }
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('active');
+                });
+                
+                if (mobileMenuClose) {
+                    mobileMenuClose.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                    });
+                }
+            }
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                });
+                
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
             }
         });
         
-        // Update debug panel every 10 seconds
-        setInterval(() => {
-            if (document.getElementById('debugPanel').classList.contains('show')) {
-                const spins = localStorage.getItem('trustcade_spins') || 0;
-                const wins = JSON.parse(localStorage.getItem('trustcade_wins') || '[]').length;
-                const nextSpin = localStorage.getItem('trustcade_nextSpin');
-                
-                document.getElementById('debugSpins').textContent = spins;
-                document.getElementById('debugWins').textContent = wins;
-                
-                if (nextSpin) {
-                    const timeLeft = nextSpin - Date.now();
-                    if (timeLeft > 0) {
-                        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                        document.getElementById('debugNextSpin').textContent = 
-                            `${hours}h ${minutes}m`;
-                    } else {
-                        document.getElementById('debugNextSpin').textContent = 'READY';
-                    }
-                }
-            }
-        }, 10000);
+        // Helper functions
+        function scrollToSpin() {
+            document.getElementById('spin').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function viewPrizeDetails() {
+            // This would normally open a modal or navigate to details page
+            alert('Prize details would be shown here. In a real app, this would open a detailed view.');
+        }
     </script>
 </body>
-    </html>
+                                                                              </html>
