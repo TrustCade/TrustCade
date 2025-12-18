@@ -1,2579 +1,779 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary-color: #8B5CF6;
-    --secondary-color: #10B981;
-    --accent-color: #FF6B6B;
-    --dark-color: #1a1a1a;
-    --light-color: #f8f9fa;
-    --text-color: #333;
-    --text-light: #666;
-    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient-secondary: linear-gradient(45deg, #FF6B6B, #FF8E53);
-    --gradient-success: linear-gradient(135deg, #10B981, #059669);
-    --gradient-warning: linear-gradient(135deg, #F59E0B, #D97706);
-    --gradient-info: linear-gradient(135deg, #3B82F6, #1D4ED8);
-    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.2);
-    --radius-sm: 10px;
-    --radius-md: 15px;
-    --radius-lg: 20px;
-    --radius-xl: 25px;
-    --transition: all 0.3s ease;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--gradient-primary);
-    color: var(--text-color);
-    line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* Loading Screen */
-.loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--gradient-primary);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.3s ease;
-}
-
-.loading-spinner {
-    font-size: 3rem;
-    color: white;
-    margin-bottom: 1rem;
-    animation: spin 2s linear infinite;
-}
-
-.loading-screen p {
-    color: white;
-    font-size: 1.2rem;
-}
-
-/* Header & Navigation */
-header {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: var(--shadow-sm);
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo-link {
-    text-decoration: none;
-    color: inherit;
-}
-
-.logo-link:hover {
-    opacity: 0.9;
-}
-
-.logo h1 {
-    color: var(--primary-color);
-    font-size: 1.8rem;
-    font-weight: 700;
-}
-
-.logo .tagline {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    margin-left: 10px;
-    font-weight: 400;
-}
-
-.desktop-nav {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.desktop-nav a,
-.desktop-nav button {
-    text-decoration: none;
-    color: var(--text-color);
-    font-weight: 500;
-    padding: 0.5rem 1.2rem;
-    border-radius: var(--radius-xl);
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-    background: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.desktop-nav a:hover,
-.desktop-nav button:hover {
-    background: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-}
-
-nav a.active {
-    background: var(--primary-color);
-    color: white;
-}
-
-.btn-spin {
-    background: var(--gradient-secondary);
-    color: white !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-}
-
-.btn-login {
-    background: var(--primary-color);
-    color: white !important;
-}
-
-.btn-profile {
-    background: var(--secondary-color);
-    color: white !important;
-}
-
-/* Mobile Menu */
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: var(--transition);
-}
-
-.mobile-menu-btn:hover {
-    opacity: 0.8;
-}
-
-.mobile-menu {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: white;
-    z-index: 1001;
-    flex-direction: column;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-}
-
-.mobile-menu.active {
-    transform: translateX(0);
-}
-
-.mobile-menu-header {
-    padding: 1.5rem;
-    background: var(--gradient-primary);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.mobile-menu-header h3 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
-}
-
-.mobile-menu-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-}
-
-.mobile-menu-links {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.mobile-menu-links a {
-    padding: 1rem;
-    text-decoration: none;
-    color: var(--text-color);
-    border-radius: var(--radius-sm);
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    font-size: 1.1rem;
-}
-
-.mobile-menu-links a:hover,
-.mobile-menu-links a.active {
-    background: var(--light-color);
-    color: var(--primary-color);
-}
-
-.mobile-menu-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #eee;
-}
-
-.mobile-trust-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-}
-
-.mobile-trust-badges span {
-    background: var(--light-color);
-    color: var(--text-color);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-/* Trust Badges */
-.trust-badges {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 1rem 0;
-    text-align: center;
-    backdrop-filter: blur(5px);
-}
-
-.trust-badges .container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.trust-badges span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1.2rem;
-    background: var(--secondary-color);
-    color: white;
-    border-radius: var(--radius-xl);
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: var(--transition);
-}
-
-.trust-badges span:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-}
-
-/* Section Common Styles */
-section {
-    margin: 2rem 0;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.section-header h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.8rem;
-    color: white;
-}
-
-.section-subtitle {
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 0.5rem;
-}
-
-.view-all-link {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: var(--transition);
-}
-
-.view-all-link:hover {
-    color: var(--accent-color);
-    transform: translateX(5px);
-}
-
-/* Grand Prize Section */
-.grand-prize {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.prize-timer {
-    color: white;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-xl);
-}
-
-.prize-card {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2rem;
-    align-items: center;
-    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-    border-radius: var(--radius-md);
-    padding: 2rem;
-    margin-top: 1.5rem;
-}
-
-@media (max-width: 768px) {
-    .prize-card {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-}
-
-.prize-image {
-    position: relative;
-}
-
-.prize-image img {
-    width: 180px;
-    height: 180px;
-    border-radius: var(--radius-sm);
-    border: 5px solid white;
-    object-fit: cover;
-    box-shadow: var(--shadow-md);
-}
-
-.prize-badge {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: var(--accent-color);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-xl);
-    font-size: 0.8rem;
-    font-weight: 700;
-    box-shadow: var(--shadow-sm);
-}
-
-.prize-info h3 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-}
-
-.prize-description {
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-}
-
-.prize-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.detail {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.8rem;
-    border-radius: var(--radius-sm);
-}
-
-.detail i {
-    color: var(--primary-color);
-}
-
-.detail span {
-    font-size: 0.9rem;
-}
-
-.detail strong {
-    color: #333;
-    font-weight: 600;
-}
-
-.prize-action {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-}
-
-.btn-spin-action,
-.btn-secondary {
-    padding: 1rem 2rem;
-    border-radius: var(--radius-xl);
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-}
-
-.btn-spin-action {
-    background: var(--gradient-secondary);
-    color: white;
-    box-shadow: var(--shadow-md);
-}
-
-.btn-secondary {
-    background: white;
-    color: var(--primary-color);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-spin-action:hover,
-.btn-secondary:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* Spin Wheel Section */
-.spin-section {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.spin-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-    margin-top: 2rem;
-}
-
-@media (max-width: 1024px) {
-    .spin-container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-}
-
-.wheel-container {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.wheel-wrapper {
-    position: relative;
-    width: 100%;
-    height: 400px;
-}
-
-#wheelCanvas {
-    width: 100%;
-    height: 100%;
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
-}
-
-.wheel-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    background: var(--accent-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
-    box-shadow: var(--shadow-md);
-}
-
-.spin-pointer {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--accent-color);
-    font-size: 3rem;
-    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
-}
-
-.wheel-prizes {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-}
-
-.prize-indicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(calc(var(--i) * 45deg)) translateY(-200px) rotate(calc(var(--i) * -45deg));
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-color);
-    white-space: nowrap;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
-}
-
-.spin-controls {
-    text-align: center;
-}
-
-.timer-container h3 {
-    color: var(--text-color);
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.timer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 2rem 0;
-}
-
-.time-unit {
-    background: var(--light-color);
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    min-width: 80px;
-}
-
-.time-unit span {
-    font-size: 2.5rem;
-    font-weight: 700;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: block;
-}
-
-.time-unit small {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    display: block;
-    margin-top: 0.5rem;
-}
-
-.time-separator {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin: 0 0.5rem;
-}
-
-.timer-progress {
-    margin-top: 1.5rem;
-}
-
-.progress-bar {
-    height: 8px;
-    background: var(--light-color);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
-.progress-fill {
-    height: 100%;
-    background: var(--gradient-primary);
-    width: 60%;
-    transition: width 0.3s ease;
-}
-
-.progress-text {
-    font-size: 0.9rem;
-    color: var(--text-light);
-}
-
-.spin-btn {
-    background: var(--gradient-secondary);
-    color: white;
-    border: none;
-    padding: 1.2rem 3rem;
-    font-size: 1.3rem;
-    border-radius: var(--radius-xl);
-    cursor: pointer;
-    transition: var(--transition);
-    margin: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: var(--shadow-md);
-}
-
-.spin-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
-}
-
-.spin-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-.btn-subtext {
-    font-size: 0.8rem;
-    opacity: 0.8;
-}
-
-.spin-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin: 1.5rem 0;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.stat-item {
-    background: var(--light-color);
-    padding: 0.8rem;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.stat-item i {
-    color: var(--primary-color);
-}
-
-.spin-info {
-    margin-top: 2rem;
-    text-align: left;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.spin-info p {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0.5rem 0;
-    color: var(--text-light);
-    font-size: 0.9rem;
-}
-
-.spin-info i {
-    color: var(--primary-color);
-}
-
-/* Registration Prompt */
-.registration-prompt {
-    background: var(--gradient-primary);
-    color: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.reg-card {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2rem;
-    align-items: center;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-    .reg-card {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-}
-
-.reg-icon {
-    font-size: 4rem;
-    color: white;
-    opacity: 0.9;
-}
-
-.reg-content h3 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.reg-content p {
-    margin-bottom: 1.5rem;
-    opacity: 0.9;
-    line-height: 1.6;
-}
-
-.reg-benefits {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.8rem;
-    margin-bottom: 2rem;
-}
-
-.reg-benefits span {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.reg-benefits i {
-    color: var(--secondary-color);
-}
-
-.reg-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-}
-
-.btn-register {
-    background: white;
-    color: var(--primary-color);
-    padding: 1rem 2rem;
-    border-radius: var(--radius-xl);
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: var(--transition);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-register:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-login-small {
-    color: white;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    opacity: 0.9;
-    transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: var(--radius-xl);
-}
-
-.btn-login-small:hover {
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.reg-note {
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.reg-note p {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0;
-}
-
-/* Winners Section */
-.winners-section {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.winners-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin: 2rem 0;
-}
-
-.winner-card {
-    background: var(--light-color);
-    padding: 1.5rem;
-    border-radius: var(--radius-md);
-    text-align: center;
-    transition: var(--transition);
-    border: 1px solid #e9ecef;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.winner-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-color);
-}
-
-.winner-avatar {
-    width: 60px;
-    height: 60px;
-    background: var(--primary-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    box-shadow: var(--shadow-sm);
-}
-
-.winner-card h4 {
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-}
-
-.winner-prize {
-    color: var(--primary-color);
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-}
-
-.winner-time {
-    color: var(--text-light);
-    font-size: 0.85rem;
-}
-
-.section-footer {
-    text-align: center;
-    margin-top: 2rem;
-}
-
-.btn-view-all {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--primary-color);
-    color: white;
-    padding: 1rem 2.5rem;
-    border-radius: var(--radius-xl);
-    text-decoration: none;
-    font-weight: 600;
-    transition: var(--transition);
-    box-shadow: var(--shadow-sm);
-    border: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.btn-view-all:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    background: #7c3aed;
-}
-
-/* Leaderboard */
-.leaderboard-section {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.leaderboard-container {
-    margin-top: 1.5rem;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid #e9ecef;
-}
-
-.leaderboard-header {
-    display: grid;
-    grid-template-columns: 80px 1fr 100px 120px 100px;
-    padding: 1rem 1.5rem;
-    background: var(--gradient-primary);
-    font-weight: 600;
-    color: white;
-}
-
-@media (max-width: 768px) {
-    .leaderboard-header {
-        grid-template-columns: 60px 1fr 80px 100px 80px;
-        font-size: 0.9rem;
-        padding: 0.8rem 1rem;
-    }
-}
-
-.leaderboard-list {
-    background: white;
-}
-
-.leaderboard-item {
-    display: grid;
-    grid-template-columns: 80px 1fr 100px 120px 100px;
-    padding: 1rem 1.5rem;
-    align-items: center;
-    border-bottom: 1px solid #e9ecef;
-    transition: var(--transition);
-}
-
-@media (max-width: 768px) {
-    .leaderboard-item {
-        grid-template-columns: 60px 1fr 80px 100px 80px;
-        font-size: 0.9rem;
-        padding: 0.8rem 1rem;
-    }
-}
-
-.leaderboard-item:hover {
-    background: var(--light-color);
-}
-
-.leaderboard-item:last-child {
-    border-bottom: none;
-}
-
-.rank {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-weight: bold;
-    color: white;
-    margin: 0 auto;
-    box-shadow: var(--shadow-sm);
-}
-
-.rank.gold {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-}
-.rank.silver {
-    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
-}
-.rank.bronze {
-    background: linear-gradient(135deg, #CD7F32, #A6692E);
-}
-
-.player {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-}
-
-.wins, .value {
-    font-weight: 500;
-}
-
-.status {
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-align: center;
-}
-
-.status.verified {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--secondary-color);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.leaderboard-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    background: var(--light-color);
-    border-top: 1px solid #e9ecef;
-}
-
-.leaderboard-footer p {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-refresh {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-refresh:hover {
-    background: #7c3aed;
-}
-
-/* Stats Section */
-.stats-section {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.stat-card {
-    padding: 2rem;
-    border-radius: var(--radius-md);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.5rem;
-    align-items: center;
-    transition: var(--transition);
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-.stat-icon {
-    font-size: 2.5rem;
-    color: white;
-    opacity: 0.9;
-}
-
-.stat-content h3 {
-    font-size: 2.5rem;
-    color: white;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-}
-
-.stat-content p {
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-}
-
-.stat-trend {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.stats-note {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e9ecef;
-    color: var(--text-light);
-    font-size: 0.9rem;
-}
-
-.stats-note p {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-refresh-stats {
-    background: none;
-    border: 1px solid #e9ecef;
-    color: var(--text-light);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-refresh-stats:hover {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
-/* Prize Gallery */
-.prize-gallery {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.prizes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.prize-category {
-    background: var(--light-color);
-    border-radius: var(--radius-md);
-    padding: 1.5rem;
-    transition: var(--transition);
-}
-
-.prize-category:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.prize-category h3 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-.category-prizes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.prize-item {
-    background: white;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    color: var(--text-color);
-    border: 1px solid #e9ecef;
-    transition: var(--transition);
-}
-
-.prize-item:hover {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-}
-
-/* How It Works */
-.how-it-works {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.steps-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-@media (max-width: 768px) {
-    .steps-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-.step {
-    text-align: center;
-    padding: 2rem;
-    background: var(--light-color);
-    border-radius: var(--radius-md);
-    position: relative;
-    transition: var(--transition);
-}
-
-.step:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.step-number {
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    box-shadow: var(--shadow-sm);
-}
-
-.step-icon {
-    font-size: 3rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.step h3 {
-    color: var(--text-color);
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-.step p {
-    color: var(--text-light);
-    line-height: 1.6;
-}
-
-/* Updates Section */
-.updates-section {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.updates-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-@media (max-width: 768px) {
-    .updates-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.update-card {
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    transition: var(--transition);
-    background: white;
-}
-
-.update-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-.update-image {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-}
-
-.update-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: var(--transition);
-}
-
-.update-card:hover .update-image img {
-    transform: scale(1.05);
-}
-
-.update-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: var(--accent-color);
-    color: white;
-    padding: 0.3rem 1rem;
-    border-radius: var(--radius-xl);
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.update-content {
-    padding: 1.5rem;
-}
-
-.update-date {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-light);
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
-}
-
-.update-content h3 {
-    color: var(--text-color);
-    margin-bottom: 0.8rem;
-    font-size: 1.2rem;
-    line-height: 1.4;
-}
-
-.update-content p {
-    color: var(--text-light);
-    margin-bottom: 1rem;
-    line-height: 1.6;
-}
-
-.update-link {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: var(--transition);
-}
-
-.update-link:hover {
-    color: #7c3aed;
-}
-
-/* Social Links */
-.social-section {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-}
-
-.social-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.social-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    transition: var(--transition);
-    border: 1px solid #e9ecef;
-    color: white;
-}
-
-.social-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.social-btn i {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.social-btn span {
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-}
-
-.social-btn small {
-    opacity: 0.8;
-    font-size: 0.8rem;
-}
-
-.social-instagram { background: linear-gradient(45deg, #E4405F, #833AB4); }
-.social-twitter { background: linear-gradient(45deg, #1DA1F2, #0D8BD9); }
-.social-facebook { background: linear-gradient(45deg, #1877F2, #0B5FCC); }
-.social-youtube { background: linear-gradient(45deg, #FF0000, #CC0000); }
-.social-email { background: linear-gradient(45deg, #8B5CF6, #667eea); }
-.social-whatsapp { background: linear-gradient(45deg, #25D366, #128C7E); }
-
-/* Footer */
-footer {
-    background: var(--dark-color);
-    color: white;
-    padding: 3rem 0 1.5rem;
-    margin-top: 4rem;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
-    margin-bottom: 3rem;
-}
-
-.footer-section h3,
-.footer-section h4 {
-    color: white;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.footer-section h3 {
-    font-size: 1.5rem;
-}
-
-.footer-section h4 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-
-.footer-section p {
-    color: #b0b0b0;
-    margin-bottom: 1rem;
-    line-height: 1.6;
-}
-
-.footer-trust {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-.footer-trust span {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.3rem 0.8rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.footer-section a {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #b0b0b0;
-    text-decoration: none;
-    margin-bottom: 0.8rem;
-    transition: var(--transition);
-    font-size: 0.95rem;
-}
-
-.footer-section a:hover {
-    color: var(--primary-color);
-    padding-left: 5px;
-}
-
-.newsletter {
-    margin-top: 1.5rem;
-}
-
-.newsletter h5 {
-    color: white;
-    margin-bottom: 0.8rem;
-    font-size: 1rem;
-}
-
-.newsletter-input {
-    display: flex;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-}
-
-.newsletter-input input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    padding: 0.8rem 1rem;
-    color: white;
-    font-size: 0.9rem;
-}
-
-.newsletter-input input::placeholder {
-    color: #999;
-}
-
-.newsletter-input button {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0 1.5rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.newsletter-input button:hover {
-    background: #7c3aed;
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.footer-bottom p {
-    color: #999;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.payment-methods {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    font-size: 1.5rem;
-    color: #999;
-}
-
-.payment-methods i {
-    transition: var(--transition);
-    cursor: pointer;
-}
-
-.payment-methods i:hover {
-    color: white;
-}
-
-.footer-legal {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    font-size: 0.8rem;
-    color: #999;
-}
-
-.footer-legal span {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-/* Back to Top Button */
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: var(--transition);
-    opacity: 0;
-    visibility: hidden;
-    box-shadow: var(--shadow-md);
-    z-index: 999;
-}
-
-.back-to-top.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-.back-to-top:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* Offline Notification */
-.offline-notification {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--gradient-warning);
-    color: white;
-    padding: 0.8rem 1rem;
-    text-align: center;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-/* Win Notification */
-.win-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--gradient-success);
-    color: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    z-index: 9999;
-    animation: slideInRight 0.5s ease;
-    max-width: 400px;
-    display: none;
-}
-
-.win-notification.show {
-    display: block;
-}
-
-.notification-content {
-    padding: 1.5rem;
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    gap: 1rem;
-    align-items: center;
-}
-
-.notification-icon {
-    font-size: 2.5rem;
-}
-
-.notification-text h4 {
-    margin-bottom: 0.3rem;
-    font-size: 1.1rem;
-}
-
-.notification-text p {
-    font-size: 0.95rem;
-    margin-bottom: 0.2rem;
-}
-
-.notification-text small {
-    opacity: 0.9;
-    font-size: 0.85rem;
-}
-
-.notification-btn {
-    background: white;
-    color: var(--secondary-color);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: var(--transition);
-    white-space: nowrap;
-}
-
-.notification-btn:hover {
-    background: #f0f0f0;
-}
-
-.notification-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.8;
-    transition: var(--transition);
-}
-
-.notification-close:hover {
-    opacity: 1;
-}
-
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.modal.show {
-    display: flex;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-content {
-    background: white;
-    border-radius: var(--radius-lg);
-    max-width: 400px;
-    width: 100%;
-    animation: slideUp 0.3s ease;
-    position: relative;
-}
-
-.modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-light);
-    cursor: pointer;
-    padding: 0.5rem;
-    line-height: 1;
-    transition: var(--transition);
-}
-
-.modal-close:hover {
-    color: var(--text-color);
-}
-
-.modal-content h2 {
-    padding: 2rem 2rem 1rem;
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.modal-content form {
-    padding: 0 2rem 2rem;
-}
-
-.modal-content input {
-    width: 100%;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #e9ecef;
-    border-radius: var(--radius-sm);
-    font-size: 1rem;
-    transition: var(--transition);
-}
-
-.modal-content input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-}
-
-.login-options {
-    padding: 0 2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-}
-
-.login-option-btn {
-    padding: 0.8rem;
-    border: 1px solid #e9ecef;
-    border-radius: var(--radius-sm);
-    background: white;
-    color: var(--text-color);
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.login-option-btn:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-}
-
-.modal-footer {
-    padding: 1rem 2rem 2rem;
-    text-align: center;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    border-top: 1px solid #e9ecef;
-}
-
-.modal-footer a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.modal-footer a:hover {
-    text-decoration: underline;
-}
-
-/* Animations */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .wheel-wrapper {
-        max-width: 350px;
-        height: 350px;
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: 768px) {
-    .desktop-nav {
-        display: none;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustCade - Spin & Win Real Prizes</title>
+    <meta name="description" content="Spin daily and win real prizes! iPhone 17, PS5, cash prizes, and more. Free daily spin, verified winners, secure platform.">
+    <meta name="keywords" content="spin wheel, win prizes, daily spin, free prizes, iPhone, PS5, cash prizes">
     
-    .mobile-menu-btn {
-        display: block;
-    }
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="TrustCade - Spin & Win Real Prizes">
+    <meta property="og:description" content="Win iPhone 17, PS5, cash prizes and more with daily free spins!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:url" content="https://trustcade.com">
     
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="manifest" href="assets/site.webmanifest">
     
-    .view-all-link {
-        align-self: flex-start;
-    }
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    .timer {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+    <!-- Preload critical images -->
+    <link rel="preload" href="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" as="image">
     
-    .time-unit {
-        min-width: 70px;
-        padding: 0.8rem;
-    }
-    
-    .time-unit span {
-        font-size: 2rem;
-    }
-    
-    .time-separator {
-        font-size: 1.5rem;
-    }
-    
-    .wheel-wrapper {
-        max-width: 300px;
-        height: 300px;
-    }
-    
-    .spin-btn {
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-    }
-    
-    .social-links {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-    
-    .notification-content {
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto auto;
-        gap: 0.5rem;
-    }
-    
-    .notification-btn {
-        grid-column: 2;
-        justify-self: start;
-    }
-    
-    .notification-close {
-        grid-column: 1;
-        grid-row: 1;
-        justify-self: end;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0 15px;
-    }
-    
-    .logo h1 {
-        font-size: 1.5rem;
-    }
-    
-    .section-header h2 {
-        font-size: 1.5rem;
-    }
-    
-    .timer {
-        gap: 0.3rem;
-    }
-    
-    .time-unit {
-        min-width: 60px;
-        padding: 0.6rem;
-    }
-    
-    .time-unit span {
-        font-size: 1.5rem;
-    }
-    
-    .spin-btn {
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-    }
-    
-    .winners-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .prizes-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .updates-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .social-links {
-        grid-template-columns: 1fr;
-    }
-    
-    .leaderboard-footer {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-    
-    .back-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 45px;
-        height: 45px;
-    }
-}}
-
-/* ========== WHEEL CANVAS ========== */
-#wheelCanvas {
-    display: block;
-    margin: 2rem auto;
-    border-radius: 50%;
-    background: #111827;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-/* ========== SPIN BUTTON ========== */
-#spinButton {
-    display: inline-block;
-    margin: 1.5rem auto;
-    padding: 0.8rem 2rem;
-    font-size: 1.2rem;
-    font-weight: 600;
-    background: #EF4444;
-    color: #fff;
-    border-radius: 12px;
-    transition: background 0.3s ease;
-    text-align: center;
-    position: relative;
-}
-
-#spinButton:hover:not(:disabled) {
-    background: #F87171;
-}
-
-#spinButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-#spinButton .btn-subtext {
-    display: block;
-    font-size: 0.8rem;
-    opacity: 0.8;
-}
-
-/* ========== COUNTDOWN TIMER ========== */
-.countdown {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.countdown span {
-    background: #374151;
-    padding: 0.5rem 0.8rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    min-width: 2rem;
-    text-align: center;
-}
-
-#spinProgressContainer {
-    width: 80%;
-    height: 6px;
-    background: #4B5563;
-    border-radius: 4px;
-    margin: 1rem auto;
-    overflow: hidden;
-}
-
-#spinProgress {
-    width: 0%;
-    height: 100%;
-    background: #10B981;
-    transition: width 0.5s linear;
-}
-
-/* ========== NOTIFICATIONS ========== */
-.notification {
-    position: fixed;
-    top: 1rem;
-    right: -400px;
-    background: #111827;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    z-index: 9999;
-    transition: right 0.5s ease, opacity 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.notification.show {
-    right: 1rem;
-}
-
-.notification-success { background: #10B981; }
-.notification-error { background: #EF4444; }
-.notification-info { background: #3B82F6; }
-
-.notification i {
-    font-size: 1.2rem;
-}
-
-.notification-close {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 1rem;
-    margin-left: auto;
-}
-
-/* ========== WIN NOTIFICATION ========== */
-#winNotification {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #111827;
-    padding: 1.5rem 2rem;
-    border-radius: 16px;
-    text-align: center;
-    display: none;
-    z-index: 9999;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-}
-
-#winNotification.show {
-    display: block;
-    animation: popIn 0.5s ease;
-}
-
-#winNotification h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
-#winNotification p {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-
-#winNotification .notification-btn {
-    padding: 0.5rem 1.2rem;
-    background: #10B981;
-    color: #fff;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: background 0.3s ease;
-}
-
-#winNotification .notification-btn:hover {
-    background: #059669;
-}
-
-@keyframes popIn {
-    0% { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
-    100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
-}
-
-/* ========== MODALS ========== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9998;
-    padding: 1rem;
-}
-
-.modal.show {
-    display: flex;
-}
-
-.modal-content {
-    background: #111827;
-    padding: 2rem;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 400px;
-    position: relative;
-}
-
-.modal-close {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.8rem;
-    font-size: 1.5rem;
-    color: #fff;
-    cursor: pointer;
-}
-
-.modal input[type="email"],
-.modal input[type="password"] {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    border: 1px solid #374151;
-    background: #1F2937;
-    color: #F9FAFB;
-}
-
-.modal button {
-    width: 100%;
-    padding: 0.7rem;
-    background: #EF4444;
-    color: #fff;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: background 0.3s ease;
-}
-
-.modal button:hover {
-    background: #F87171;
-}
-
-.login-option-btn {
-    margin-top: 0.5rem;
-    width: 100%;
-    padding: 0.6rem;
-    border-radius: 8px;
-    background: #374151;
-    color: #fff;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.login-option-btn:hover {
-    background: #4B5563;
-}
-
-/* ========== MOBILE MENU ========== */
-#mobileMenu {
-    position: fixed;
-    inset: 0;
-    background: #111827;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: 9997;
-    padding: 2rem;
-    overflow-y: auto;
-}
-
-#mobileMenu.active {
-    transform: translateX(0);
-}
-
-#mobileMenu a {
-    display: block;
-    padding: 1rem 0;
-    font-size: 1.2rem;
-    border-bottom: 1px solid #374151;
-}
-
-/* ========== RECENT WINNERS ========== */
-#winnersGrid, #recentWinnersGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
-    margin: 2rem 1rem;
-}
-
-.winner-card {
-    background: #1F2937;
-    padding: 1rem;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.winner-avatar {
-    background: #EF4444;
-    color: #fff;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.winner-info h4 {
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.winner-prize {
-    font-size: 0.9rem;
-    color: #10B981;
-}
-
-.winner-time {
-    font-size: 0.8rem;
-    color: #9CA3AF;
-}
-
-/* ========== LEADERBOARD ========== */
-#leaderboard {
-    margin: 2rem 1rem;
-}
-
-.leaderboard-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem 1rem;
-    background: #1F2937;
-    border-radius: 12px;
-    margin-bottom: 0.5rem;
-    color: #F9FAFB;
-}
-
-.leaderboard-item .rank {
-    font-weight: 700;
-    width: 2rem;
-    text-align: center;
-}
-
-.rank.gold { color: #FFD700; }
-.rank.silver { color: #C0C0C0; }
-.rank.bronze { color: #CD7F32; }
-
-.leaderboard-item .status.verified { color: #10B981; }
-.leaderboard-item .status.pending { color: #FBBF24; }
-
-/* ========== BACK TO TOP BUTTON ========== */
-#backToTop {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: #EF4444;
-    color: #fff;
-    padding: 0.7rem 1rem;
-    border-radius: 50px;
-    display: none;
-    font-size: 1.2rem;
-    z-index: 9996;
-    transition: opacity 0.3s ease;
-}
-
-#backToTop.visible {
-    display: block;
-}
-
-/* ========== NEWSLETTER ========== */
-.newsletter-input {
-    display: flex;
-    gap: 0.5rem;
-    max-width: 400px;
-    margin: 2rem auto;
-}
-
-.newsletter-input input[type="email"] {
-    flex: 1;
-    padding: 0.5rem 1rem;
-    border-radius: 12px;
-    border: 1px solid #374151;
-    background: #1F2937;
-    color: #F9FAFB;
-}
-
-.newsletter-input button {
-    padding: 0.5rem 1rem;
-    background: #10B981;
-    color: #fff;
-    border-radius: 12px;
-    font-weight: 600;
-}
-
-.newsletter-input button:hover {
-    background: #059669;
-}}
-
-/* ========= CONTAINER ========= */
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* ========= HEADER & NAV ========= */
-header {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: var(--shadow-sm);
-}
-header .container { display: flex; justify-content: space-between; align-items: center; }
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo h1 { color: var(--primary-color); font-size: 1.8rem; font-weight: 700; }
-.logo .tagline { font-size: 0.8rem; color: var(--text-light); font-weight: 400; }
-nav { display: flex; gap: 1rem; align-items: center; }
-nav a { text-decoration: none; color: var(--text-color); font-weight: 500; padding: 0.5rem 1.2rem; border-radius: var(--radius-xl); transition: var(--transition); }
-nav a:hover { background: var(--primary-color); color: white; transform: translateY(-2px); }
-nav a.active { background: var(--primary-color); color: white; }
-.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--primary-color); cursor: pointer; }
-
-/* ========= MOBILE MENU ========= */
-.mobile-menu {
-    display: none;
-    position: fixed;
-    top: 70px;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 1rem;
-    box-shadow: var(--shadow-md);
-    z-index: 999;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-.mobile-menu a { padding: 1rem; text-decoration: none; color: var(--text-color); border-radius: var(--radius-sm); transition: var(--transition); }
-.mobile-menu a:hover { background: var(--light-color); }
-
-/* ========= BUTTON STYLES ========= */
-.btn-spin { background: var(--gradient-secondary); color: white; font-weight: 700; box-shadow: 0 4px 15px rgba(255,107,107,0.3); border: none; cursor: pointer; border-radius: var(--radius-xl); transition: var(--transition); }
-.btn-login { background: var(--primary-color); color: white; }
-.btn-profile { background: var(--secondary-color); color: white; }
-
-/* ========= SECTIONS ========= */
-
-/* Spin Wheel Section */
-.spin-section { background: white; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg); }
-.spin-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 2rem; }
-.wheel-container { position: relative; width: 300px; height: 300px; margin: 0 auto; }
-#wheelCanvas { width: 100%; height: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); }
-.wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; box-shadow: var(--shadow-md); }
-.spin-pointer { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); color: var(--accent-color); font-size: 3rem; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
-.spin-btn { width: 100%; max-width: 300px; margin: 1rem auto; padding: 1.2rem 3rem; font-size: 1.3rem; border-radius: var(--radius-xl); border: none; background: var(--gradient-secondary); color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: var(--transition); box-shadow: var(--shadow-md); }
-.spin-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.spin-btn:disabled { background: #ccc; cursor: not-allowed; }
-
-/* Winners Section */
-.winners-section { background: white; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg); }
-.winners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 1.5rem; margin: 2rem 0; }
-.winner-card { background: var(--light-color); padding: 1.5rem; border-radius: var(--radius-md); text-align: center; border: 1px solid #e9ecef; transition: var(--transition); }
-.winner-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--primary-color); }
-.winner-avatar { width: 60px; height: 60px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin: 0 auto 1rem; box-shadow: var(--shadow-sm); }
-
-/* Leaderboard Section */
-.leaderboard-section { background: white; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg); }
-.leaderboard-header, .leaderboard-item { display: grid; grid-template-columns: 80px 1fr 100px 120px 100px; padding: 1rem 1.5rem; align-items: center; border-bottom: 1px solid #e9ecef; transition: var(--transition); }
-.leaderboard-header { background: var(--light-color); font-weight: 600; border-radius: var(--radius-md); margin-bottom: 0.5rem; }
-.leaderboard-item:hover { background: var(--light-color); }
-.rank-badge { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; margin: 0 auto; box-shadow: var(--shadow-sm); }
-.rank-1 { background: linear-gradient(135deg,#FFD700,#FFA500); }
-.rank-2 { background: linear-gradient(135deg,#C0C0C0,#A0A0A0); }
-.rank-3 { background: linear-gradient(135deg,#CD7F32,#A6692E); }
-.rank-other { background: var(--primary-color); }
-
-/* Stats Section */
-.stats-section { background: white; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg); }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 1.5rem; margin-top: 2rem; }
-.stat-card { padding: 2rem; border-radius: var(--radius-md); display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: center; transition: var(--transition); }
-.stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-.stat-primary { background: linear-gradient(135deg,#8B5CF6,#667eea); }
-.stat-success { background: linear-gradient(135deg,#10B981,#059669); }
-
-/* Updates Section */
-.updates-section { background: white; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg); }
-.updates-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr)); gap: 2rem; margin-top: 2rem; }
-.update-card { border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md); transition: var(--transition); }
-.update-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-
-/* Social Section */
-.social-section { background: white; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg); }
-.social-links { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1rem; margin-top: 2rem; }
-
-/* Footer Section */
-footer { background: var(--dark-color); color: white; padding: 3rem 0 1.5rem; margin-top: 4rem; }
-.footer-content { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 3rem; margin-bottom: 3rem; }
-.footer-section h3, .footer-section h4 { color: white; margin-bottom: 1rem; }
-.footer-section p { color: #b0b0b0; margin-bottom: 1rem; line-height: 1.6; }
-
-/* Notifications & Modals */
-#winNotification { position: fixed; top: 20px; right: 20px; background: var(--gradient-success); color: white; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 9999; display: none; }
-#winNotification.show { display: block; }
-
-/* ========= ANIMATIONS ========= */
-@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* ========= RESPONSIVE ========= */
-@media (max-width: 1024px) { .spin-container { grid-template-columns: 1fr; gap: 2rem; } .wheel-container { width: 280px; height: 280px; } }
-@media (max-width: 768px) { nav { display: none; } .mobile-menu-btn { display: block; } .mobile-menu.show { display: flex; } }
-@media (max-width: 480px) { .spin-container { grid-template-columns: 1fr; } .wheel-container { width: 250px; height: 250px; } }
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://trustcade.com">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner">
+            <i class="fas fa-gift fa-spin"></i>
+        </div>
+        <p>Loading TrustCade...</p>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <h1><i class="fas fa-gift"></i> TrustCade</h1>
+                    <p class="tagline">Spin & Win Real Prizes</p>
+                </a>
+            </div>
+            <nav class="desktop-nav">
+                <a href="#spin" class="btn-spin"><i class="fas fa-redo"></i> SPIN NOW</a>
+                <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+                <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+                <button class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <h3><i class="fas fa-gift"></i> TrustCade</h3>
+            <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="#spin"><i class="fas fa-redo"></i> Spin Wheel</a>
+            <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+            <a href="profile.html"><i class="fas fa-user"></i> My Prizes</a>
+            <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+            <a href="login.html" id="mobileLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+        <div class="mobile-menu-footer">
+            <div class="mobile-trust-badges">
+                <span><i class="fas fa-shield-alt"></i> Verified</span>
+                <span><i class="fas fa-trophy"></i> 5,247+ Wins</span>
+                <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+        <div class="container">
+            <span><i class="fas fa-shield-alt"></i> 100% Verified</span>
+            <span><i class="fas fa-trophy"></i> 5,247+ Winners</span>
+            <span><i class="fas fa-box-open"></i> Real Prizes</span>
+            <span><i class="fas fa-clock"></i> Free Daily Spin</span>
+            <span><i class="fas fa-shipping-fast"></i> Free Shipping</span>
+            <span><i class="fas fa-headset"></i> 24/7 Support</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Grand Prize Display -->
+        <section class="grand-prize" aria-labelledby="grandPrizeTitle">
+            <div class="section-header">
+                <h2 id="grandPrizeTitle"><i class="fas fa-crown"></i> TODAY'S GRAND PRIZE</h2>
+                <div class="prize-timer">
+                    <i class="fas fa-clock"></i> Draws in: <span id="grandPrizeTimer" role="timer">12:34:56</span>
+                </div>
+            </div>
+            <div class="prize-card">
+                <div class="prize-image">
+                    <img src="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" 
+                         alt="Nintendo Switch OLED with games" 
+                         loading="lazy">
+                    <div class="prize-badge">GRAND PRIZE</div>
+                </div>
+                <div class="prize-info">
+                    <h3>$500 Nintendo Switch OLED + 5 Games</h3>
+                    <p class="prize-description">Limited edition with Mario Kart, Zelda, and 3 popular games included</p>
+                    <div class="prize-details">
+                        <div class="detail">
+                            <i class="fas fa-tag"></i>
+                            <span>Value: <strong>$500</strong></span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-user-check"></i>
+                            <span>Winners today: <strong>1</strong></span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-gift"></i>
+                            <span>Available: <strong>Now</strong></span>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-users"></i>
+                            <span>Entries: <strong>2,543</strong></span>
+                        </div>
+                    </div>
+                    <div class="prize-action">
+                        <button class="btn-spin-action" onclick="scrollToSpin()" aria-label="Spin to win the grand prize">
+                            <i class="fas fa-redo"></i> Spin to Win!
+                        </button>
+                        <button class="btn-secondary" onclick="viewPrizeDetails()">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spin Wheel Section -->
+        <section class="spin-section" id="spin" aria-labelledby="spinWheelTitle">
+            <div class="section-header">
+                <h2 id="spinWheelTitle"><i class="fas fa-redo"></i> DAILY SPIN WHEEL</h2>
+                <p class="section-subtitle">Spin once every 24 hours for free!</p>
+            </div>
+            
+            <div class="spin-container">
+                <div class="wheel-container">
+                    <div class="wheel-wrapper">
+                        <canvas id="wheelCanvas" width="400" height="400" 
+                                aria-label="Spin wheel with 8 prize sections"
+                                role="img"></canvas>
+                        <div class="wheel-center">
+                            <div class="spin-pointer" aria-hidden="true">
+                                <i class="fas fa-caret-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wheel-prizes" aria-label="Available prizes on the wheel">
+                        <div class="prize-indicator" style="--i:1">iPhone 17</div>
+                        <div class="prize-indicator" style="--i:2">$500 Cash</div>
+                        <div class="prize-indicator" style="--i:3">Headphones</div>
+                        <div class="prize-indicator" style="--i:4">Try Again</div>
+                        <div class="prize-indicator" style="--i:5">PS5</div>
+                        <div class="prize-indicator" style="--i:6">$100 Card</div>
+                        <div class="prize-indicator" style="--i:7">Watch</div>
+                        <div class="prize-indicator" style="--i:8">MacBook</div>
+                    </div>
+                </div>
+                
+                <!-- Timer & Controls -->
+                <div class="spin-controls">
+                    <div class="timer-container">
+                        <h3><i class="fas fa-clock"></i> NEXT FREE SPIN IN:</h3>
+                        <div class="timer" id="countdown" role="timer">
+                            <div class="time-unit">
+                                <span id="hours">00</span>
+                                <small>Hours</small>
+                            </div>
+                            <div class="time-separator">:</div>
+                            <div class="time-unit">
+                                <span id="minutes">00</span>
+                                <small>Minutes</small>
+                            </div>
+                            <div class="time-separator">:</div>
+                            <div class="time-unit">
+                                <span id="seconds">00</span>
+                                <small>Seconds</small>
+                            </div>
+                        </div>
+                        <div class="timer-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="spinProgress"></div>
+                            </div>
+                            <span class="progress-text">Next spin available at <span id="nextSpinTime">12:00 PM</span></span>
+                        </div>
+                    </div>
+                    
+                    <button class="spin-btn" id="spinButton" disabled aria-label="Spin the wheel">
+                        <i class="fas fa-redo"></i> SPIN NOW
+                        <span class="btn-subtext">Free spin available in <span id="timeLeft">00:00:00</span></span>
+                    </button>
+                    
+                    <div class="spin-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Spins today: <strong>24,832</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-gift"></i>
+                            <span>Wins today: <strong>3,104</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="spin-info">
+                        <p><i class="fas fa-info-circle"></i> 1 free spin every 24 hours</p>
+                        <p><i class="fas fa-gift"></i> Win real prizes instantly</p>
+                        <p><i class="fas fa-user-check"></i> Login required to claim prizes</p>
+                        <p><i class="fas fa-sync-alt"></i> Additional spins available for purchase</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Prompt -->
+        <section class="registration-prompt" aria-labelledby="regPromptTitle">
+            <div class="reg-card">
+                <div class="reg-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="reg-content">
+                    <h3 id="regPromptTitle"><i class="fas fa-shield-alt"></i> Verify with $100 Gift Card</h3>
+                    <p>Register with a Steam/Apple gift card to unlock prize claiming and participate in grand prize draws</p>
+                    <div class="reg-benefits">
+                        <span><i class="fas fa-check"></i> Claim unlimited prizes</span>
+                        <span><i class="fas fa-check"></i> Join grand prize draws</span>
+                        <span><i class="fas fa-check"></i> Priority shipping</span>
+                        <span><i class="fas fa-check"></i> Verified badge</span>
+                        <span><i class="fas fa-check"></i> Extra daily spin</span>
+                        <span><i class="fas fa-check"></i> Higher win chances</span>
+                    </div>
+                    <div class="reg-actions">
+                        <a href="register.html" class="btn-register">
+                            <i class="fas fa-user-plus"></i> Register Now
+                        </a>
+                        <a href="login.html" class="btn-login-small">
+                            <i class="fas fa-sign-in-alt"></i> Already have account?
+                        </a>
+                    </div>
+                    <div class="reg-note">
+                        <p><i class="fas fa-lock"></i> Your gift card balance remains fully usable after verification</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Winners -->
+        <section class="winners-section" aria-labelledby="winnersTitle">
+            <div class="section-header">
+                <h2 id="winnersTitle"><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
+                <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="winners-grid" id="recentWinnersGrid" role="list" aria-label="List of recent winners">
+                <!-- Winners loaded via JavaScript -->
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">L</div>
+                    <div class="winner-info">
+                        <h4>LuckyStar23</h4>
+                        <p class="winner-prize">iPhone 17 Pro</p>
+                        <span class="winner-time">2 minutes ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">M</div>
+                    <div class="winner-info">
+                        <h4>MikeWins</h4>
+                        <p class="winner-prize">$500 Cash</p>
+                        <span class="winner-time">15 minutes ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">S</div>
+                    <div class="winner-info">
+                        <h4>SarahG</h4>
+                        <p class="winner-prize">PS5 Pro</p>
+                        <span class="winner-time">1 hour ago</span>
+                    </div>
+                </div>
+                <div class="winner-card" role="listitem">
+                    <div class="winner-avatar">J</div>
+                    <div class="winner-info">
+                        <h4>JohnDoe</h4>
+                        <p class="winner-prize">MacBook Pro</p>
+                        <span class="winner-time">3 hours ago</span>
+                    </div>
+                </div>
+            </div>
+            <div class="section-footer">
+                <a href="winners.html" class="btn-view-all">
+                    <i class="fas fa-users"></i> View All 5,247+ Winners
+                </a>
+            </div>
+        </section>
+
+        <!-- Leaderboard -->
+        <section class="leaderboard-section" aria-labelledby="leaderboardTitle">
+            <div class="section-header">
+                <h2 id="leaderboardTitle"><i class="fas fa-medal"></i> TOP WINNERS LEADERBOARD</h2>
+                <p class="section-subtitle">Our most successful players this month</p>
+            </div>
+            <div class="leaderboard-container">
+                <div class="leaderboard-header">
+                    <span class="rank-header">Rank</span>
+                    <span class="player-header">Player</span>
+                    <span class="wins-header">Total Wins</span>
+                    <span class="value-header">Total Value</span>
+                    <span class="status-header">Status</span>
+                </div>
+                <div class="leaderboard-list" id="leaderboard" role="list" aria-label="Top winners leaderboard">
+                    <!-- Leaderboard loaded via JavaScript -->
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank gold">1</span>
+                        <span class="player"><i class="fas fa-crown"></i> LuckyStar23</span>
+                        <span class="wins">47 wins</span>
+                        <span class="value">$12,450</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank silver">2</span>
+                        <span class="player">PrizeHunter</span>
+                        <span class="wins">32 wins</span>
+                        <span class="value">$8,760</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                    <div class="leaderboard-item" role="listitem">
+                        <span class="rank bronze">3</span>
+                        <span class="player">WinMaster</span>
+                        <span class="wins">28 wins</span>
+                        <span class="value">$7,230</span>
+                        <span class="status verified">Verified</span>
+                    </div>
+                </div>
+                <div class="leaderboard-footer">
+                    <p><i class="fas fa-sync-alt"></i> Updated every hour • Last updated: <span id="leaderboardUpdate">Just now</span></p>
+                    <button class="btn-refresh" id="refreshLeaderboard" aria-label="Refresh leaderboard">
+                        <i class="fas fa-redo"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Stats -->
+        <section class="stats-section" aria-labelledby="statsTitle">
+            <div class="section-header">
+                <h2 id="statsTitle"><i class="fas fa-chart-line"></i> LIVE STATISTICS</h2>
+                <p class="section-subtitle">Real-time data from TrustCade</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card stat-primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalWinners">5,247</h3>
+                        <p>Total Winners</p>
+                        <span class="stat-trend"><i class="fas fa-arrow-up"></i> +24 today</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-success">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalValue">$892,450</h3>
+                        <p>Prizes Distributed</p>
+                        <span class="stat-trend"><i class="fas fa-arrow-up"></i> +$12,450 today</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="winsToday">324</h3>
+                        <p>Wins Today</p>
+                        <span class="stat-trend"><i class="fas fa-chart-line"></i> 1 win every 4.5 minutes</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-info">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="winRate">1:8</h3>
+                        <p>Win Rate</p>
+                        <span class="stat-trend"><i class="fas fa-user-friends"></i> 12.5% of spins win</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-note">
+                <p><i class="fas fa-info-circle"></i> Statistics update in real-time. Last updated: <span id="lastUpdated">Just now</span></p>
+                <button class="btn-refresh-stats" id="refreshStats" aria-label="Refresh statistics">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Prize Gallery -->
+        <section class="prize-gallery" id="prizes" aria-labelledby="prizesTitle">
+            <div class="section-header">
+                <h2 id="prizesTitle"><i class="fas fa-gifts"></i> WINNING PRIZES</h2>
+                <p class="section-subtitle">Amazing prizes you can win right now</p>
+            </div>
+            <div class="prizes-grid">
+                <div class="prize-category">
+                    <h3><i class="fas fa-mobile-alt"></i> Electronics</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">iPhone 17 Pro Max</span>
+                        <span class="prize-item">Samsung Galaxy S24</span>
+                        <span class="prize-item">MacBook Pro M3</span>
+                        <span class="prize-item">iPad Pro 12.9"</span>
+                        <span class="prize-item">AirPods Pro 2</span>
+                        <span class="prize-item">Apple Watch Ultra</span>
+                    </div>
+                </div>
+                <div class="prize-category">
+                    <h3><i class="fas fa-gamepad"></i> Gaming</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">PlayStation 5 Pro</span>
+                        <span class="prize-item">Xbox Series X</span>
+                        <span class="prize-item">Nintendo Switch OLED</span>
+                        <span class="prize-item">Gaming PC RTX 4090</span>
+                        <span class="prize-item">VR Headset</span>
+                        <span class="prize-item">Gaming Chair</span>
+                    </div>
+                </div>
+                <div class="prize-category">
+                    <h3><i class="fas fa-money-bill"></i> Cash & Cards</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">$5,000 Cash</span>
+                        <span class="prize-item">$1,000 Amazon</span>
+                        <span class="prize-item">$500 Steam</span>
+                        <span class="prize-item">$250 Apple</span>
+                        <span class="prize-item">$100 Google</span>
+                        <span class="prize-item">$50 Netflix</span>
+                    </div>
+                </div>
+                <div class="prize-category">
+                    <h3><i class="fas fa-tshirt"></i> Lifestyle</h3>
+                    <div class="category-prizes">
+                        <span class="prize-item">Smart TV 65"</span>
+                        <span class="prize-item">Drone Pro</span>
+                        <span class="prize-item">Camera Kit</span>
+                        <span class="prize-item">Studio Equipment</span>
+                        <span class="prize-item">Designer Watch</span>
+                        <span class="prize-item">Electric Scooter</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works" aria-labelledby="howItWorksTitle">
+            <div class="section-header">
+                <h2 id="howItWorksTitle"><i class="fas fa-play-circle"></i> HOW IT WORKS</h2>
+                <p class="section-subtitle">Win prizes in 3 easy steps</p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>Register & Verify</h3>
+                    <p>Create your account and verify with a $100 gift card to unlock all features</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <h3>Spin Daily</h3>
+                    <p>Use your free daily spin or purchase additional spins for more chances</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>Claim Prize</h3>
+                    <p>If you win, claim your prize instantly. We ship worldwide for free!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updates Section -->
+        <section class="updates-section" aria-labelledby="updatesTitle">
+            <div class="section-header">
+                <h2 id="updatesTitle"><i class="fas fa-bullhorn"></i> LATEST UPDATES</h2>
+                <a href="#" class="view-all-link">All Updates <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="updates-grid">
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="iPhone 17" 
+                             loading="lazy">
+                        <div class="update-badge">NEW</div>
+                    </div>
+                    <div class="update-content">
+                        <span class="update-date"><i class="far fa-clock"></i> 2 hours ago</span>
+                        <h3>iPhone 17 Added to Prize Pool!</h3>
+                        <p>The latest iPhone model is now available to win. Be the first to get it!</p>
+                        <a href="#" class="update-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Big Win Celebration" 
+                             loading="lazy">
+                        <div class="update-badge">HOT</div>
+                    </div>
+                    <div class="update-content">
+                        <span class="update-date"><i class="far fa-clock"></i> 1 day ago</span>
+                        <h3>Record $5,000 Win!</h3>
+                        <p>User "LuckyStar" just won our biggest cash prize ever. You could be next!</p>
+                        <a href="#" class="update-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Mobile App" 
+                             loading="lazy">
+                        <div class="update-badge">UPDATE</div>
+                    </div>
+                    <div class="update-content">
+                        <span class="update-date"><i class="far fa-clock"></i> 3 days ago</span>
+                        <h3>New Mobile App Launched!</h3>
+                        <p>Spin on the go with our new iOS and Android apps. Download now!</p>
+                        <a href="#" class="update-link">Download <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Links -->
+        <section class="social-section" aria-labelledby="socialTitle">
+            <div class="section-header">
+                <h2 id="socialTitle"><i class="fas fa-comments"></i> STAY CONNECTED</h2>
+                <p class="section-subtitle">Follow us for updates and winner announcements</p>
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-btn social-instagram" aria-label="Follow on Instagram">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                    <small>@TrustCadeWins</small>
+                </a>
+                <a href="#" class="social-btn social-twitter" aria-label="Follow on Twitter">
+                    <i class="fab fa-twitter"></i>
+                    <span>Twitter</span>
+                    <small>@TrustCade</small>
+                </a>
+                <a href="#" class="social-btn social-facebook" aria-label="Follow on Facebook">
+                    <i class="fab fa-facebook"></i>
+                    <span>Facebook</span>
+                    <small>/TrustCade</small>
+                </a>
+                <a href="#" class="social-btn social-youtube" aria-label="Subscribe on YouTube">
+                    <i class="fab fa-youtube"></i>
+                    <span>YouTube</span>
+                    <small>Unboxing videos</small>
+                </a>
+                <a href="mailto:contact@trustcade.com" class="social-btn social-email" aria-label="Send email">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email</span>
+                    <small>24/7 Support</small>
+                </a>
+                <a href="#" class="social-btn social-whatsapp" aria-label="Chat on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                    <small>Quick Help</small>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-gift"></i> TrustCade</h3>
+                    <p>Your trusted platform for winning real prizes through daily spins. Verified winners, transparent system.</p>
+                    <div class="footer-trust">
+                        <span><i class="fas fa-check-circle"></i> 100% Legit</span>
+                        <span><i class="fas fa-shield-alt"></i> Secure</span>
+                        <span><i class="fas fa-truck"></i> Free Shipping</span>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                    <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
+                    <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
+                    <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="terms.html"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="privacy.html"><i class="fas fa-lock"></i> Privacy Policy</a>
+                    <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+                    <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                    <a href="rules.html"><i class="fas fa-book"></i> Contest Rules</a>
+                    <a href="disclaimer.html"><i class="fas fa-exclamation-circle"></i> Disclaimer</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> support@trustcade.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Prize Street, NY</p>
+                    <div class="newsletter">
+                        <h5>Get Updates</h5>
+                        <div class="newsletter-input">
+                            <input type="email" placeholder="Your email" aria-label="Email for newsletter">
+                            <button aria-label="Subscribe to newsletter"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TrustCade. All rights reserved. | Real Prizes, Real Winners, Real Fun!</p>
+                <p>Odds displayed: 1:8 win rate | Verified business | Transparent system | Must be 18+ to play</p>
+                <div class="payment-methods" aria-label="Accepted payment methods">
+                    <i class="fab fa-cc-visa" title="Visa"></i>
+                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fab fa-cc-amex" title="American Express"></i>
+                    <i class="fab fa-cc-paypal" title="PayPal"></i>
+                    <i class="fab fa-cc-apple-pay" title="Apple Pay"></i>
+                    <i class="fab fa-google-pay" title="Google Pay"></i>
+                </div>
+                <div class="footer-legal">
+                    <span><i class="fas fa-globe"></i> Worldwide shipping</span>
+                    <span><i class="fas fa-user-check"></i> Age verification required</span>
+                    <span><i class="fas fa-balance-scale"></i> Gambling license: GL-2024-98765</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Win Notification (Hidden by default) -->
+    <div id="winNotification" class="win-notification" role="alert" aria-live="polite" hidden>
+        <div class="notification-content">
+            <div class="notification-icon">🎉</div>
+            <div class="notification-text">
+                <h4>Congratulations!</h4>
+                <p>You won <span id="wonPrize">iPhone 17</span>!</p>
+                <small>Value: <span id="wonValue">$1,299</span></small>
+            </div>
+            <a href="profile.html" class="notification-btn">Claim Now</a>
+            <button class="notification-close" aria-label="Close notification">&times;</button>
+        </div>
+    </div>
+
+    <!-- Login Modal (Hidden by default) -->
+    <div id="loginModal" class="modal" role="dialog" aria-labelledby="modalTitle" hidden>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <h2 id="modalTitle"><i class="fas fa-sign-in-alt"></i> Login to TrustCade</h2>
+            <form id="quickLoginForm">
+                <input type="email" placeholder="Email Address" required aria-label="Email address">
+                <input type="password" placeholder="Password" required aria-label="Password">
+                <button type="submit" class="spin-btn">Login</button>
+            </form>
+            <div class="login-options">
+                <button class="login-option-btn">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+                <button class="login-option-btn">
+                    <i class="fab fa-apple"></i> Continue with Apple
+                </button>
+            </div>
+            <p class="modal-footer">
+                New user? <a href="register.html">Register here</a> |
+                <a href="forgot-password.html">Forgot password?</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Offline Notification -->
+    <div id="offlineNotification" class="offline-notification" hidden>
+        <i class="fas fa-wifi-slash"></i>
+        <span>You're offline. Some features may not work.</span>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Initialize scripts -->
+    <script>
+        // Simple initialization for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 300);
+                }, 500);
+            }
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('active');
+                });
+                
+                if (mobileMenuClose) {
+                    mobileMenuClose.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                    });
+                }
+            }
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                });
+                
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+        
+        // Helper functions
+        function scrollToSpin() {
+            document.getElementById('spin').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function viewPrizeDetails() {
+            // This would normally open a modal or navigate to details page
+            alert('Prize details would be shown here. In a real app, this would open a detailed view.');
+        }
+    </script>
+</body>
+</html>
