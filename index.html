@@ -38,7 +38,7 @@
             overflow-x: hidden;
         }
         
-        /* Loading screen */
+        /* Loading screen - FIXED TO AUTO-HIDE */
         #loadingScreen {
             position: fixed;
             top: 0;
@@ -385,7 +385,7 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
+    <!-- Loading Screen - Will auto-hide -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner">
             <i class="fas fa-gift fa-spin"></i>
@@ -609,6 +609,7 @@
                 <div class="prize-item"><i class="fas fa-money-bill"></i> Cash</div>
                 <div class="prize-item"><i class="fas fa-gift-card"></i> Gift Cards</div>
                 <div class="prize-item"><i class="fas fa-headphones"></i> PlayStation 5 pro</div>
+            </div>
         </section>
     </main>
 
@@ -664,20 +665,42 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
+    <!-- JavaScript - FIXED VERSION -->
     <script>
         // ========================
-        // MOBILE SPIN WHEEL
+        // CRITICAL FIX: Hide loading screen immediately
+        // ========================
+        
+        // Method 1: Hide loading screen right away
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 300);
+                console.log('Loading screen hidden successfully');
+            }
+        }
+
+        // Hide immediately when script loads
+        hideLoadingScreen();
+
+        // Backup: Hide after 2 seconds no matter what
+        setTimeout(hideLoadingScreen, 2000);
+
+        // ========================
+        // MOBILE SPIN WHEEL - KEEPING YOUR PRIZE CHANGES
         // ========================
         class SpinWheel {
             constructor() {
                 this.wheel = document.getElementById('wheel');
                 this.spinButton = document.getElementById('spinButton');
                 this.resultDisplay = document.getElementById('result');
-                this.prizeDisplay = document.getElementById('prizeDisplay');
+                this.prizeDisplay = document.getElementById('prize-display');
                 this.isSpinning = false;
                 
-                // Prize configuration
+                // Prize configuration - KEEPING YOUR EXACT PRIZE LIST
                 this.prizes = [
                     { name: "PlayStation 5 Pro", color: "#FF6B6B", probability: 10 },
                     { name: "Better Luck Next Time", color: "#4ECDC4", probability: 30 },
@@ -686,10 +709,11 @@
                     { name: "iPhone", color: "#118AB2", probability: 2 },
                     { name: "Gaming PC RTX 4090", color: "#EF476F", probability: 10 },
                     { name: "$1YouTubeeam Wallet", color: "#073B4C", probability: 8 },
-                    { name: "Nintendo Switch OHeadphonesr: "#7209B7", probability: 5 }
+                    { name: "Nintendo Switch OHeadphonesr", color: "#7209B7", probability: 5 }
                 ];
                 
-                this.init();
+                // Initialize after a short delay to ensure DOM is ready
+                setTimeout(() => this.init(), 100);
             }
             
             init() {
@@ -713,6 +737,11 @@
             }
             
             createWheelSegments() {
+                if (!this.wheel) {
+                    console.error('Wheel element not found');
+                    return;
+                }
+                
                 this.wheel.innerHTML = '';
                 const totalProbability = this.prizes.reduce((sum, prize) => sum + prize.probability, 0);
                 let currentAngle = 0;
@@ -753,25 +782,29 @@
             
             showPrize(prize) {
                 // Show in result display
-                this.resultDisplay.innerHTML = `
-                    <div style="background: ${prize.color}; color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                        <h3 style="margin: 0 0 10px 0;">🎉 YOU WON! 🎉</h3>
-                        <p style="font-size: 24px; font-weight: bold; margin: 0;">${prize.name}</p>
-                    </div>
-                `;
+                if (this.resultDisplay) {
+                    this.resultDisplay.innerHTML = `
+                        <div style="background: ${prize.color}; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                            <h3 style="margin: 0 0 10px 0;">🎉 YOU WON! 🎉</h3>
+                            <p style="font-size: 24px; font-weight: bold; margin: 0;">${prize.name}</p>
+                        </div>
+                    `;
+                }
                 
                 // Show in prize display
-                this.prizeDisplay.innerHTML = `
-                    <div style="text-align: center;">
-                        <h4>🎁 Prize Details</h4>
-                        <p><strong>Prize:</strong> ${prize.name}</p>
-                        <p><strong>Status:</strong> Ready to Claim</p>
-                        <button onclick="claimPrize('${prize.name}')" 
-                                style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 25px; margin-top: 10px; cursor: pointer;">
-                            📲 CLAIM PRIZE
-                        </button>
-                    </div>
-                `;
+                if (this.prizeDisplay) {
+                    this.prizeDisplay.innerHTML = `
+                        <div style="text-align: center;">
+                            <h4>🎁 Prize Details</h4>
+                            <p><strong>Prize:</strong> ${prize.name}</p>
+                            <p><strong>Status:</strong> Ready to Claim</p>
+                            <button onclick="claimPrize('${prize.name.replace(/'/g, "\\'")}')" 
+                                    style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 25px; margin-top: 10px; cursor: pointer;">
+                                📲 CLAIM PRIZE
+                            </button>
+                        </div>
+                    `;
+                }
                 
                 // Show notification
                 this.showNotification(prize);
@@ -784,11 +817,17 @@
             
             showNotification(prize) {
                 const notification = document.getElementById('winNotification');
-                document.getElementById('wonPrize').textContent = prize.name;
-                document.getElementById('wonValue').textContent = prize.name.includes('iPhone') ? '$1,299' : 
-                                                                  prize.name.includes('Amazon') ? '$10' : 
-                                                                  prize.name.includes('Starbucks') ? '$5' : 
-                                                                  prize.name.includes('Steam') ? '$20' : 'Free';
+                if (!notification) return;
+                
+                const wonPrize = document.getElementById('wonPrize');
+                const wonValue = document.getElementById('wonValue');
+                
+                if (wonPrize) wonPrize.textContent = prize.name;
+                if (wonValue) {
+                    wonValue.textContent = prize.name.includes('iPhone') ? '$1,299' : 
+                                          prize.name.includes('PlayStation') ? '$499' : 
+                                          prize.name.includes('Gaming PC') ? '$2,000' : 'Free';
+                }
                 
                 notification.hidden = false;
                 
@@ -823,7 +862,11 @@
                     this.isSpinning = false;
                     this.spinButton.disabled = false;
                     this.spinButton.innerHTML = '<i class="fas fa-redo"></i> SPIN AGAIN';
-                    this.spinButton.querySelector('.btn-subtext').textContent = 'Next spin in 24h';
+                    
+                    const btnSubtext = this.spinButton.querySelector('.btn-subtext');
+                    if (btnSubtext) {
+                        btnSubtext.textContent = 'Next spin in 24h';
+                    }
                     
                     this.showPrize(prize);
                     
@@ -847,14 +890,22 @@
                 let spinsToday = parseInt(localStorage.getItem('spinsToday') || '24832');
                 spinsToday++;
                 localStorage.setItem('spinsToday', spinsToday.toString());
-                document.getElementById('spinsToday').textContent = spinsToday.toLocaleString();
+                
+                const spinsTodayEl = document.getElementById('spinsToday');
+                if (spinsTodayEl) {
+                    spinsTodayEl.textContent = spinsToday.toLocaleString();
+                }
                 
                 // Update wins counter (with probability)
                 if (Math.random() > 0.7) { // 30% chance to count as win
                     let winsToday = parseInt(localStorage.getItem('winsToday') || '3104');
                     winsToday++;
                     localStorage.setItem('winsToday', winsToday.toString());
-                    document.getElementById('winsToday').textContent = winsToday.toLocaleString();
+                    
+                    const winsTodayEl = document.getElementById('winsToday');
+                    if (winsTodayEl) {
+                        winsTodayEl.textContent = winsToday.toLocaleString();
+                    }
                 }
             }
             
@@ -872,16 +923,24 @@
                 
                 if (hoursDiff >= 24) {
                     this.spinButton.disabled = false;
-                    this.spinButton.querySelector('.btn-subtext').textContent = 'Free spin available!';
+                    const btnSubtext = this.spinButton.querySelector('.btn-subtext');
+                    if (btnSubtext) {
+                        btnSubtext.textContent = 'Free spin available!';
+                    }
                 } else {
                     this.spinButton.disabled = true;
                     const hoursLeft = 24 - Math.floor(hoursDiff);
-                    this.spinButton.querySelector('.btn-subtext').textContent = `Next spin in ${hoursLeft}h`;
+                    const btnSubtext = this.spinButton.querySelector('.btn-subtext');
+                    if (btnSubtext) {
+                        btnSubtext.textContent = `Next spin in ${hoursLeft}h`;
+                    }
                 }
             }
             
             setupEventListeners() {
-                this.spinButton.addEventListener('click', () => this.spin());
+                if (this.spinButton) {
+                    this.spinButton.addEventListener('click', () => this.spin());
+                }
             }
         }
         
@@ -898,9 +957,13 @@
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
             
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            
+            if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
+            if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+            if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
         }
         
         // ========================
@@ -915,6 +978,8 @@
             ];
             
             const grid = document.getElementById('recentWinnersGrid');
+            if (!grid) return;
+            
             grid.innerHTML = '';
             
             winners.forEach(winner => {
@@ -944,13 +1009,18 @@
         }
         
         function scrollToSpin() {
-            document.getElementById('spin').scrollIntoView({ behavior: 'smooth' });
+            const spinSection = document.getElementById('spin');
+            if (spinSection) {
+                spinSection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
         
         // ========================
         // INITIALIZATION
         // ========================
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializeApp() {
+            console.log('Initializing TrustCade...');
+            
             // Initialize spin wheel
             const wheel = new SpinWheel();
             
@@ -961,31 +1031,32 @@
             updateCountdown();
             setInterval(updateCountdown, 1000);
             
-            // Hide loading screen
-            setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                }, 300);
-            }, 1000);
-            
-            // Mobile menu
+            // Mobile menu setup
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.add('active');
-            });
-            
-            mobileMenuClose.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-            });
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.add('active');
+                });
+                
+                if (mobileMenuClose) {
+                    mobileMenuClose.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                    });
+                }
+            }
             
             // Login modal
-            document.getElementById('loginBtn').addEventListener('click', () => {
-                document.getElementById('loginModal').hidden = false;
-            });
+            const loginBtn = document.getElementById('loginBtn');
+            const loginModal = document.getElementById('loginModal');
+            
+            if (loginBtn && loginModal) {
+                loginBtn.addEventListener('click', () => {
+                    loginModal.hidden = false;
+                });
+            }
             
             // Close modal when clicking outside
             window.addEventListener('click', (e) => {
@@ -996,49 +1067,35 @@
             });
             
             // Quick login form
-            document.getElementById('quickLoginForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                if (email && password) {
-                    alert('Login successful!');
-                    document.getElementById('loginModal').hidden = true;
-                } else {
-                    alert('Please enter email and password');
-                }
-            });
-            
-            // Back to top functionality
-            window.addEventListener('scroll', () => {
-                const backToTop = document.createElement('button');
-                backToTop.id = 'backToTop';
-                backToTop.innerHTML = '<i class="fas fa-chevron-up"></i>';
-                backToTop.style.position = 'fixed';
-                backToTop.style.bottom = '20px';
-                backToTop.style.right = '20px';
-                backToTop.style.padding = '15px';
-                backToTop.style.borderRadius = '50%';
-                backToTop.style.background = '#4CAF50';
-                backToTop.style.color = 'white';
-                backToTop.style.border = 'none';
-                backToTop.style.cursor = 'pointer';
-                backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-                backToTop.style.zIndex = '100';
-                
-                backToTop.addEventListener('click', () => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+            const quickLoginForm = document.getElementById('quickLoginForm');
+            if (quickLoginForm) {
+                quickLoginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('loginEmail');
+                    const password = document.getElementById('loginPassword');
+                    
+                    if (email && password && email.value && password.value) {
+                        alert('Login successful!');
+                        document.getElementById('loginModal').hidden = true;
+                    } else {
+                        alert('Please enter email and password');
+                    }
                 });
-                
-                // Remove existing button if any
-                const existingBtn = document.getElementById('backToTop');
-                if (existingBtn) existingBtn.remove();
-                
-                document.body.appendChild(backToTop);
-            });
+            }
             
-            console.log('TrustCade loaded successfully!');
-        });
+            console.log('TrustCade initialized successfully!');
+        }
+        
+        // Start initialization after page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            // DOM is already ready
+            setTimeout(initializeApp, 500);
+        }
+        
+        // Backup initialization after 3 seconds
+        setTimeout(initializeApp, 3000);
     </script>
 </body>
 </html>
