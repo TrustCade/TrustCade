@@ -2,46 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TrustCade - Spin & Win Real Prizes</title>
-    <meta name="description" content="Spin daily and win real prizes! iPhone 17, PS5, cash prizes, and more. Free daily spin, verified winners, secure platform.">
+    <meta name="description" content="Spin daily and win real prizes! iPhone, PS5, cash prizes, and more. Free daily spin, verified winners, secure platform.">
     <meta name="keywords" content="spin wheel, win prizes, daily spin, free prizes, iPhone, PS5, cash prizes">
     
     <!-- Open Graph for Social Sharing -->
     <meta property="og:title" content="TrustCade - Spin & Win Real Prizes">
-    <meta property="og:description" content="Win iPhone 17, PS5, cash prizes and more with daily free spins!">
+    <meta property="og:description" content="Win iPhone, PS5, cash prizes and more with daily free spins!">
     <meta property="og:image" content="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80">
-    <meta property="og:url" content="https://trustcade.com">
+    <meta property="og:url" content="https://trustcade.github.io/TrustCade">
     
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-    <link rel="manifest" href="assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Preload critical images -->
-    <link rel="preload" href="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" as="image">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://trustcade.com">
+    <!-- Critical Inline CSS for Mobile -->
     <style>
-        /* Additional inline styles for spin wheel */
-        .wheel-container {
-            position: relative;
-            width: 400px;
-            height: 400px;
-            margin: 0 auto;
+        /* Critical styles for immediate rendering */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
         }
         
-        #wheelCanvas {
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Loading screen */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            transition: transform 5s cubic-bezier(0.2, 0.8, 0.3, 1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s;
+        }
+        
+        .loading-spinner {
+            font-size: 60px;
+            color: white;
+            margin-bottom: 20px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo-link {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-link h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #4CAF50;
+        }
+        
+        .tagline {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Wheel Container - FIXED FOR MOBILE */
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            max-width: 90vw;
+        }
+        
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 4s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+        
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .wheel-segment span {
+            position: absolute;
+            left: -100%;
+            width: 200%;
+            text-align: center;
+            top: 30px;
+            transform-origin: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         
         .spin-pointer {
@@ -54,24 +154,158 @@
             z-index: 10;
         }
         
-        .wheel-prizes {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
+        /* Prize Display - CRITICAL FIX */
+        #result {
+            min-height: 120px;
+            margin: 20px auto;
+            padding: 15px;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
-        .prize-indicator {
-            background: var(--prize-color, #4ECDC4);
+        #prize-display {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px dashed #4CAF50;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Buttons - Mobile Optimized */
+        #spin-button {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 600;
+            border: none;
+            padding: 18px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            min-width: 200px;
+            min-height: 60px;
+            touch-action: manipulation;
+        }
+        
+        #spin-button:active {
+            transform: scale(0.95);
+        }
+        
+        #spin-button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+            z-index: 1001;
+            transition: right 0.3s;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        /* Main content */
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .prize-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Trust badges */
+        .trust-badges {
+            background: white;
+            padding: 15px;
+            margin: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
             font-size: 14px;
         }
         
-        /* Enhanced notification */
+        .trust-badges span {
+            background: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Timer */
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+        
+        .time-unit {
+            background: #2d3748;
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 50px;
+            text-align: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        /* Winners grid */
+        .winners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .winner-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Footer */
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+        
+        /* Win Notification */
         .win-notification {
             position: fixed;
             top: 100px;
@@ -91,62 +325,62 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        .notification-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .wheel-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            #spin-button {
+                padding: 16px 32px;
+                font-size: 18px;
+                min-width: 180px;
+                min-height: 56px;
+            }
+            
+            .wheel-segment span {
+                font-size: 10px;
+                top: 25px;
+            }
+            
+            .winners-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-unit {
+                min-width: 40px;
+                font-size: 16px;
+                padding: 8px;
+            }
+            
+            #result {
+                margin: 15px 10px;
+                padding: 10px;
+            }
+            
+            #prize-display {
+                margin: 15px 10px;
+                padding: 15px;
+            }
         }
         
-        .notification-icon {
-            font-size: 40px;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* Timer enhancements */
-        .timer {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            font-size: 32px;
-            font-weight: 700;
-            margin: 20px 0;
-        }
-        
-        .time-unit {
-            background: #2d3748;
-            padding: 15px;
-            border-radius: 10px;
-            min-width: 70px;
-            text-align: center;
-            color: white;
-        }
-        
-        .time-unit small {
-            display: block;
-            font-size: 12px;
-            font-weight: 400;
-            margin-top: 5px;
-            color: #a0aec0;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4ade80, #3b82f6);
-            width: 0%;
-            transition: width 1s linear;
+        @media (max-width: 480px) {
+            .wheel-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            #spin-button {
+                padding: 14px 28px;
+                font-size: 16px;
+                min-width: 160px;
+                min-height: 52px;
+            }
+            
+            .logo-link h1 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -233,14 +467,11 @@
             </div>
             <div class="prize-card">
                 <div class="prize-image">
-                    <img src="https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" 
-                         alt="Nintendo Switch OLED with games" 
-                         loading="lazy">
                     <div class="prize-badge">GRAND PRIZE</div>
                 </div>
                 <div class="prize-info">
-                    <h3>$500 Nintendo Switch OLED + 5 Games</h3>
-                    <p class="prize-description">Limited edition with Mario Kart, Zelda, and 3 popular games included</p>
+                    <h3>Nintendo Switch OLED + 5 Games</h3>
+                    <p class="prize-description">Limited edition with popular games included</p>
                     <div class="prize-details">
                         <div class="detail">
                             <i class="fas fa-tag"></i>
@@ -254,24 +485,17 @@
                             <i class="fas fa-gift"></i>
                             <span>Available: <strong>Now</strong></span>
                         </div>
-                        <div class="detail">
-                            <i class="fas fa-users"></i>
-                            <span>Entries: <strong>2,543</strong></span>
-                        </div>
                     </div>
                     <div class="prize-action">
                         <button class="btn-spin-action" onclick="scrollToSpin()">
                             <i class="fas fa-redo"></i> Spin to Win!
-                        </button>
-                        <button class="btn-secondary" onclick="viewPrizeDetails()">
-                            <i class="fas fa-info-circle"></i> Details
                         </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Spin Wheel Section -->
+        <!-- SPIN WHEEL SECTION - CRITICAL -->
         <section class="spin-section" id="spin" aria-labelledby="spinWheelTitle">
             <div class="section-header">
                 <h2 id="spinWheelTitle"><i class="fas fa-redo"></i> DAILY SPIN WHEEL</h2>
@@ -279,12 +503,13 @@
             </div>
             
             <div class="spin-container">
+                <!-- WHEEL CONTAINER - SIMPLIFIED FOR MOBILE -->
                 <div class="wheel-container">
-                    <div class="wheel-wrapper">
-                        <canvas id="wheelCanvas" width="400" height="400"></canvas>
-                        <div class="spin-pointer">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
+                    <div id="wheel">
+                        <!-- Wheel segments will be created by JavaScript -->
+                    </div>
+                    <div class="spin-pointer">
+                        <i class="fas fa-caret-down"></i>
                     </div>
                 </div>
                 
@@ -308,18 +533,25 @@
                                 <small>Seconds</small>
                             </div>
                         </div>
-                        <div class="timer-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="spinProgress"></div>
-                            </div>
-                            <span class="progress-text">Next spin available at <span id="nextSpinTime">12:00 PM</span></span>
-                        </div>
                     </div>
                     
+                    <!-- SPIN BUTTON - FIXED -->
                     <button class="spin-btn" id="spinButton">
                         <i class="fas fa-redo"></i> SPIN NOW
                         <span class="btn-subtext">Free spin available!</span>
                     </button>
+                    
+                    <!-- RESULT DISPLAY - MUST EXIST FOR PRIZES TO SHOW -->
+                    <div id="result">
+                        <!-- Prize will appear here after spin -->
+                        <p style="color: #888;">Spin the wheel to see what you win!</p>
+                    </div>
+                    
+                    <!-- PRIZE DETAILS DISPLAY -->
+                    <div id="prize-display">
+                        <!-- Prize details will appear here -->
+                        <p style="color: #aaa; text-align: center;">Your prize details will appear here</p>
+                    </div>
                     
                     <div class="spin-stats">
                         <div class="stat-item">
@@ -331,106 +563,52 @@
                             <span>Wins today: <strong id="winsToday">3,104</strong></span>
                         </div>
                     </div>
-                    
-                    <div class="spin-info">
-                        <p><i class="fas fa-info-circle"></i> 1 free spin every 24 hours</p>
-                        <p><i class="fas fa-gift"></i> Win real prizes instantly</p>
-                        <p><i class="fas fa-user-check"></i> Login required to claim prizes</p>
-                        <p><i class="fas fa-sync-alt"></i> Additional spins available for purchase</p>
-                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Registration Prompt -->
-        <section class="registration-prompt" aria-labelledby="regPromptTitle">
+        <section class="registration-prompt">
             <div class="reg-card">
-                <div class="reg-icon">
-                    <i class="fas fa-gift"></i>
-                </div>
                 <div class="reg-content">
-                    <h3 id="regPromptTitle"><i class="fas fa-shield-alt"></i> Verify with $100 Gift Card</h3>
-                    <p>Register with a Steam/Apple gift card to unlock prize claiming and participate in grand prize draws</p>
-                    <div class="reg-benefits">
-                        <span><i class="fas fa-check"></i> Claim unlimited prizes</span>
-                        <span><i class="fas fa-check"></i> Join grand prize draws</span>
-                        <span><i class="fas fa-check"></i> Priority shipping</span>
-                        <span><i class="fas fa-check"></i> Verified badge</span>
-                        <span><i class="fas fa-check"></i> Extra daily spin</span>
-                        <span><i class="fas fa-check"></i> Higher win chances</span>
-                    </div>
+                    <h3><i class="fas fa-shield-alt"></i> Claim Your Prizes</h3>
+                    <p>Login or register to claim your prizes and track your wins</p>
                     <div class="reg-actions">
                         <a href="register.html" class="btn-register">
                             <i class="fas fa-user-plus"></i> Register Now
                         </a>
                         <a href="login.html" class="btn-login-small">
-                            <i class="fas fa-sign-in-alt"></i> Already have account?
+                            <i class="fas fa-sign-in-alt"></i> Login
                         </a>
-                    </div>
-                    <div class="reg-note">
-                        <p><i class="fas fa-lock"></i> Your gift card balance remains fully usable after verification</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Recent Winners -->
-        <section class="winners-section" aria-labelledby="winnersTitle">
+        <section class="winners-section">
             <div class="section-header">
-                <h2 id="winnersTitle"><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
-                <a href="winners.html" class="view-all-link">View All Winners <i class="fas fa-arrow-right"></i></a>
+                <h2><i class="fas fa-trophy"></i> RECENT WINNERS</h2>
+                <a href="winners.html" class="view-all-link">View All <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="winners-grid" id="recentWinnersGrid">
                 <!-- Winners loaded via JavaScript -->
             </div>
-            <div class="section-footer">
-                <a href="winners.html" class="btn-view-all">
-                    <i class="fas fa-users"></i> View All 5,247+ Winners
-                </a>
-            </div>
         </section>
 
         <!-- Prize Gallery -->
-        <section class="prize-gallery" id="prizes" aria-labelledby="prizesTitle">
+        <section class="prize-gallery" id="prizes">
             <div class="section-header">
-                <h2 id="prizesTitle"><i class="fas fa-gifts"></i> WINNING PRIZES</h2>
-                <p class="section-subtitle">Amazing prizes you can win right now</p>
+                <h2><i class="fas fa-gifts"></i> WINNING PRIZES</h2>
+                <p class="section-subtitle">Real prizes you can win today</p>
             </div>
             <div class="prizes-grid">
-                <div class="prize-category">
-                    <h3><i class="fas fa-mobile-alt"></i> Electronics</h3>
-                    <div class="category-prizes">
-                        <span class="prize-item">iPhone 17 Pro Max</span>
-                        <span class="prize-item">Samsung Galaxy S24</span>
-                        <span class="prize-item">MacBook Pro M3</span>
-                        <span class="prize-item">iPad Pro 12.9"</span>
-                        <span class="prize-item">AirPods Pro 2</span>
-                        <span class="prize-item">Apple Watch Ultra</span>
-                    </div>
-                </div>
-                <div class="prize-category">
-                    <h3><i class="fas fa-gamepad"></i> Gaming</h3>
-                    <div class="category-prizes">
-                        <span class="prize-item">PlayStation 5 Pro</span>
-                        <span class="prize-item">Xbox Series X</span>
-                        <span class="prize-item">Nintendo Switch OLED</span>
-                        <span class="prize-item">Gaming PC RTX 4090</span>
-                        <span class="prize-item">VR Headset</span>
-                        <span class="prize-item">Gaming Chair</span>
-                    </div>
-                </div>
-                <div class="prize-category">
-                    <h3><i class="fas fa-money-bill"></i> Cash & Cards</h3>
-                    <div class="category-prizes">
-                        <span class="prize-item">$5,000 Cash</span>
-                        <span class="prize-item">$1,000 Amazon</span>
-                        <span class="prize-item">$500 Steam</span>
-                        <span class="prize-item">$250 Apple</span>
-                        <span class="prize-item">$700 Google</span>
-                        <span class="prize-item">$900 Netflix</span>
-                    </div>
-                </div>
-            </div>
+                <div class="prize-item"><i class="fas fa-mobile-alt"></i> iPhone</div>
+                <div class="prize-item"><i class="fas fa-gamepad"></i> PS5</div>
+                <div class="prize-item"><i class="fas fa-laptop"></i> MacBook</div>
+                <div class="prize-item"><i class="fas fa-money-bill"></i> Cash</div>
+                <div class="prize-item"><i class="fas fa-gift-card"></i> Gift Cards</div>
+                <div class="prize-item"><i class="fas fa-headphones"></i> PlayStation 5 pro</div>
         </section>
     </main>
 
@@ -440,27 +618,14 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3><i class="fas fa-gift"></i> TrustCade</h3>
-                    <p>Your trusted platform for winning real prizes through daily spins. Verified winners, transparent system.</p>
-                    <div class="footer-trust">
-                        <span><i class="fas fa-check-circle"></i> 100% Legit</span>
-                        <span><i class="fas fa-shield-alt"></i> Secure</span>
-                        <span><i class="fas fa-truck"></i> Free Shipping</span>
-                    </div>
+                    <p>Your trusted platform for winning real prizes through daily spins.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <a href="index.html"><i class="fas fa-home"></i> Home</a>
                     <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
-                    <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
-                    <a href="#prizes"><i class="fas fa-gifts"></i> Prizes</a>
-                    <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
-                    <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-envelope"></i> support@trustcade.com</p>
-                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
-                    <p><i class="fas fa-map-marker-alt"></i> 123 Prize Street, NY</p>
+                    <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                    <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -475,10 +640,10 @@
             <div class="notification-icon">🎉</div>
             <div class="notification-text">
                 <h4>Congratulations!</h4>
-                <p>You won <span id="wonPrize">iPhone 17</span>!</p>
+                <p>You won <span id="wonPrize">iPhone</span>!</p>
                 <small>Value: <span id="wonValue">$1,299</span></small>
             </div>
-            <a href="profile.html" class="notification-btn">Claim Now</a>
+            <a href="profile.html" class="notification-btn">Claim</a>
             <button class="notification-close" onclick="document.getElementById('winNotification').hidden = true">&times;</button>
         </div>
     </div>
@@ -487,9 +652,9 @@
     <div id="loginModal" class="modal" hidden>
         <div class="modal-content">
             <button class="modal-close" onclick="document.getElementById('loginModal').hidden = true">&times;</button>
-            <h2><i class="fas fa-sign-in-alt"></i> Login to TrustCade</h2>
-            <form id="quickLoginForm" onsubmit="event.preventDefault(); handleLogin()">
-                <input type="email" placeholder="Email Address" id="loginEmail" required>
+            <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+            <form id="quickLoginForm">
+                <input type="email" placeholder="Email" id="loginEmail" required>
                 <input type="password" placeholder="Password" id="loginPassword" required>
                 <button type="submit" class="spin-btn">Login</button>
             </form>
@@ -499,203 +664,227 @@
         </div>
     </div>
 
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="back-to-top">
-        <i class="fas fa-chevron-up"></i>
-    </button>
-
     <!-- JavaScript -->
     <script>
         // ========================
-        // SPIN WHEEL CLASS
+        // MOBILE SPIN WHEEL
         // ========================
         class SpinWheel {
             constructor() {
-                this.canvas = document.getElementById('wheelCanvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.prizes = [
-                    { name: 'iPhone 17', value: '$1,299', color: '#FF6B6B' },
-                    { name: '$500 Cash', value: '$500', color: '#4ECDC4' },
-                    { name: 'Headphones', value: '$299', color: '#FFD166' },
-                    { name: 'Try Again', value: 'Try Again', color: '#06D6A0' },
-                    { name: 'PS5', value: '$499', color: '#118AB2' },
-                    { name: '$900 Card', value: '$900', color: '#EF476F' },
-                    { name: 'Watch', value: '$399', color: '#073B4C' },
-                    { name: 'MacBook', value: '$1,299', color: '#7209B7' }
-                ];
+                this.wheel = document.getElementById('wheel');
+                this.spinButton = document.getElementById('spinButton');
+                this.resultDisplay = document.getElementById('result');
+                this.prizeDisplay = document.getElementById('prizeDisplay');
                 this.isSpinning = false;
-                this.lastSpinTime = localStorage.getItem('lastSpinTime') || null;
+                
+                // Prize configuration
+                this.prizes = [
+                    { name: "PlayStation 5 Pro", color: "#FF6B6B", probability: 10 },
+                    { name: "Better Luck Next Time", color: "#4ECDC4", probability: 30 },
+                    { name: "iPhone 17 Pro Max", color: "#FFD166", probability: 15 },
+                    { name: "Free Spin Tomorrow", color: "#06D6A0", probability: 20 },
+                    { name: "iPhone", color: "#118AB2", probability: 2 },
+                    { name: "Gaming PC RTX 4090", color: "#EF476F", probability: 10 },
+                    { name: "$1YouTubeeam Wallet", color: "#073B4C", probability: 8 },
+                    { name: "Nintendo Switch OHeadphonesr: "#7209B7", probability: 5 }
+                ];
                 
                 this.init();
             }
             
             init() {
-                this.drawWheel();
+                this.createWheelSegments();
+                this.setupEventListeners();
                 this.updateSpinButton();
                 
-                // Check if user can spin
-                const canSpin = this.canUserSpin();
-                document.getElementById('spinButton').disabled = !canSpin;
+                // Mobile touch optimization
+                this.spinButton.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.spinButton.style.transform = 'scale(0.95)';
+                });
+                
+                this.spinButton.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.spinButton.style.transform = 'scale(1)';
+                    if (!this.isSpinning) {
+                        this.spin();
+                    }
+                });
             }
             
-            drawWheel() {
-                const centerX = this.canvas.width / 2;
-                const centerY = this.canvas.height / 2;
-                const radius = Math.min(centerX, centerY) - 10;
-                const sliceAngle = (2 * Math.PI) / this.prizes.length;
+            createWheelSegments() {
+                this.wheel.innerHTML = '';
+                const totalProbability = this.prizes.reduce((sum, prize) => sum + prize.probability, 0);
+                let currentAngle = 0;
                 
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.prizes.forEach((prize, index) => {
+                    const segment = document.createElement('div');
+                    const angle = (prize.probability / totalProbability) * 360;
+                    
+                    segment.className = 'wheel-segment';
+                    segment.style.backgroundColor = prize.color;
+                    segment.style.transform = `rotate(${currentAngle}deg) skewY(${90 - angle}deg)`;
+                    segment.style.transformOrigin = '0% 0%';
+                    
+                    // Add prize name
+                    const span = document.createElement('span');
+                    span.textContent = prize.name;
+                    span.style.transform = `rotate(${angle/2}deg)`;
+                    segment.appendChild(span);
+                    
+                    this.wheel.appendChild(segment);
+                    currentAngle += angle;
+                });
+            }
+            
+            getRandomPrize() {
+                const total = this.prizes.reduce((sum, prize) => sum + prize.probability, 0);
+                let random = Math.random() * total;
                 
-                // Draw each slice
-                for (let i = 0; i < this.prizes.length; i++) {
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(centerX, centerY);
-                    this.ctx.arc(centerX, centerY, radius, i * sliceAngle, (i + 1) * sliceAngle);
-                    this.ctx.closePath();
-                    
-                    // Fill with color
-                    this.ctx.fillStyle = this.prizes[i].color;
-                    this.ctx.fill();
-                    this.ctx.strokeStyle = '#FFFFFF';
-                    this.ctx.lineWidth = 2;
-                    this.ctx.stroke();
-                    
-                    // Draw text
-                    this.ctx.save();
-                    this.ctx.translate(centerX, centerY);
-                    this.ctx.rotate(i * sliceAngle + sliceAngle / 2);
-                    this.ctx.textAlign = 'right';
-                    this.ctx.fillStyle = '#FFFFFF';
-                    this.ctx.font = 'bold 16px Arial';
-                    this.ctx.fillText(this.prizes[i].name, radius - 20, 5);
-                    this.ctx.restore();
+                for (const prize of this.prizes) {
+                    if (random < prize.probability) {
+                        return prize;
+                    }
+                    random -= prize.probability;
                 }
                 
-                // Draw center circle
-                this.ctx.beginPath();
-                this.ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
-                this.ctx.fillStyle = '#2D3748';
-                this.ctx.fill();
-                this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 3;
-                this.ctx.stroke();
+                return this.prizes[0];
             }
             
-            canUserSpin() {
-                if (!this.lastSpinTime) return true;
+            showPrize(prize) {
+                // Show in result display
+                this.resultDisplay.innerHTML = `
+                    <div style="background: ${prize.color}; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h3 style="margin: 0 0 10px 0;">🎉 YOU WON! 🎉</h3>
+                        <p style="font-size: 24px; font-weight: bold; margin: 0;">${prize.name}</p>
+                    </div>
+                `;
                 
-                const lastSpin = new Date(this.lastSpinTime);
-                const now = new Date();
-                const hoursDiff = (now - lastSpin) / (1000 * 60 * 60);
+                // Show in prize display
+                this.prizeDisplay.innerHTML = `
+                    <div style="text-align: center;">
+                        <h4>🎁 Prize Details</h4>
+                        <p><strong>Prize:</strong> ${prize.name}</p>
+                        <p><strong>Status:</strong> Ready to Claim</p>
+                        <button onclick="claimPrize('${prize.name}')" 
+                                style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 25px; margin-top: 10px; cursor: pointer;">
+                            📲 CLAIM PRIZE
+                        </button>
+                    </div>
+                `;
                 
-                return hoursDiff >= 24;
-            }
-            
-            getTimeUntilNextSpin() {
-                if (!this.lastSpinTime) return { hours: 0, minutes: 0, seconds: 0 };
+                // Show notification
+                this.showNotification(prize);
                 
-                const lastSpin = new Date(this.lastSpinTime);
-                const nextSpin = new Date(lastSpin.getTime() + (24 * 60 * 60 * 1000));
-                const now = new Date();
-                
-                if (now >= nextSpin) return { hours: 0, minutes: 0, seconds: 0 };
-                
-                const diff = nextSpin - now;
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                
-                return { hours, minutes, seconds };
-            }
-            
-            updateSpinButton() {
-                const spinBtn = document.getElementById('spinButton');
-                const { hours, minutes, seconds } = this.getTimeUntilNextSpin();
-                
-                if (hours === 0 && minutes === 0 && seconds === 0) {
-                    spinBtn.disabled = false;
-                    spinBtn.querySelector('.btn-subtext').textContent = 'Free spin available!';
-                } else {
-                    spinBtn.disabled = true;
-                    spinBtn.querySelector('.btn-subtext').textContent = 
-                        `Available in ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                // Haptic feedback for mobile
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
                 }
+            }
+            
+            showNotification(prize) {
+                const notification = document.getElementById('winNotification');
+                document.getElementById('wonPrize').textContent = prize.name;
+                document.getElementById('wonValue').textContent = prize.name.includes('iPhone') ? '$1,299' : 
+                                                                  prize.name.includes('Amazon') ? '$10' : 
+                                                                  prize.name.includes('Starbucks') ? '$5' : 
+                                                                  prize.name.includes('Steam') ? '$20' : 'Free';
+                
+                notification.hidden = false;
+                
+                // Auto-hide after 8 seconds
+                setTimeout(() => {
+                    notification.hidden = true;
+                }, 8000);
             }
             
             spin() {
-                if (this.isSpinning || !this.canUserSpin()) return;
+                if (this.isSpinning) return;
                 
                 this.isSpinning = true;
-                const spinBtn = document.getElementById('spinButton');
-                spinBtn.disabled = true;
-                spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SPINNING...';
+                this.spinButton.disabled = true;
+                this.spinButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SPINNING...';
                 
-                // Random winner selection
-                const winnerIndex = Math.floor(Math.random() * this.prizes.length);
-                const spins = 5 + Math.random() * 3; // 5-8 rotations
-                const totalRotation = spins * 360 + (winnerIndex * (360 / this.prizes.length));
+                // Get random prize
+                const prize = this.getRandomPrize();
                 
-                // Animation
-                let currentRotation = 0;
-                const animate = () => {
-                    currentRotation += 15;
-                    this.canvas.style.transform = `rotate(${currentRotation}deg)`;
-                    
-                    if (currentRotation < totalRotation) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        // Spin complete
-                        this.isSpinning = false;
-                        this.lastSpinTime = new Date().toISOString();
-                        localStorage.setItem('lastSpinTime', this.lastSpinTime);
-                        
-                        // Update UI
-                        spinBtn.innerHTML = '<i class="fas fa-redo"></i> SPIN NOW';
-                        this.updateSpinButton();
-                        this.showResult(this.prizes[winnerIndex]);
-                        
-                        // Update stats
-                        this.updateStats();
-                    }
-                };
+                // Calculate spin animation
+                const prizeIndex = this.prizes.findIndex(p => p.name === prize.name);
+                const segmentAngle = 360 / this.prizes.length;
+                const extraSpins = 5;
+                const targetAngle = (extraSpins * 360) + (prizeIndex * segmentAngle) + Math.random() * segmentAngle;
                 
-                animate();
-            }
-            
-            showResult(prize) {
-                const notification = document.getElementById('winNotification');
-                const prizeElement = document.getElementById('wonPrize');
-                const valueElement = document.getElementById('wonValue');
+                // Start animation
+                this.wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
+                this.wheel.style.transform = `rotate(${targetAngle}deg)`;
                 
-                prizeElement.textContent = prize.name;
-                valueElement.textContent = prize.value;
-                
-                // Show notification
-                notification.hidden = false;
-                
-                // Auto-hide after 10 seconds
+                // Show result after animation
                 setTimeout(() => {
-                    notification.hidden = true;
-                }, 10000);
+                    this.isSpinning = false;
+                    this.spinButton.disabled = false;
+                    this.spinButton.innerHTML = '<i class="fas fa-redo"></i> SPIN AGAIN';
+                    this.spinButton.querySelector('.btn-subtext').textContent = 'Next spin in 24h';
+                    
+                    this.showPrize(prize);
+                    
+                    // Update stats
+                    this.updateStats();
+                    
+                    // Reset wheel position
+                    setTimeout(() => {
+                        this.wheel.style.transition = 'none';
+                        this.wheel.style.transform = 'rotate(0deg)';
+                        setTimeout(() => {
+                            this.wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
+                        }, 50);
+                    }, 1000);
+                    
+                }, 4000);
             }
             
             updateStats() {
-                // Increment spins counter
+                // Update spins counter
                 let spinsToday = parseInt(localStorage.getItem('spinsToday') || '24832');
                 spinsToday++;
                 localStorage.setItem('spinsToday', spinsToday.toString());
                 document.getElementById('spinsToday').textContent = spinsToday.toLocaleString();
                 
-                // Randomly increment wins (12.5% chance)
-                if (Math.random() < 0.125) {
+                // Update wins counter (with probability)
+                if (Math.random() > 0.7) { // 30% chance to count as win
                     let winsToday = parseInt(localStorage.getItem('winsToday') || '3104');
                     winsToday++;
                     localStorage.setItem('winsToday', winsToday.toString());
                     document.getElementById('winsToday').textContent = winsToday.toLocaleString();
                 }
             }
+            
+            updateSpinButton() {
+                // Check if user can spin (24-hour cooldown)
+                const lastSpin = localStorage.getItem('lastSpinTime');
+                if (!lastSpin) {
+                    this.spinButton.disabled = false;
+                    return;
+                }
+                
+                const lastSpinTime = new Date(lastSpin);
+                const now = new Date();
+                const hoursDiff = (now - lastSpinTime) / (1000 * 60 * 60);
+                
+                if (hoursDiff >= 24) {
+                    this.spinButton.disabled = false;
+                    this.spinButton.querySelector('.btn-subtext').textContent = 'Free spin available!';
+                } else {
+                    this.spinButton.disabled = true;
+                    const hoursLeft = 24 - Math.floor(hoursDiff);
+                    this.spinButton.querySelector('.btn-subtext').textContent = `Next spin in ${hoursLeft}h`;
+                }
+            }
+            
+            setupEventListeners() {
+                this.spinButton.addEventListener('click', () => this.spin());
+            }
         }
-
+        
         // ========================
         // COUNTDOWN TIMER
         // ========================
@@ -709,77 +898,61 @@
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
             
-            // Update display
             document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
             document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            
-            // Update progress bar
-            const progress = ((24 * 60 * 60 * 1000 - diff) / (24 * 60 * 60 * 1000)) * 100;
-            document.getElementById('spinProgress').style.width = `${progress}%`;
-            
-            // Update next spin time
-            const nextSpinTime = nextMidnight.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('nextSpinTime').textContent = nextSpinTime;
         }
-
+        
         // ========================
         // WINNERS DISPLAY
         // ========================
         function loadWinners() {
             const winners = [
-                { name: 'LuckyStar23', prize: 'iPhone 17 Pro', time: '2 minutes ago' },
-                { name: 'MikeWins', prize: '$500 Cash', time: '15 minutes ago' },
-                { name: 'SarahG', prize: 'PS5 Pro', time: '1 hour ago' },
-                { name: 'JohnDoe', prize: 'MacBook Pro', time: '3 hours ago' },
-                { name: 'PrizeHunter', prize: '$1,000 Amazon', time: '5 hours ago' },
-                { name: 'WinMaster', prize: 'Apple Watch', time: '8 hours ago' }
+                { name: 'AlexW', prize: 'iPhone', time: '5 min ago' },
+                { name: 'SarahM', prize: 'PlayStation 5 Pro', time: '15 min ago' },
+                { name: 'MikeT', prize: 'PS5', time: '1 hour ago' },
+                { name: 'JennyL', prize: 'Gaming PC RTX 4090', time: '3 hours ago' }
             ];
             
             const grid = document.getElementById('recentWinnersGrid');
             grid.innerHTML = '';
             
             winners.forEach(winner => {
-                const initial = winner.name.charAt(0);
                 const card = document.createElement('div');
                 card.className = 'winner-card';
                 card.innerHTML = `
-                    <div class="winner-avatar">${initial}</div>
-                    <div class="winner-info">
-                        <h4>${winner.name}</h4>
-                        <p class="winner-prize">${winner.prize}</p>
-                        <span class="winner-time">${winner.time}</span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 40px; height: 40px; background: #4CAF50; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            ${winner.name.charAt(0)}
+                        </div>
+                        <div>
+                            <h4 style="margin: 0;">${winner.name}</h4>
+                            <p style="margin: 5px 0; color: #4CAF50; font-weight: bold;">${winner.prize}</p>
+                            <small style="color: #888;">${winner.time}</small>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
-
+        
         // ========================
-        // LOGIN HANDLER
+        // GLOBAL FUNCTIONS
         // ========================
-        function handleLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            // Simple validation (in real app, this would call a backend)
-            if (email && password) {
-                alert('Login successful! In a real app, this would redirect to your profile.');
-                document.getElementById('loginModal').hidden = true;
-            } else {
-                alert('Please enter email and password');
-            }
+        function claimPrize(prizeName) {
+            alert(`🎊 Congratulations!\nYou claimed: ${prizeName}\n\nPrize will be delivered within 24 hours.`);
         }
-
+        
+        function scrollToSpin() {
+            document.getElementById('spin').scrollIntoView({ behavior: 'smooth' });
+        }
+        
         // ========================
         // INITIALIZATION
         // ========================
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize spin wheel
             const wheel = new SpinWheel();
-            
-            // Set up spin button
-            document.getElementById('spinButton').addEventListener('click', () => wheel.spin());
             
             // Load winners
             loadWinners();
@@ -802,7 +975,7 @@
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             
             mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('active');
+                mobileMenu.classList.add('active');
             });
             
             mobileMenuClose.addEventListener('click', () => {
@@ -814,31 +987,58 @@
                 document.getElementById('loginModal').hidden = false;
             });
             
-            // Back to top button
-            const backToTop = document.getElementById('backToTop');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    backToTop.classList.add('visible');
-                } else {
-                    backToTop.classList.remove('visible');
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                const modal = document.getElementById('loginModal');
+                if (e.target === modal) {
+                    modal.hidden = true;
                 }
             });
             
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Quick login form
+            document.getElementById('quickLoginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (email && password) {
+                    alert('Login successful!');
+                    document.getElementById('loginModal').hidden = true;
+                } else {
+                    alert('Please enter email and password');
+                }
             });
+            
+            // Back to top functionality
+            window.addEventListener('scroll', () => {
+                const backToTop = document.createElement('button');
+                backToTop.id = 'backToTop';
+                backToTop.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                backToTop.style.position = 'fixed';
+                backToTop.style.bottom = '20px';
+                backToTop.style.right = '20px';
+                backToTop.style.padding = '15px';
+                backToTop.style.borderRadius = '50%';
+                backToTop.style.background = '#4CAF50';
+                backToTop.style.color = 'white';
+                backToTop.style.border = 'none';
+                backToTop.style.cursor = 'pointer';
+                backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+                backToTop.style.zIndex = '100';
+                
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                
+                // Remove existing button if any
+                const existingBtn = document.getElementById('backToTop');
+                if (existingBtn) existingBtn.remove();
+                
+                document.body.appendChild(backToTop);
+            });
+            
+            console.log('TrustCade loaded successfully!');
         });
-
-        // ========================
-        // HELPER FUNCTIONS
-        // ========================
-        function scrollToSpin() {
-            document.getElementById('spin').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function viewPrizeDetails() {
-            alert('Grand Prize Details:\n\n• Nintendo Switch OLED (Limited Edition)\n• Includes 5 Popular Games\n• Value: $500\n• Worldwide Shipping\n• Winner Announced Daily');
-        }
     </script>
 </body>
-        </html>
+</html>
