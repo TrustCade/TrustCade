@@ -1,50 +1,89 @@
-</style>
-</head>
-<body>
-    <!-- Skip to content for accessibility -->
-    <a href="#main-content" class="skip-to-content" aria-label="Skip to main content">
-        Skip to main content
-    </a>
-    
-    <!-- Loading Overlay -->
-    <div id="loadingScreen">
-        <div class="spinner">
-            <i class="fas fa-user-plus" aria-hidden="true"></i>
-            <p>Creating your account...</p>
-        </div>
-    </div>
-    
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1><i class="fas fa-gift" aria-hidden="true"></i> TrustCade</h1>
-                <p class="tagline">Spin & Win Real Prizes</p>
-            </div>
-            <nav aria-label="Main navigation">
-                <a href="index.html" class="btn-spin" aria-label="Spin the wheel">SPIN NOW</a>
-                <a href="winners.html" aria-label="View winners"><i class="fas fa-trophy" aria-hidden="true"></i> Winners</a>
-                <a href="profile.html" aria-label="Go to profile"><i class="fas fa-user" aria-hidden="true"></i> My Profile</a>
-                <a href="index.html#prizes" aria-label="View prizes">Prizes</a>
-                <a href="login.html" class="btn-login" aria-label="Login to account"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login</a>
-            </nav>
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-                <i class="fas fa-bars" aria-hidden="true"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile menu">
-        <button id="mobileMenuClose" class="mobile-menu-close" aria-label="Close menu">
-            <i class="fas fa-times" aria-hidden="true"></i>
-        </button>
-        <a href="index.html" aria-label="Home page">Home</a>
-        <a href="index.html#spin" aria-label="Spin the wheel">Spin Wheel</a>
-        <a href="winners.html" aria-label="View winners">Winners</a>
-        <a href="profile.html" aria-label="Go to profile">My Profile</a>
-        <a href="index.html#prizes" aria-label="View prizes">Prizes</a>
-        <a href="login.html" aria-label="Login to account">Login</a>
-        <a href="register.html" class="active" aria-current="page">Register</a>
-        <div class="mobile-menu-footer">
-            <p>Need help? <a
+toggleMobileMenu() {
+                document.getElementById('mobileMenu').classList.toggle('active');
+            }
+            
+            validateStep1() {
+                const name = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                
+                if (!name  !email  !password) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                if (!this.isValidEmail(email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
+                if (!this.isStrongPassword(password)) {
+                    alert('Password does not meet requirements');
+                    return;
+                }
+                
+                this.goToStep(2);
+            }
+            
+            validatePassword() {
+                const password = document.getElementById('password').value;
+                const requirements = this.checkPasswordRequirements(password);
+                
+                Object.keys(requirements).forEach(req => {
+                    const element = document.getElementById(req${req.charAt(0).toUpperCase() + req.slice(1)});
+                    if (element) {
+                        element.classList.toggle('valid', requirements[req]);
+                        element.querySelector('i').className = requirements[req] ? 'fas fa-check-circle' : 'fas fa-circle';
+                    }
+                });
+            }
+            
+            checkPasswordRequirements(password) {
+                return {
+                    length: password.length >= 8,
+                    uppercase: /[A-Z]/.test(password),
+                    lowercase: /[a-z]/.test(password),
+                    number: /\d/.test(password),
+                    special: /[^A-Za-z0-9]/.test(password)
+                };
+            }
+            
+            isStrongPassword(password) {
+                const requirements = this.checkPasswordRequirements(password);
+                return Object.values(requirements).every(req => req);
+            }
+            
+            goToStep(stepNumber) {
+                this.currentStep = stepNumber;
+                
+                // Update step indicators
+                document.querySelectorAll('.register-step').forEach(step => {
+                    const stepNum = parseInt(step.dataset.step);
+                    step.classList.remove('active', 'completed');
+                    
+                    if (stepNum < stepNumber) {
+                        step.classList.add('completed');
+                    } else if (stepNum === stepNumber) {
+                        step.classList.add('active');
+                    }
+                });
+                
+                // Update progress bar
+                const progressPercent = (stepNumber / this.totalSteps) * 100;
+                document.getElementById('progressFill').style.width = ${progressPercent}%;
+                document.getElementById('currentStep').textContent = stepNumber;
+                document.getElementById('progressPercent').textContent = ${Math.round(progressPercent)}%;
+            }
+            
+            isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new RegistrationSystem();
+        });
+    </script>
+</body>
+</html>
