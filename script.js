@@ -309,3 +309,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log("TrustCade spin wheel loaded successfully!");
 });
+// DEBUG: Force show a prize for testing
+setTimeout(function() {
+    console.log("DEBUG: Testing prize display...");
+    const testPrize = { name: "$10 Amazon Gift Card", color: "#FF6B6B" };
+    
+    // Try to display prize manually
+    const resultDiv = document.getElementById('result');
+    if (resultDiv) {
+        resultDiv.innerHTML = `<div style="background:${testPrize.color};color:white;padding:20px;border-radius:10px;">
+            🎉 TEST PRIZE: ${testPrize.name}
+        </div>`;
+        console.log("DEBUG: Prize should be visible now");
+    } else {
+        console.error("DEBUG: #result element not found!");
+    }
+}, 3000); // After 3 seconds
