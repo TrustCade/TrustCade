@@ -381,8 +381,8 @@ main {
 
 .wheel-wrapper {
     position: relative;
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
 }
 
 @media (max-width: 480px) {
@@ -458,7 +458,7 @@ main {
 .time-separator {
     color: white;
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 500;
     display: flex;
     align-items: center;
 }
