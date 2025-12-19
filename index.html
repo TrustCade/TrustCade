@@ -80,7 +80,7 @@
             padding: 20px;
         }
         
-        /* WHEEL CONTAINER - FIXED */
+        /* WHEEL CONTAINER */
         .wheel-section {
             background: white;
             border-radius: 20px;
@@ -102,34 +102,32 @@
             font-size: 16px;
         }
         
-        /* WHEEL - FIXED VISIBILITY */
         .wheel-container{
-    position:relative;
-    width:300px;
-    height:300px;
-    margin:30px auto;
-}
+            position:relative;
+            width:300px;
+            height:300px;
+            margin:30px auto;
+        }
         
         #wheel{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    position:relative;
-    overflow:hidden; /* 🔥 FIX */
-    border:10px solid #2c3e50;
-    transition:transform 4s cubic-bezier(.2,.8,.3,1);
-    background:#333;
-}
+            width:100%;
+            height:100%;
+            border-radius:50%;
+            position:relative;
+            overflow:hidden;
+            border:10px solid #2c3e50;
+            transition:transform 4s cubic-bezier(.2,.8,.3,1);
+            background:#333;
+        }
         
-        /* WHEEL SEGMENTS - FIXED */
         .wheel-segment{
-    position:absolute;
-    width:50%;
-    height:50%;
-    top:50%;
-    left:50%;
-    transform-origin:0% 0%;
-}
+            position:absolute;
+            width:50%;
+            height:50%;
+            top:50%;
+            left:50%;
+            transform-origin:0% 0%;
+        }
         
         .wheel-segment-content {
             position: absolute;
@@ -155,7 +153,6 @@
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
         }
         
-        /* SPIN BUTTON - GREEN */
         #spin-button {
             background: linear-gradient(to right, #4CAF50, #45a049);
             color: white;
@@ -191,7 +188,6 @@
             box-shadow: none;
         }
         
-        /* TIMER - FIXED */
         .timer-container {
             background: #2c3e50;
             border-radius: 15px;
@@ -231,7 +227,6 @@
             color: #bdc3c7;
         }
         
-        /* RESULT DISPLAY - GREEN THEME */
         #result {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
@@ -248,7 +243,6 @@
             box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
         }
         
-        /* PRIZE DISPLAY */
         #prize-display {
             background: white;
             border-radius: 15px;
@@ -258,7 +252,6 @@
             text-align: center;
         }
         
-        /* PRIZE GALLERY - GREEN */
         .prize-gallery {
             background: white;
             border-radius: 20px;
@@ -296,7 +289,6 @@
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
         
-        /* FOOTER - GREEN */
         footer {
             background: #2c3e50;
             color: white;
@@ -319,7 +311,6 @@
             font-weight: 500;
         }
         
-        /* WIN NOTIFICATION */
         .win-notification {
             position: fixed;
             top: 20px;
@@ -340,80 +331,31 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .wheel-container {
-                width: 280px;
-                height: 280px;
-            }
-            
-            .wheel-segment-content {
-                font-size: 12px;
-                top: 35px;
-            }
-            
-            #spin-button {
-                padding: 16px 40px;
-                font-size: 20px;
-                min-width: 200px;
-            }
-            
-            .timer {
-                font-size: 28px;
-            }
-            
-            .time-unit {
-                min-width: 70px;
-                padding: 12px;
-            }
-            
-            .prizes-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .wheel-container { width: 280px; height: 280px; }
+            .wheel-segment-content { font-size: 12px; top: 35px; }
+            #spin-button { padding: 16px 40px; font-size: 20px; min-width: 200px; }
+            .timer { font-size: 28px; }
+            .time-unit { min-width: 70px; padding: 12px; }
+            .prizes-grid { grid-template-columns: repeat(2, 1fr); }
         }
         
         @media (max-width: 480px) {
-            .wheel-container {
-                width: 250px;
-                height: 250px;
-            }
-            
-            .wheel-segment-content {
-                font-size: 10px;
-                top: 30px;
-            }
-            
-            #spin-button {
-                padding: 14px 35px;
-                font-size: 18px;
-                min-width: 180px;
-            }
-            
-            .timer {
-                font-size: 24px;
-            }
-            
-            .time-unit {
-                min-width: 60px;
-                padding: 10px;
-            }
-            
-            .prizes-grid {
-                grid-template-columns: 1fr;
-            }
+            .wheel-container { width: 250px; height: 250px; }
+            .wheel-segment-content { font-size: 10px; top: 30px; }
+            #spin-button { padding: 14px 35px; font-size: 18px; min-width: 180px; }
+            .timer { font-size: 24px; }
+            .time-unit { min-width: 60px; padding: 10px; }
+            .prizes-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- NO LOADING SCREEN -->
-
-    <!-- Header -->
     <header>
         <div class="logo">🎁 TrustCade</div>
         <div class="tagline">Spin & Win Real Prizes</div>
     </header>
 
-    <!-- Trust Badges -->
     <div class="trust-badges">
         <div class="trust-badge">✅ 100% Verified</div>
         <div class="trust-badge">🏆 5,247+ Winners</div>
@@ -423,61 +365,41 @@
         <div class="trust-badge">📞 24/7 Support</div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-container">
-        <!-- Spin Wheel Section -->
         <section class="wheel-section">
             <h1 class="wheel-title">🎡 Daily Spin Wheel</h1>
             <p class="wheel-subtitle">Spin once every 24 hours for free!</p>
-            
-            <!-- Wheel Container -->
             <div class="wheel-container">
-                <div id="wheel">
-                    <!-- Wheel segments will be created by JavaScript -->
-                </div>
+                <div id="wheel"></div>
                 <div class="spin-pointer">▼</div>
             </div>
-            
-            <!-- Timer - FIXED -->
+
             <div class="timer-container">
                 <div class="timer-title">⏳ NEXT FREE SPIN IN:</div>
                 <div class="timer" id="countdown">
-                    <div class="time-unit">
-                        <span id="hours">24</span>
-                        <small>HOURS</small>
-                    </div>
+                    <div class="time-unit"><span id="hours">24</span><small>HOURS</small></div>
                     <div class="time-separator">:</div>
-                    <div class="time-unit">
-                        <span id="minutes">00</span>
-                        <small>MINUTES</small>
-                    </div>
+                    <div class="time-unit"><span id="minutes">00</span><small>MINUTES</small></div>
                     <div class="time-separator">:</div>
-                    <div class="time-unit">
-                        <span id="seconds">00</span>
-                        <small>SECONDS</small>
-                    </div>
+                    <div class="time-unit"><span id="seconds">00</span><small>SECONDS</small></div>
                 </div>
             </div>
-            
-            <!-- Spin Button -->
+
             <button id="spin-button">
                 🎯 SPIN NOW
                 <br>
                 <small style="font-size: 14px; font-weight: normal;" id="spin-status">Free spin available!</small>
             </button>
-            
-            <!-- Result Display -->
+
             <div id="result">
                 Spin the wheel to see what you win! 🎉
             </div>
-            
-            <!-- Prize Display -->
+
             <div id="prize-display">
                 <p style="color: #666;">Your prize details will appear here</p>
             </div>
         </section>
 
-        <!-- Prize Gallery - YOUR PRIZES PRESERVED -->
         <section class="prize-gallery">
             <h2>🎁 WINNING PRIZES</h2>
             <p style="text-align: center; color: #666; margin-bottom: 20px;">Real prizes you can win today</p>
@@ -492,7 +414,6 @@
         </section>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>© 2024 TrustCade. All rights reserved.</p>
         <div class="footer-links">
@@ -503,7 +424,6 @@
         <p style="color: #bdc3c7; margin-top: 20px; font-size: 14px;">Your trusted platform for winning real prizes</p>
     </footer>
 
-    <!-- Win Notification -->
     <div id="winNotification" class="win-notification">
         <div style="text-align: center;">
             <div style="font-size: 40px; margin-bottom: 10px;">🎉</div>
@@ -517,11 +437,12 @@
         </div>
     </div>
 
-    <!-- JavaScript - COMPLETELY FIXED -->
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+
+    <!-- JavaScript -->
     <script>
-        // ========================
-        // FIXED WHEEL SYSTEM
-        // ========================
+        // --- Spin Wheel Class ---
         class SpinWheel {
             constructor() {
                 this.wheel = document.getElementById('wheel');
@@ -530,8 +451,7 @@
                 this.prizeDisplay = document.getElementById('prize-display');
                 this.spinStatus = document.getElementById('spin-status');
                 this.isSpinning = false;
-                
-                // Your prize configuration - EXACTLY AS YOU WANT
+
                 this.prizes = [
                     { name: "PlayStation 5 Pro", color: "#FF6B6B", value: "$499" },
                     { name: "Better Luck Next Time", color: "#4ECDC4", value: "Try Again" },
@@ -542,285 +462,21 @@
                     { name: "$1,000 Gift Card", color: "#073B4C", value: "$1,000" },
                     { name: "Nintendo Switch OLED", color: "#7209B7", value: "$350" }
                 ];
-                
+
                 this.colors = this.prizes.map(p => p.color);
                 this.lastSpinTime = localStorage.getItem('lastSpinTime');
                 this.cooldownHours = 24;
-                
+
                 this.init();
             }
-            
+
             init() {
-                console.log("Initializing spin wheel...");
                 this.createWheel();
                 this.setupEventListeners();
                 this.updateButtonState();
                 this.startTimer();
             }
-            
+
             createWheel() {
-                if (!this.wheel) {
-                    console.error("Wheel element not found!");
-                    return;
-                }
-                
                 this.wheel.innerHTML = '';
-                const sliceCount = this.prizes.length;
-                const sliceAngle = 360 / sliceCount;
-                
-                for (let i = 0; i < sliceCount; i++) {
-                    const slice = document.createElement('div');
-                    slice.className = 'wheel-segment';
-                    
-                    // Calculate rotation for this slice
-                    const rotate = i * sliceAngle;
-                    const skew = 90 - sliceAngle;
-                    
-                    slice.style.transform = `rotate(${rotate}deg) skewY(${skew}deg)`;
-                    slice.style.backgroundColor = this.colors[i];
-                    
-                    // Add text
-                    const textDiv = document.createElement('div');
-                    textDiv.className = 'wheel-segment-content';
-                    textDiv.style.transform = `rotate(${sliceAngle/2}deg)`;
-                    textDiv.textContent = this.prizes[i].name;
-                    
-                    slice.appendChild(textDiv);
-                    this.wheel.appendChild(slice);
-                }
-                
-                console.log(`Wheel created with ${sliceCount} segments`);
-            }
-            
-            setupEventListeners() {
-                // Click event
-                this.spinButton.addEventListener('click', () => {
-                    if (!this.isSpinning && !this.spinButton.disabled) {
-                        this.spin();
-                    }
-                });
-                
-                // Touch events for mobile
-                this.spinButton.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    if (!this.isSpinning && !this.spinButton.disabled) {
-                        this.spinButton.style.transform = 'scale(0.95)';
-                    }
-                });
-                
-                this.spinButton.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    this.spinButton.style.transform = 'scale(1)';
-                    if (!this.isSpinning && !this.spinButton.disabled) {
-                        this.spin();
-                    }
-                });
-            }
-            
-            canSpin() {
-                if (!this.lastSpinTime) return true;
-                
-                const lastSpin = new Date(this.lastSpinTime);
-                const now = new Date();
-                const hoursDiff = (now - lastSpin) / (1000 * 60 * 60);
-                
-                return hoursDiff >= this.cooldownHours;
-            }
-            
-            getTimeUntilNextSpin() {
-                if (!this.lastSpinTime) {
-                    return { hours: 0, minutes: 0, seconds: 0 };
-                }
-                
-                const lastSpin = new Date(this.lastSpinTime);
-                const nextSpin = new Date(lastSpin.getTime() + (this.cooldownHours * 60 * 60 * 1000));
-                const now = new Date();
-                
-                if (now >= nextSpin) {
-                    return { hours: 0, minutes: 0, seconds: 0 };
-                }
-                
-                const diff = nextSpin - now;
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                
-                return { hours, minutes, seconds };
-            }
-            
-            updateButtonState() {
-                const canSpinNow = this.canSpin();
-                this.spinButton.disabled = !canSpinNow;
-                
-                if (canSpinNow) {
-                    this.spinStatus.textContent = "Free spin available!";
-                    this.spinStatus.style.color = "#e0f7e0";
-                } else {
-                    const time = this.getTimeUntilNextSpin();
-                    this.spinStatus.textContent = `Next spin in ${time.hours}h ${time.minutes}m`;
-                    this.spinStatus.style.color = "#ffcccc";
-                }
-            }
-            
-            startTimer() {
-                // Update immediately
-                this.updateTimerDisplay();
-                
-                // Update every second
-                setInterval(() => {
-                    this.updateTimerDisplay();
-                    this.updateButtonState();
-                }, 1000);
-            }
-            
-            updateTimerDisplay() {
-                const time = this.getTimeUntilNextSpin();
-                
-                // Update timer display
-                document.getElementById('hours').textContent = time.hours.toString().padStart(2, '0');
-                document.getElementById('minutes').textContent = time.minutes.toString().padStart(2, '0');
-                document.getElementById('seconds').textContent = time.seconds.toString().padStart(2, '0');
-                
-                // Update button status
-                if (time.hours === 0 && time.minutes === 0 && time.seconds === 0) {
-                    this.spinButton.disabled = false;
-                    this.spinStatus.textContent = "Free spin available!";
-                } else {
-                    this.spinButton.disabled = true;
-                    this.spinStatus.textContent = `Next spin in ${time.hours}h ${time.minutes}m`;
-                }
-            }
-            
-            spin() {
-                if (this.isSpinning || this.spinButton.disabled) return;
-                
-                console.log("Starting spin...");
-                this.isSpinning = true;
-                this.spinButton.disabled = true;
-                this.spinButton.innerHTML = '🌀 SPINNING...';
-                
-                // Randomly select a winner
-                const winnerIndex = Math.floor(Math.random() * this.prizes.length);
-                const winner = this.prizes[winnerIndex];
-                
-                console.log(`Selected winner: ${winner.name}`);
-                
-                // Animation: 5 full spins + offset to winning segment
-                const fullSpins = 5;
-                const segmentAngle = 360 / this.prizes.length;
-                const targetRotation = (fullSpins * 360) + (winnerIndex * segmentAngle) + Math.random() * segmentAngle;
-                
-                // Apply spin animation
-                this.wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
-                this.wheel.style.transform = `rotate(${targetRotation}deg)`;
-                
-                // After spin completes
-                setTimeout(() => {
-                    this.isSpinning = false;
-                    
-                    // Save spin time
-                    this.lastSpinTime = new Date().toISOString();
-                    localStorage.setItem('lastSpinTime', this.lastSpinTime);
-                    
-                    // Update UI
-                    this.showResult(winner);
-                    this.updateButtonState();
-                    
-                    // Reset button text
-                    this.spinButton.innerHTML = '🎯 SPIN NOW<br><small style="font-size: 14px; font-weight: normal;" id="spin-status">Next spin in 24h</small>';
-                    
-                    // Reset wheel after a moment
-                    setTimeout(() => {
-                        this.wheel.style.transition = 'none';
-                        this.wheel.style.transform = 'rotate(0deg)';
-                        setTimeout(() => {
-                            this.wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
-                        }, 50);
-                    }, 1000);
-                    
-                }, 4000);
-            }
-            
-            showResult(prize) {
-                // Update result display
-                this.resultDisplay.innerHTML = `
-                    <div style="text-align: center;">
-                        <div style="font-size: 30px; margin-bottom: 10px;">🎉</div>
-                        <h3 style="margin: 10px 0;">YOU WON!</h3>
-                        <p style="font-size: 24px; font-weight: bold;">${prize.name}</p>
-                        <p style="margin-top: 10px; font-size: 18px;">Value: ${prize.value}</p>
-                    </div>
-                `;
-                
-                // Update prize details
-                this.prizeDisplay.innerHTML = `
-                    <div style="text-align: center;">
-                        <h4 style="color: #4CAF50; margin-bottom: 15px;">🎁 Prize Details</h4>
-                        <p><strong>Prize:</strong> ${prize.name}</p>
-                        <p><strong>Value:</strong> ${prize.value}</p>
-                        <p><strong>Status:</strong> Ready to claim!</p>
-                        <button onclick="claimPrize('${prize.name.replace(/'/g, "\\'")}')" 
-                                style="background: #4CAF50; color: white; border: none; padding: 12px 30px; border-radius: 25px; margin-top: 15px; cursor: pointer; font-weight: bold;">
-                            📲 CLAIM PRIZE
-                        </button>
-                    </div>
-                `;
-                
-                // Show notification
-                this.showNotification(prize);
-                
-                // Haptic feedback on mobile
-                if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]);
-                }
-            }
-            
-            showNotification(prize) {
-                const notification = document.getElementById('winNotification');
-                document.getElementById('wonPrize').textContent = prize.name;
-                document.getElementById('wonValue').textContent = prize.value.replace('$', '');
-                
-                notification.style.display = 'block';
-                
-                // Auto-hide after 8 seconds
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 8000);
-            }
-        }
-        
-        // ========================
-        // GLOBAL FUNCTIONS
-        // ========================
-        function claimPrize(prizeName) {
-            alert(`🎊 Congratulations!\n\nYou claimed: ${prizeName}\n\nYour prize will be delivered within 24 hours!\n\nThank you for playing TrustCade!`);
-        }
-        
-        // ========================
-        // INITIALIZATION
-        // ========================
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM loaded, initializing app...");
-            
-            // Initialize the spin wheel
-            window.spinWheel = new SpinWheel();
-            
-            console.log("TrustCade initialized successfully!");
-            
-            // Remove any existing loading screen
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen) {
-                loadingScreen.style.display = 'none';
-            }
-        });
-        
-        // Backup initialization in case DOMContentLoaded doesn't fire
-        setTimeout(() => {
-            if (!window.spinWheel) {
-                console.log("Fallback initialization...");
-                window.spinWheel = new SpinWheel();
-            }
-        }, 1000);
-    </script>
-</body>
-</html>
+                const sliceCount = this.prizes
