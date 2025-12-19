@@ -16,6 +16,6 @@
 4. Claim prize
 
 ## 📞 Contact
-Questions? Email: [your-email@example.com]
+Questions? Email: trustcade@gmail.com]
 
 *TrustCade - Fair games, real prizes.*
