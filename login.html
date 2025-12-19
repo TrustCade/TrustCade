@@ -7,6 +7,28 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
+    
+    <!-- Structured data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Login - TrustCade",
+        "description": "Secure login page for TrustCade users to access their account and spin the prize wheel",
+        "url": "https://trustcade.com/login.html",
+        "mainEntity": {
+            "@type": "Service",
+            "name": "Account Login",
+            "description": "User authentication service for TrustCade prize platform"
+        }
+    }
+    </script>
+    
     <style>
         :root {
             --primary-color: #8B5CF6;
@@ -14,12 +36,52 @@
             --error-color: #EF4444;
             --success-color: #10B981;
             --warning-color: #F59E0B;
+            --focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.5);
+        }
+        
+        /* Skip to content link - Accessibility */
+        .skip-to-content {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px;
+            z-index: 1001;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 0 0 4px 0;
+            transition: top 0.3s;
+        }
+        
+        .skip-to-content:focus {
+            top: 0;
+            outline: 3px solid white;
+            outline-offset: -3px;
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
         
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+        }
+        
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
         }
         
         /* Header */
@@ -47,6 +109,15 @@
             color: var(--primary-color);
             font-size: 1.8rem;
             font-weight: 700;
+            margin: 0;
+        }
+        
+        .logo a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         nav {
@@ -72,9 +143,27 @@
             color: white;
         }
         
+        nav a:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Mobile menu toggle (hidden by default) */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
         /* Auth Container */
         .auth-container {
-            min-height: 80vh;
+            min-height: calc(100vh - 80px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -152,12 +241,17 @@
             font-size: 1rem;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
         }
         
         .auth-form input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            box-shadow: var(--focus-ring);
+        }
+        
+        .auth-form input:invalid:not(:focus):not(:placeholder-shown) {
+            border-color: var(--error-color);
         }
         
         .form-icon {
@@ -167,6 +261,7 @@
             transform: translateY(-50%);
             color: #999;
             font-size: 1.2rem;
+            pointer-events: none;
         }
         
         .form-group.password-field {
@@ -184,6 +279,17 @@
             cursor: pointer;
             font-size: 1.2rem;
             padding: 0.5rem;
+            z-index: 2;
+        }
+        
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+        
+        .toggle-password:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+            border-radius: 4px;
         }
         
         /* Password Strength Indicator */
@@ -228,6 +334,7 @@
             width: 18px;
             height: 18px;
             accent-color: var(--primary-color);
+            cursor: pointer;
         }
         
         .forgot-password {
@@ -239,6 +346,12 @@
         
         .forgot-password:hover {
             text-decoration: underline;
+        }
+        
+        .forgot-password:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+            border-radius: 4px;
         }
         
         /* Submit Button */
@@ -283,6 +396,11 @@
         .auth-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .auth-btn:focus {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
         }
         
         .auth-btn:disabled {
@@ -354,6 +472,11 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
+        .social-btn:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
         .social-btn.google i { color: #DB4437; }
         .social-btn.facebook i { color: #4267B2; }
         
@@ -378,6 +501,12 @@
         
         .auth-links a:hover {
             text-decoration: underline;
+        }
+        
+        .auth-links a:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+            border-radius: 4px;
         }
         
         /* Verification Banner */
@@ -488,6 +617,63 @@
             display: none;
         }
         
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            z-index: 1001;
+            transition: right 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: #333;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .mobile-menu-links a:hover,
+        .mobile-menu-links a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .auth-card {
@@ -496,6 +682,10 @@
             
             nav {
                 display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
             }
             
             .social-buttons {
@@ -517,100 +707,156 @@
                 gap: 1rem;
                 align-items: flex-start;
             }
+            
+            .mobile-menu {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-to-content" aria-label="Skip to main content">
+        Skip to main content
+    </a>
+    
     <!-- Header -->
     <header>
         <div class="container">
-            <a href="index.html" class="logo">
-                <h1><i class="fas fa-gift"></i> TrustCade</h1>
+            <a href="index.html" class="logo" aria-label="TrustCade Home">
+                <h1><i class="fas fa-gift" aria-hidden="true"></i> TrustCade</h1>
             </a>
-            <nav>
-                <a href="index.html"><i class="fas fa-home"></i> Home</a>
-                <a href="winners.html"><i class="fas fa-trophy"></i> Winners</a>
-                <a href="login.html" class="active"><i class="fas fa-sign-in-alt"></i> Login</a>
-                <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+            <nav aria-label="Main navigation">
+                <a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> Home</a>
+                <a href="winners.html"><i class="fas fa-trophy" aria-hidden="true"></i> Winners</a>
+                <a href="login.html" class="active" aria-current="page"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login</a>
+                <a href="register.html"><i class="fas fa-user-plus" aria-hidden="true"></i> Register</a>
             </nav>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile menu">
+        <div class="mobile-menu-header">
+            <h2>Menu</h2>
+            <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="index.html" aria-label="Home page">
+                <i class="fas fa-home" aria-hidden="true"></i> Home
+            </a>
+            <a href="winners.html" aria-label="View winners">
+                <i class="fas fa-trophy" aria-hidden="true"></i> Winners
+            </a>
+            <a href="login.html" class="active" aria-current="page">
+                <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login
+            </a>
+            <a href="register.html" aria-label="Register new account">
+                <i class="fas fa-user-plus" aria-hidden="true"></i> Register
+            </a>
+        </div>
+    </div>
+
     <!-- Main Content -->
-    <div class="auth-container">
+    <main id="main-content" class="auth-container" tabindex="-1">
         <div class="auth-card">
             <!-- Verification Banner -->
-            <div class="verification-banner">
-                <i class="fas fa-shield-alt"></i>
+            <div class="verification-banner" role="region" aria-label="Verification notice">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
                 <p><strong>Verify with $100 Gift Card</strong> to unlock prize claiming!</p>
             </div>
             
             <!-- Rate Limit Warning -->
-            <div class="rate-limit-warning" id="rateLimitWarning">
-                <i class="fas fa-clock"></i>
+            <div class="rate-limit-warning" id="rateLimitWarning" role="alert" aria-live="assertive">
+                <i class="fas fa-clock" aria-hidden="true"></i>
                 <span id="rateLimitText"></span>
             </div>
             
             <!-- Auth Header -->
             <div class="auth-header">
                 <div class="auth-logo">
-                    <i class="fas fa-gift"></i>
+                    <i class="fas fa-gift" aria-hidden="true"></i>
                 </div>
-                <h2>Welcome Back!</h2>
+                <h1>Welcome Back!</h1>
                 <p>Login to access your account and spin the wheel</p>
             </div>
             
             <!-- Error/Success Messages -->
-            <div id="errorMessage" class="message error"></div>
-            <div id="successMessage" class="message success"></div>
-            <div id="infoMessage" class="message info"></div>
+            <div id="errorMessage" class="message error" role="alert" aria-live="assertive" aria-atomic="true"></div>
+            <div id="successMessage" class="message success" role="alert" aria-live="assertive" aria-atomic="true"></div>
+            <div id="infoMessage" class="message info" role="alert" aria-live="polite" aria-atomic="true"></div>
             
             <!-- Login Form -->
-            <form class="auth-form" id="loginForm">
+            <form class="auth-form" id="loginForm" novalidate>
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="form-icon">
-                        <i class="fas fa-envelope"></i>
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
                     </div>
-                    <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="you@example.com" 
+                        required 
+                        autocomplete="email"
+                        aria-required="true"
+                        aria-describedby="emailError">
+                    <span id="emailError" class="error-message" aria-live="polite"></span>
                 </div>
                 
                 <div class="form-group password-field">
                     <label for="password">Password</label>
                     <div class="form-icon">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-lock" aria-hidden="true"></i>
                     </div>
-                    <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
-                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
-                        <i class="fas fa-eye"></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password" 
+                        required 
+                        minlength="6"
+                        autocomplete="current-password"
+                        aria-required="true"
+                        aria-describedby="passwordError passwordStrengthInfo">
+                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password" aria-pressed="false">
+                        <i class="fas fa-eye" aria-hidden="true"></i>
                     </button>
+                    <span id="passwordError" class="error-message" aria-live="polite"></span>
                     <div class="password-strength" id="passwordStrength">
-                        <div class="strength-bar" id="strengthBar"></div>
+                        <div class="strength-bar" id="strengthBar" role="meter" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
+                    <div id="passwordStrengthInfo" class="visually-hidden" aria-live="polite"></div>
                 </div>
                 
                 <div class="remember-forgot">
                     <label class="remember-me">
-                        <input type="checkbox" id="remember">
+                        <input type="checkbox" id="remember" name="remember">
                         <span>Remember me</span>
                     </label>
                     <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
                 </div>
                 
-                <button type="submit" class="auth-btn" id="submitBtn">
-                    <i class="fas fa-sign-in-alt"></i> 
+                <button type="submit" class="auth-btn" id="submitBtn" aria-label="Login to your account">
+                    <i class="fas fa-sign-in-alt" aria-hidden="true"></i> 
                     <span id="btnText">Login</span>
                 </button>
             </form>
             
             <!-- Security Features -->
-            <div class="security-features">
-                <h4><i class="fas fa-shield-alt"></i> Security Features</h4>
+            <div class="security-features" role="region" aria-label="Security information">
+                <h4><i class="fas fa-shield-alt" aria-hidden="true"></i> Security Features</h4>
                 <ul>
-                    <li><i class="fas fa-check-circle"></i> Encrypted password storage</li>
-                    <li><i class="fas fa-check-circle"></i> Rate limiting protection</li>
-                    <li><i class="fas fa-check-circle"></i> No hardcoded credentials</li>
-                    <li><i class="fas fa-check-circle"></i> Secure session management</li>
+                    <li><i class="fas fa-check-circle" aria-hidden="true"></i> Encrypted password storage</li>
+                    <li><i class="fas fa-check-circle" aria-hidden="true"></i> Rate limiting protection</li>
+                    <li><i class="fas fa-check-circle" aria-hidden="true"></i> No hardcoded credentials</li>
+                    <li><i class="fas fa-check-circle" aria-hidden="true"></i> Secure session management</li>
                 </ul>
             </div>
             
@@ -618,11 +864,11 @@
             <div class="social-login">
                 <p>Or continue with</p>
                 <div class="social-buttons">
-                    <button class="social-btn google" id="googleLogin" type="button">
-                        <i class="fab fa-google"></i> Google
+                    <button class="social-btn google" id="googleLogin" type="button" aria-label="Login with Google">
+                        <i class="fab fa-google" aria-hidden="true"></i> Google
                     </button>
-                    <button class="social-btn facebook" id="facebookLogin" type="button">
-                        <i class="fab fa-facebook"></i> Facebook
+                    <button class="social-btn facebook" id="facebookLogin" type="button" aria-label="Login with Facebook">
+                        <i class="fab fa-facebook" aria-hidden="true"></i> Facebook
                     </button>
                 </div>
             </div>
@@ -634,7 +880,7 @@
                 <p>By logging in, you agree to our <a href="terms.html">Terms</a> & <a href="privacy.html">Privacy Policy</a></p>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
         // ========================================
@@ -643,8 +889,12 @@
         const SECURITY_CONFIG = {
             maxFailedAttempts: 5,
             lockoutDuration: 15 * 60 * 1000, // 15 minutes in milliseconds
-            passwordMinLength: 6
+            passwordMinLength: 6,
+            csrfToken: 'csrf_' + Math.random().toString(36).substr(2, 9)
         };
+
+        // Store CSRF token
+        sessionStorage.setItem('trustcade_csrf_token', SECURITY_CONFIG.csrfToken);
 
         // ========================================
         // UTILITY FUNCTIONS
@@ -666,9 +916,11 @@
         function updatePasswordStrength(password) {
             const strengthBar = document.getElementById('strengthBar');
             const passwordStrength = document.getElementById('passwordStrength');
+            const passwordStrengthInfo = document.getElementById('passwordStrengthInfo');
             
             if (!password) {
                 passwordStrength.style.display = 'none';
+                passwordStrengthInfo.textContent = '';
                 return;
             }
             
@@ -676,30 +928,37 @@
             const strength = checkPasswordStrength(password);
             let width = 0;
             let className = '';
-            let color = '';
+            let strengthText = '';
             
             switch(strength) {
                 case 0:
                 case 1:
                     width = 25;
                     className = 'strength-weak';
+                    strengthText = 'Weak password';
                     break;
                 case 2:
                     width = 50;
                     className = 'strength-fair';
+                    strengthText = 'Fair password';
                     break;
                 case 3:
                     width = 75;
                     className = 'strength-good';
+                    strengthText = 'Good password';
                     break;
                 case 4:
                     width = 100;
                     className = 'strength-strong';
+                    strengthText = 'Strong password';
                     break;
             }
             
             strengthBar.style.width = `${width}%`;
             strengthBar.className = `strength-bar ${className}`;
+            strengthBar.setAttribute('aria-valuenow', width);
+            strengthBar.setAttribute('aria-label', strengthText);
+            passwordStrengthInfo.textContent = strengthText;
         }
 
         function showMessage(elementId, message, type = 'info') {
@@ -793,12 +1052,20 @@
         }
 
         function saveUser(userData, remember) {
+            // Validate CSRF token
+            const storedToken = sessionStorage.getItem('trustcade_csrf_token');
+            if (storedToken !== SECURITY_CONFIG.csrfToken) {
+                showMessage('errorMessage', 'Security token mismatch. Please refresh the page.', 'error');
+                return false;
+            }
+            
             // Create a secure session token
             const sessionToken = btoa(Date.now() + Math.random().toString(36));
             const sessionData = {
                 ...userData,
                 sessionToken: sessionToken,
-                expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
+                expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
+                csrfToken: SECURITY_CONFIG.csrfToken
             };
             
             // Store session data
@@ -815,14 +1082,31 @@
             
             // Clear failed attempts on successful login
             clearFailedAttempts();
+            
+            // Track login event for analytics
+            trackLoginEvent(userData);
+            
+            return true;
+        }
+
+        function trackLoginEvent(userData) {
+            // This would connect to analytics in production
+            console.log('Login tracked:', {
+                userId: userData.userId,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            });
         }
 
         // ========================================
         // DEMO AUTHENTICATION SYSTEM
         // ========================================
         async function demoAuthenticate(email, password) {
-            // This is a DEMO system only
-            // In a real application, this would call a secure backend API
+            // Validate CSRF token
+            const storedToken = sessionStorage.getItem('trustcade_csrf_token');
+            if (storedToken !== SECURITY_CONFIG.csrfToken) {
+                throw new Error('Security token mismatch. Please refresh the page.');
+            }
             
             // Simulate API delay
             await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
@@ -854,7 +1138,8 @@
                 totalWins: Math.floor(Math.random() * 5),
                 totalValue: Math.floor(Math.random() * 2000),
                 giftCardVerified: Math.random() > 0.5,
-                avatarColor: '#' + Math.floor(Math.random()*16777215).toString(16)
+                avatarColor: '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0'),
+                loginTime: new Date().toISOString()
             };
             
             // Create demo wins for some users
@@ -877,6 +1162,37 @@
         // ========================================
         // EVENT HANDLERS
         // ========================================
+        // Mobile menu functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        function toggleMobileMenu() {
+            const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
+            mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = !isExpanded ? 'hidden' : '';
+        }
+
+        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+        mobileMenuClose.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (mobileMenu.classList.contains('active') && 
+                !mobileMenu.contains(e.target) && 
+                !mobileMenuToggle.contains(e.target)) {
+                toggleMobileMenu();
+            }
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                toggleMobileMenu();
+            }
+        });
+
         // Password visibility toggle
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
@@ -884,12 +1200,16 @@
         
         togglePassword.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            const isPressed = type === 'text';
+            
             passwordInput.setAttribute('type', type);
             eyeIcon.classList.toggle('fa-eye');
             eyeIcon.classList.toggle('fa-eye-slash');
-            this.setAttribute('aria-label', 
-                type === 'password' ? 'Show password' : 'Hide password'
-            );
+            this.setAttribute('aria-label', isPressed ? 'Hide password' : 'Show password');
+            this.setAttribute('aria-pressed', isPressed);
+            
+            // Focus back on password input for better UX
+            passwordInput.focus();
         });
 
         // Password strength indicator
@@ -897,23 +1217,73 @@
             updatePasswordStrength(this.value);
         });
 
-        // Form submission
+        // Form validation
         const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+
+        emailInput.addEventListener('blur', function() {
+            if (!this.value) {
+                emailError.textContent = 'Email is required';
+            } else if (!isValidEmail(this.value)) {
+                emailError.textContent = 'Please enter a valid email address';
+            } else {
+                emailError.textContent = '';
+            }
+        });
+
+        passwordInput.addEventListener('blur', function() {
+            if (!this.value) {
+                passwordError.textContent = 'Password is required';
+            } else if (this.value.length < SECURITY_CONFIG.passwordMinLength) {
+                passwordError.textContent = `Password must be at least ${SECURITY_CONFIG.passwordMinLength} characters`;
+            } else {
+                passwordError.textContent = '';
+            }
+        });
+
+        // Form submission
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // Validate form
+            let isValid = true;
+            
+            if (!emailInput.value) {
+                emailError.textContent = 'Email is required';
+                isValid = false;
+            } else if (!isValidEmail(emailInput.value)) {
+                emailError.textContent = 'Please enter a valid email address';
+                isValid = false;
+            }
+            
+            if (!passwordInput.value) {
+                passwordError.textContent = 'Password is required';
+                isValid = false;
+            } else if (passwordInput.value.length < SECURITY_CONFIG.passwordMinLength) {
+                passwordError.textContent = `Password must be at least ${SECURITY_CONFIG.passwordMinLength} characters`;
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                showMessage('errorMessage', 'Please fix the errors in the form', 'error');
+                return;
+            }
+            
             // Check rate limiting
             const attempts = getFailedAttempts();
             if (attempts.locked) {
                 updateRateLimitWarning();
+                showMessage('errorMessage', 'Too many failed attempts. Please wait before trying again.', 'error');
                 return;
             }
             
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
             const remember = document.getElementById('remember').checked;
             
             // Reset messages
@@ -921,35 +1291,17 @@
             showMessage('errorMessage', '', 'error');
             showMessage('successMessage', '', 'success');
             
-            // Validation
-            if (!email || !password) {
-                showMessage('errorMessage', 'Please fill in all fields', 'error');
-                shakeElement(loginForm);
-                return;
-            }
-            
-            if (!isValidEmail(email)) {
-                showMessage('errorMessage', 'Please enter a valid email address', 'error');
-                shakeElement(loginForm);
-                return;
-            }
-            
-            if (password.length < SECURITY_CONFIG.passwordMinLength) {
-                showMessage('errorMessage', 
-                    `Password must be at least ${SECURITY_CONFIG.passwordMinLength} characters`, 
-                    'error'
-                );
-                shakeElement(loginForm);
-                return;
-            }
-            
             // Show loading state
             submitBtn.disabled = true;
             btnText.innerHTML = '<div class="loading-spinner"></div> Authenticating...';
             
             try {
                 const userData = await demoAuthenticate(email, password);
-                saveUser(userData, remember);
+                const saveSuccess = saveUser(userData, remember);
+                
+                if (!saveSuccess) {
+                    throw new Error('Security error. Please try again.');
+                }
                 
                 // Show success message
                 const welcomeMessage = userData.verified 
@@ -1006,6 +1358,11 @@
         // INITIALIZATION
         // ========================================
         document.addEventListener('DOMContentLoaded', function() {
+            // Focus on main content for screen readers
+            setTimeout(() => {
+                document.getElementById('main-content').focus();
+            }, 100);
+            
             // Check for remembered email
             const remembered = localStorage.getItem('trustcade_remember');
             const rememberedEmail = localStorage.getItem('trustcade_user_email');
@@ -1026,11 +1383,32 @@
                     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
                     20%, 40%, 60%, 80% { transform: translateX(5px); }
                 }
+                
+                .error-message {
+                    color: var(--error-color);
+                    font-size: 0.85rem;
+                    margin-top: 0.25rem;
+                    display: block;
+                }
+                
+                .visually-hidden {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    padding: 0;
+                    margin: -1px;
+                    overflow: hidden;
+                    clip: rect(0, 0, 0, 0);
+                    white-space: nowrap;
+                    border: 0;
+                }
             `;
             document.head.appendChild(style);
             
-            // Auto-focus email field
-            document.getElementById('email').focus();
+            // Auto-focus email field (with delay for better UX)
+            setTimeout(() => {
+                emailInput.focus();
+            }, 300);
             
             // Show demo info on first visit
             if (!localStorage.getItem('trustcade_login_info_shown')) {
@@ -1043,7 +1421,24 @@
                     localStorage.setItem('trustcade_login_info_shown', 'true');
                 }, 1000);
             }
+            
+            // Add keyboard navigation for form
+            loginForm.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.type !== 'submit') {
+                    e.preventDefault();
+                    const formElements = Array.from(loginForm.elements);
+                    const currentIndex = formElements.indexOf(e.target);
+                    const nextElement = formElements[currentIndex + 1];
+                    
+                    if (nextElement) {
+                        nextElement.focus();
+                        if (nextElement.type === 'button' || nextElement.type === 'submit') {
+                            nextElement.click();
+                        }
+                    }
+                }
+            });
         });
     </script>
 </body>
-    </html>
+</html>
