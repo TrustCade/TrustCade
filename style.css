@@ -65,7 +65,7 @@ body {
 /* Container */
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 300px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -387,8 +387,10 @@ main {
 
 @media (max-width: 480px) {
     .wheel-wrapper {
-        width: 300px;
-        height: 300px;
+        width: 90vw;  /* Use viewport width instead of fixed px */
+        height: 90vw; /* Keep it square */
+        max-width: 300px; /* Optional: don't let it get too big on tablets */
+        max-height: 300px;
     }
 }
 
