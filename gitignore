@@ -1,0 +1,10 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Sensitive data
+*.env
+secrets.json
+
+# Logs
+*.log
