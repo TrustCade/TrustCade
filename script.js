@@ -11,14 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     const prizes = [
-        { text: "$10 Amazon Gift Card", color: "#FF6B6B", weight: 5 },
+        { text: "$1000 Amazon Gift Card", color: "#FF6B6B", weight: 5 },
         { text: "Better Luck Next Time", color: "#4ECDC4", weight: 30 },
-        { text: "$5 Starbucks Card", color: "#FFD166", weight: 10 },
-        { text: "Free Spin Tomorrow", color: "#06D6A0", weight: 25 },
-        { text: "iPhone 15", color: "#118AB2", weight: 1 },
-        { text: "TrustCade T-Shirt", color: "#EF476F", weight: 15 },
-        { text: "$20 Steam Wallet", color: "#073B4C", weight: 8 },
-        { text: "YouTube Premium 1 Month", color: "#7209B7", weight: 6 }
+        { text: "PS5", color: "#FFD166", weight: 10 },
+        { text: "Watch", color: "#06D6A0", weight: 25 },
+        { text: "iPhone 17", color: "#118AB2", weight: 1 },
+        { text: "Headphones", color: "#EF476F", weight: 15 },
+        { text: "Try again", color: "#073B4C", weight: 8 },
+        { text: "MacBook", color: "#7209B7", weight: 6 }
     ];
 
     const size = 500;
@@ -117,16 +117,15 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         prizeBox.innerHTML = `
-            <div style="text-align:center">
-                <h3>🎁 Prize Ready</h3>
-                <p>${prize.text}</p>
-                <button onclick="alert('Prize claimed!')"
-                    style="background:#4CAF50;color:white;border:none;padding:12px 25px;border-radius:25px;">
-                    CLAIM PRIZE
-                </button>
-            </div>
-        `;
-
+    <div style="text-align:center">
+        <h3>🎉 Congratulations! 🎉</h3>
+        <p><strong>You won:</strong> ${prize.text}</p>
+        <button onclick="alert('Prize claimed! Redirecting to claim page...'); window.location.href='profile.html';"
+            style="background:#4CAF50;color:white;border:none;padding:12px 25px;border-radius:25px;font-weight:bold;margin:10px;">
+            Claim Your Prize Now
+        </button>
+    </div>
+`;
         if (navigator.vibrate && isMobile) navigator.vibrate([120, 60, 120]);
     }
 
